@@ -2,13 +2,14 @@
 #include "./ui_mainwindow.h"
 #include "client.h"
 #include <QMessageBox>
+#include "dialog.h"
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , client(nullptr)
 {
     ui->setupUi(this);
-
-    client = new Client(this);
+    this->setStyleSheet("background-color: grey;");
 
     connect(ui->sendMessageButton, &QPushButton::clicked, this, &MainWindow::on_sendMessageButton_clicked);
     connect(ui->connectButton, &QPushButton::clicked, this, &MainWindow::on_connectButton_clicked);
@@ -20,11 +21,14 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::setClient(Client *client){
+    this->client = client;
+}
 void MainWindow::on_sendMessageButton_clicked()
 {
     QString message = ui->messageBox->text();
     client->sendMessage(message);
-    ui->chatBox->append("Client: " + message);
+    ui->chatBox->append(client->getClientName()+ ":" + message);
     ui->messageBox->clear();
 }
 

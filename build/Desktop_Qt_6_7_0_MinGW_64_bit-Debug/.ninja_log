@@ -1,53 +1,93 @@
 # ninja log v5
-118	1240	7414813195353420	CMakeFiles/chat.dir/main.cpp.obj	57bfb1f7b7dadfbc
-376	1455	7414782908937909	CMakeFiles/chat.dir/chat_autogen/mocs_compilation.cpp.obj	ecb1810330c69033
-7	109	7414813184043438	chat_autogen/timestamp	563a2194021a4a31
-7	109	7414813184043438	chat_autogen/mocs_compilation.cpp	563a2194021a4a31
-7	109	7414813184043438	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/timestamp	563a2194021a4a31
-509	1706	7414765699413035	CMakeFiles/chat.dir/client.cpp.obj	5e68dccfb20f917
-7	109	7414813184043438	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+12	456	7419307673799434	chat_autogen/timestamp	563a2194021a4a31
+469	1889	7419307688459652	CMakeFiles/chat.dir/chat_autogen/mocs_compilation.cpp.obj	ecb1810330c69033
+456	1908	7419307688649659	CMakeFiles/chat.dir/main.cpp.obj	57bfb1f7b7dadfbc
+12	456	7419307673799434	chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+12	456	7419307673799434	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/timestamp	563a2194021a4a31
+12	456	7419307673799434	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+475	1702	7419307686599626	CMakeFiles/chat.dir/client.cpp.obj	5e68dccfb20f917
 505	1726	7414765699613029	CMakeFiles/chat.dir/chatserver.cpp.obj	3c3e8032713c435a
-128	1357	7414813196533417	CMakeFiles/chat.dir/mainwindow.cpp.obj	83f17ce1481e3412
+472	2019	7419307689769676	CMakeFiles/chat.dir/mainwindow.cpp.obj	83f17ce1481e3412
 0	11	0	CMakeFiles/clean.additional	baedbe210acaa455
 12	16	0	clean	577b940aee94fbd7
-1357	1535	7414813198283414	chat.exe	b2c06230b27992e3
-131	1321	7414813196173419	CMakeFiles/chat.dir/dialog.cpp.obj	b28b56526a8b8850
-7	113	7414813318283225	chat_autogen/timestamp	563a2194021a4a31
-7	113	7414813318283225	chat_autogen/mocs_compilation.cpp	563a2194021a4a31
-7	113	7414813318283225	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/timestamp	563a2194021a4a31
-7	113	7414813318283225	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/mocs_compilation.cpp	563a2194021a4a31
-123	1301	7414813330153207	CMakeFiles/chat.dir/main.cpp.obj	57bfb1f7b7dadfbc
-135	1360	7414813330743201	CMakeFiles/chat.dir/dialog.cpp.obj	b28b56526a8b8850
-133	1419	7414813331333201	CMakeFiles/chat.dir/mainwindow.cpp.obj	83f17ce1481e3412
-1419	1599	7414813333103200	chat.exe	b2c06230b27992e3
-8	131	7414813562862830	chat_autogen/timestamp	563a2194021a4a31
-8	131	7414813562862830	chat_autogen/mocs_compilation.cpp	563a2194021a4a31
-8	131	7414813562862830	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/timestamp	563a2194021a4a31
-8	131	7414813562862830	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/mocs_compilation.cpp	563a2194021a4a31
-141	1322	7414813574782809	CMakeFiles/chat.dir/main.cpp.obj	57bfb1f7b7dadfbc
-154	1382	7414813575382809	CMakeFiles/chat.dir/dialog.cpp.obj	b28b56526a8b8850
-152	1444	7414813576002809	CMakeFiles/chat.dir/mainwindow.cpp.obj	83f17ce1481e3412
-1445	1625	7414813577772802	chat.exe	b2c06230b27992e3
-8	107	7414814458011381	chat_autogen/timestamp	563a2194021a4a31
-8	107	7414814458011381	chat_autogen/mocs_compilation.cpp	563a2194021a4a31
-8	107	7414814458011381	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/timestamp	563a2194021a4a31
-8	107	7414814458011381	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/mocs_compilation.cpp	563a2194021a4a31
-117	1241	7414814469351365	CMakeFiles/chat.dir/main.cpp.obj	57bfb1f7b7dadfbc
-130	1324	7414814470171365	CMakeFiles/chat.dir/dialog.cpp.obj	b28b56526a8b8850
-127	1365	7414814470591359	CMakeFiles/chat.dir/mainwindow.cpp.obj	83f17ce1481e3412
-1366	1552	7414814472421356	chat.exe	b2c06230b27992e3
-5	120	7414814815760803	chat_autogen/timestamp	563a2194021a4a31
-5	120	7414814815760803	chat_autogen/mocs_compilation.cpp	563a2194021a4a31
-5	120	7414814815760803	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/timestamp	563a2194021a4a31
-5	120	7414814815760803	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/mocs_compilation.cpp	563a2194021a4a31
-130	1337	7414814827930785	CMakeFiles/chat.dir/main.cpp.obj	57bfb1f7b7dadfbc
-143	1364	7414814828190786	CMakeFiles/chat.dir/dialog.cpp.obj	b28b56526a8b8850
-140	1442	7414814828980783	CMakeFiles/chat.dir/mainwindow.cpp.obj	83f17ce1481e3412
-1442	1617	7414814830700782	chat.exe	b2c06230b27992e3
-4	104	7414815304210015	chat_autogen/timestamp	563a2194021a4a31
-4	104	7414815304210015	chat_autogen/mocs_compilation.cpp	563a2194021a4a31
-4	104	7414815304210015	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/timestamp	563a2194021a4a31
-4	104	7414815304210015	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/mocs_compilation.cpp	563a2194021a4a31
-124	1284	7414815316010000	CMakeFiles/chat.dir/dialog.cpp.obj	b28b56526a8b8850
-114	1299	7414815316159997	CMakeFiles/chat.dir/mainwindow.cpp.obj	83f17ce1481e3412
-1299	1475	7414815317889995	chat.exe	b2c06230b27992e3
+2019	2218	7419307691716796	chat.exe	b2c06230b27992e3
+477	1956	7419307689129661	CMakeFiles/chat.dir/dialog.cpp.obj	b28b56526a8b8850
+10	441	7419314367747983	chat_autogen/timestamp	563a2194021a4a31
+10	441	7419314367747983	chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+10	441	7419314367747983	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/timestamp	563a2194021a4a31
+10	441	7419314367747983	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+455	1774	7419314381418178	CMakeFiles/chat.dir/chat_autogen/mocs_compilation.cpp.obj	ecb1810330c69033
+461	1907	7419314382748196	CMakeFiles/chat.dir/dialog.cpp.obj	b28b56526a8b8850
+458	1912	7419314382798198	CMakeFiles/chat.dir/mainwindow.cpp.obj	83f17ce1481e3412
+8	103	7419315093321741	chat_autogen/timestamp	563a2194021a4a31
+8	103	7419315093321741	chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+8	103	7419315093321741	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/timestamp	563a2194021a4a31
+8	103	7419315093321741	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+111	1201	7419315104291911	CMakeFiles/chat.dir/main.cpp.obj	57bfb1f7b7dadfbc
+123	1252	7419315104811913	CMakeFiles/chat.dir/dialog.cpp.obj	b28b56526a8b8850
+121	1293	7419315105211926	CMakeFiles/chat.dir/mainwindow.cpp.obj	83f17ce1481e3412
+1293	1491	7419315107171953	chat.exe	b2c06230b27992e3
+7	94	7419317693230651	chat_autogen/timestamp	563a2194021a4a31
+7	94	7419317693230651	chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+7	94	7419317693230651	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/timestamp	563a2194021a4a31
+7	94	7419317693230651	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+102	1165	7419317703940800	CMakeFiles/chat.dir/main.cpp.obj	57bfb1f7b7dadfbc
+114	1270	7419317705000806	CMakeFiles/chat.dir/dialog.cpp.obj	b28b56526a8b8850
+111	1279	7419317705090817	CMakeFiles/chat.dir/mainwindow.cpp.obj	83f17ce1481e3412
+1280	1441	7419317706680829	chat.exe	b2c06230b27992e3
+6	412	7419320433640029	chat_autogen/timestamp	563a2194021a4a31
+6	412	7419320433640029	chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+6	412	7419320433640029	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/timestamp	563a2194021a4a31
+6	412	7419320433640029	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+426	1363	7419320443430160	CMakeFiles/chat.dir/client.cpp.obj	5e68dccfb20f917
+412	1504	7419320444850180	CMakeFiles/chat.dir/chat_autogen/mocs_compilation.cpp.obj	ecb1810330c69033
+422	1513	7419320444940184	CMakeFiles/chat.dir/main.cpp.obj	57bfb1f7b7dadfbc
+428	1594	7419320445740195	CMakeFiles/chat.dir/dialog.cpp.obj	b28b56526a8b8850
+424	1637	7419320446180201	CMakeFiles/chat.dir/mainwindow.cpp.obj	83f17ce1481e3412
+1637	1800	7419320447780222	chat.exe	b2c06230b27992e3
+3	92	7419323706242242	chat_autogen/timestamp	563a2194021a4a31
+3	92	7419323706242242	chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+3	92	7419323706242242	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/timestamp	563a2194021a4a31
+3	92	7419323706242242	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+101	1305	7419323718372407	CMakeFiles/chat.dir/main.cpp.obj	57bfb1f7b7dadfbc
+115	1398	7419323719302423	CMakeFiles/chat.dir/dialog.cpp.obj	b28b56526a8b8850
+112	1443	7419323719752423	CMakeFiles/chat.dir/mainwindow.cpp.obj	83f17ce1481e3412
+1443	1654	7419323721789151	chat.exe	b2c06230b27992e3
+6	93	7419323946427083	chat_autogen/timestamp	563a2194021a4a31
+6	93	7419323946427083	chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+6	93	7419323946427083	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/timestamp	563a2194021a4a31
+6	93	7419323946427083	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+101	1194	7419323957447228	CMakeFiles/chat.dir/main.cpp.obj	57bfb1f7b7dadfbc
+113	1275	7419323958257237	CMakeFiles/chat.dir/dialog.cpp.obj	b28b56526a8b8850
+110	1282	7419323958327242	CMakeFiles/chat.dir/mainwindow.cpp.obj	83f17ce1481e3412
+1282	1446	7419323959937625	chat.exe	b2c06230b27992e3
+7	95	7419324210084994	chat_autogen/timestamp	563a2194021a4a31
+7	95	7419324210084994	chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+7	95	7419324210084994	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/timestamp	563a2194021a4a31
+7	95	7419324210084994	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+103	1173	7419324220865136	CMakeFiles/chat.dir/main.cpp.obj	57bfb1f7b7dadfbc
+116	1266	7419324221795149	CMakeFiles/chat.dir/dialog.cpp.obj	b28b56526a8b8850
+113	1268	7419324221825152	CMakeFiles/chat.dir/mainwindow.cpp.obj	83f17ce1481e3412
+1268	1434	7419324223455170	chat.exe	b2c06230b27992e3
+7	106	7419324291622684	chat_autogen/timestamp	563a2194021a4a31
+7	106	7419324291622684	chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+7	106	7419324291622684	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/timestamp	563a2194021a4a31
+7	106	7419324291622684	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+127	1253	7419324303092839	CMakeFiles/chat.dir/dialog.cpp.obj	b28b56526a8b8850
+115	1279	7419324303352837	CMakeFiles/chat.dir/mainwindow.cpp.obj	83f17ce1481e3412
+1279	1441	7419324304942871	chat.exe	b2c06230b27992e3
+3	100	7419325752010948	chat_autogen/timestamp	563a2194021a4a31
+3	100	7419325752010948	chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+3	100	7419325752010948	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/timestamp	563a2194021a4a31
+3	100	7419325752010948	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+120	1226	7419325763271116	CMakeFiles/chat.dir/dialog.cpp.obj	b28b56526a8b8850
+109	1265	7419325763661112	CMakeFiles/chat.dir/mainwindow.cpp.obj	83f17ce1481e3412
+1265	1428	7419325765261133	chat.exe	b2c06230b27992e3
+3	91	7419328780502116	chat_autogen/timestamp	563a2194021a4a31
+3	91	7419328780502116	chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+3	91	7419328780502116	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/timestamp	563a2194021a4a31
+3	91	7419328780502116	C:/Users/Hamid/Desktop/C++ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Debug/chat_autogen/mocs_compilation.cpp	563a2194021a4a31
+99	1167	7419328791272246	CMakeFiles/chat.dir/main.cpp.obj	57bfb1f7b7dadfbc
+110	1249	7419328792092258	CMakeFiles/chat.dir/dialog.cpp.obj	b28b56526a8b8850
+108	1295	7419328792552264	CMakeFiles/chat.dir/mainwindow.cpp.obj	83f17ce1481e3412
+1295	1463	7419328794194566	chat.exe	b2c06230b27992e3

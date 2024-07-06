@@ -21,7 +21,7 @@ QT_BEGIN_NAMESPACE
 class Ui_Dialog
 {
 public:
-    QLineEdit *lineEdit;
+    QLineEdit *userNameInput;
     QLabel *label;
     QPushButton *okButton;
     QPushButton *cancelButton;
@@ -31,9 +31,9 @@ public:
         if (Dialog->objectName().isEmpty())
             Dialog->setObjectName("Dialog");
         Dialog->resize(400, 300);
-        lineEdit = new QLineEdit(Dialog);
-        lineEdit->setObjectName("lineEdit");
-        lineEdit->setGeometry(QRect(80, 160, 241, 24));
+        userNameInput = new QLineEdit(Dialog);
+        userNameInput->setObjectName("userNameInput");
+        userNameInput->setGeometry(QRect(80, 160, 241, 24));
         label = new QLabel(Dialog);
         label->setObjectName("label");
         label->setGeometry(QRect(150, 130, 261, 20));

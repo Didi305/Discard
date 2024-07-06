@@ -44,6 +44,7 @@ C:/Users/Hamid/Desktop/C++\ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Deb
   C:/Qt/6.7.0/mingw_64/include/QtCore/qglobalstatic.h \
   C:/Qt/6.7.0/mingw_64/include/QtCore/qhash.h \
   C:/Qt/6.7.0/mingw_64/include/QtCore/qhashfunctions.h \
+  C:/Qt/6.7.0/mingw_64/include/QtCore/qiodevice.h \
   C:/Qt/6.7.0/mingw_64/include/QtCore/qiodevicebase.h \
   C:/Qt/6.7.0/mingw_64/include/QtCore/qiterable.h \
   C:/Qt/6.7.0/mingw_64/include/QtCore/qiterator.h \
@@ -142,6 +143,13 @@ C:/Users/Hamid/Desktop/C++\ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Deb
   C:/Qt/6.7.0/mingw_64/include/QtGui/qtransform.h \
   C:/Qt/6.7.0/mingw_64/include/QtGui/qwindowdefs.h \
   C:/Qt/6.7.0/mingw_64/include/QtGui/qwindowdefs_win.h \
+  C:/Qt/6.7.0/mingw_64/include/QtNetwork/QTcpSocket \
+  C:/Qt/6.7.0/mingw_64/include/QtNetwork/qabstractsocket.h \
+  C:/Qt/6.7.0/mingw_64/include/QtNetwork/qhostaddress.h \
+  C:/Qt/6.7.0/mingw_64/include/QtNetwork/qtcpsocket.h \
+  C:/Qt/6.7.0/mingw_64/include/QtNetwork/qtnetwork-config.h \
+  C:/Qt/6.7.0/mingw_64/include/QtNetwork/qtnetworkexports.h \
+  C:/Qt/6.7.0/mingw_64/include/QtNetwork/qtnetworkglobal.h \
   C:/Qt/6.7.0/mingw_64/include/QtWidgets/QDialog \
   C:/Qt/6.7.0/mingw_64/include/QtWidgets/qdialog.h \
   C:/Qt/6.7.0/mingw_64/include/QtWidgets/qsizepolicy.h \
@@ -347,4 +355,5 @@ C:/Users/Hamid/Desktop/C++\ baby/Qt/chat/build/Desktop_Qt_6_7_0_MinGW_64_bit-Deb
   C:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/sys/types.h \
   C:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/time.h \
   C:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/vadefs.h \
-  C:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/wchar.h
+  C:/Qt/Tools/mingw1120_64/x86_64-w64-mingw32/include/wchar.h \
+  C:/Users/Hamid/Desktop/C++\ baby/Qt/chat/client.h

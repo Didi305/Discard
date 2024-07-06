@@ -2,7 +2,7 @@
 #define DIALOG_H
 
 #include <QDialog>
-
+#include "client.h"
 namespace Ui {
 class Dialog;
 }
@@ -13,6 +13,7 @@ class Dialog : public QDialog
 
 public:
     explicit Dialog(QWidget *parent = nullptr);
+    void setClient(Client *client);
     ~Dialog();
 private slots:
     void on_cancelButton_clicked();
@@ -20,6 +21,7 @@ private slots:
 
 private:
     Ui::Dialog *ui;
+    Client *client;
 };
 
 #endif // DIALOG_H

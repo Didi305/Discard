@@ -16,6 +16,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    void setClient(Client *client);
 
 private slots:
     void on_connectButton_clicked();

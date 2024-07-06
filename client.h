@@ -6,6 +6,8 @@ class Client : public QObject {
     Q_OBJECT
 public:
     Client(QObject *parent = nullptr);
+    QString getClientName();
+    void setClientName(QString &name);
     ~Client();
 
     void connectToServer(const QString &host, int port);
@@ -24,7 +26,7 @@ private slots:
 
 private:
     QTcpSocket *socket;
-    QString username;
+    QString name;
 };
 
 #endif // CLIENT_H

@@ -17,8 +17,8 @@
    <widget class="QPushButton" name="sendMessageButton">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>120</y>
+      <x>420</x>
+      <y>350</y>
       <width>80</width>
       <height>24</height>
      </rect>
@@ -30,8 +30,8 @@
    <widget class="QPushButton" name="connectButton">
     <property name="geometry">
      <rect>
-      <x>270</x>
-      <y>160</y>
+      <x>420</x>
+      <y>320</y>
       <width>80</width>
       <height>24</height>
      </rect>
@@ -43,18 +43,18 @@
    <widget class="QLineEdit" name="messageBox">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>123</y>
+      <x>240</x>
+      <y>340</y>
       <width>171</width>
-      <height>61</height>
+      <height>31</height>
      </rect>
     </property>
    </widget>
    <widget class="QTextEdit" name="chatBox">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>9</y>
+      <x>240</x>
+      <y>210</y>
       <width>261</width>
       <height>101</height>
      </rect>

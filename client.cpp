@@ -11,6 +11,12 @@ Client::Client(QObject *parent) : QObject(parent){
 Client::~Client() {
     delete socket;
 }
+QString Client::getClientName(){
+    return name;
+}
+void Client::setClientName(QString &name){
+    this->name = name;
+}
 void Client::connectToServer(const QString &host, int port){
     socket->connectToHost(host, port);
 }
