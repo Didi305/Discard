@@ -10,10 +10,12 @@ public:
 
 signals:
     void messageReceived();
-
+    
 public slots:
     void onNewConnection();
+    
     void readClient();
+    
     void clientDisconnected();
 private:
     QTcpServer *tcpServer;

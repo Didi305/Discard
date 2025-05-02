@@ -2,18 +2,15 @@
 #include "./ui_mainwindow.h"
 #include "client.h"
 #include <QMessageBox>
-#include "dialog.h"
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
     , client(nullptr)
 {
     ui->setupUi(this);
-    this->setStyleSheet("background-color: grey;");
+    connect(ui->sendMessageButton, &QPushButton::clicked, this, &::MainWindow::onSendMessageButtonclicked);
+    connect(ui->connectButton, &QPushButton::clicked, this, &::MainWindow::onConnectButtonClicked);
 
-    connect(ui->sendMessageButton, &QPushButton::clicked, this, &MainWindow::on_sendMessageButton_clicked);
-    connect(ui->connectButton, &QPushButton::clicked, this, &MainWindow::on_connectButton_clicked);
-    connect(client, &Client::connected, this, &MainWindow::on_connectionSuccess);
 }
 
 MainWindow::~MainWindow()
@@ -23,21 +20,29 @@ MainWindow::~MainWindow()
 
 void MainWindow::setClient(Client *client){
     this->client = client;
+    connect(client, &Client::connected, this, &::MainWindow::onConnectionSuccess);
+    connect(client, &Client::messageReceived, this, &::MainWindow::onMessageReceived);
 }
-void MainWindow::on_sendMessageButton_clicked()
+void MainWindow::onSendMessageButtonclicked()
 {
     QString message = ui->messageBox->text();
     client->sendMessage(message);
-    ui->chatBox->append(client->getClientName()+ ":" + message);
     ui->messageBox->clear();
 }
 
-void MainWindow::on_connectButton_clicked() {
+void MainWindow::onConnectButtonClicked() {
     QString host = "127.0.0.1";
     int port = 1234;
     client->connectToServer(host, port);
 }
-void MainWindow::on_connectionSuccess()
+void MainWindow::onConnectionSuccess()
 {
+    qDebug("daba walo ya?");
     QMessageBox::information(this, "Connection", "Successfully connected to the server!");
 }
+
+void MainWindow::onMessageReceived(QString &message)
+{
+    ui->chatBox->append(message);
+}
+

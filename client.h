@@ -17,7 +17,7 @@ public:
 signals:
     void connected();
     void disconnected();
-    void messageReceived();
+    void messageReceived(QString &data);
 
 private slots:
     void onConnected();
