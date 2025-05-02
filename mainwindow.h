@@ -19,9 +19,10 @@ public:
     void setClient(Client *client);
 
 private slots:
-    void on_connectButton_clicked();
-    void on_sendMessageButton_clicked();
-    void on_connectionSuccess();
+    void onConnectButtonClicked();
+    void onSendMessageButtonclicked();
+    void onConnectionSuccess();
+    void onMessageReceived(QString &str);
 private:
     Ui::MainWindow *ui;
     Client *client;

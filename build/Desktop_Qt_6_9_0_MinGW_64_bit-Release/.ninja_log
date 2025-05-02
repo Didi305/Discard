@@ -1,0 +1,20 @@
+# ninja log v6
+19	431	7678323311407585	chat_autogen/timestamp	fdf2699b545134b4
+433	1492	7678323311849172	CMakeFiles/chat.dir/main.cpp.obj	6b50bb034e5cfd6e
+431	1525	7678323311828969	CMakeFiles/chat.dir/chat_autogen/mocs_compilation.cpp.obj	49cb0fc115c903e4
+19	431	7678323311407585	chat_autogen/mocs_compilation.cpp	fdf2699b545134b4
+19	431	7678323311407585	C:/Users/giler/OneDrive/Desktop/C++/Chatto/build/Desktop_Qt_6_9_0_MinGW_64_bit-Release/chat_autogen/timestamp	fdf2699b545134b4
+19	431	7678323311407585	C:/Users/giler/OneDrive/Desktop/C++/Chatto/build/Desktop_Qt_6_9_0_MinGW_64_bit-Release/chat_autogen/mocs_compilation.cpp	fdf2699b545134b4
+438	1486	7678323311899331	CMakeFiles/chat.dir/client.cpp.obj	bbce72cb8f0d7001
+436	1465	7678323311879230	CMakeFiles/chat.dir/chatserver.cpp.obj	5ff364ffc1867608
+440	1569	7678323311909352	CMakeFiles/chat.dir/dialog.cpp.obj	441e6530a137b739
+435	1601	7678323311859191	CMakeFiles/chat.dir/mainwindow.cpp.obj	f7d9df7054f6e00a
+1601	1704	7678323323519260	chat.exe	a19433c85f9adb90
+18	105	7678328630831710	chat_autogen/timestamp	fdf2699b545134b4
+18	105	7678328630831710	chat_autogen/mocs_compilation.cpp	fdf2699b545134b4
+18	105	7678328630831710	C:/Users/giler/OneDrive/Desktop/C++/Chatto/build/Desktop_Qt_6_9_0_MinGW_64_bit-Release/chat_autogen/timestamp	fdf2699b545134b4
+18	105	7678328630831710	C:/Users/giler/OneDrive/Desktop/C++/Chatto/build/Desktop_Qt_6_9_0_MinGW_64_bit-Release/chat_autogen/mocs_compilation.cpp	fdf2699b545134b4
+108	1031	7678328631713878	CMakeFiles/chat.dir/chatserver.cpp.obj	5ff364ffc1867608
+109	1163	7678328631726694	CMakeFiles/chat.dir/dialog.cpp.obj	441e6530a137b739
+106	1208	7678328631703215	CMakeFiles/chat.dir/mainwindow.cpp.obj	f7d9df7054f6e00a
+1208	1295	7678328642726073	chat.exe	a19433c85f9adb90

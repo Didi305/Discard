@@ -23,9 +23,16 @@ ChatServer::~ChatServer() {
     };
 
     void ChatServer::readClient(){
+        qDebug() << "jerebti hadchi?";
         QTcpSocket* clientSocket = qobject_cast<QTcpSocket*>(sender());
-        if(clientSocket && clientSocket->canReadLine()){
+        qDebug() << "chmen client hada?" << clientSocket;
+        if(clientSocket){
             QByteArray data = clientSocket->readAll();
+            qDebug() << data;
+            QString message = data;
+            for(QTcpSocket *c : clients){
+                c->write(message.toUtf8());
+            }
         }
     };
 

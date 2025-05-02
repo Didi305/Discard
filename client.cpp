@@ -1,5 +1,5 @@
 #include "client.h"
-
+#include "mainwindow.h"
 
 Client::Client(QObject *parent) : QObject(parent){
     socket = new QTcpSocket(this);
@@ -27,7 +27,9 @@ void Client::disconnectFromServer(){
 
 void Client::sendMessage(const QString &message) {
     if (socket->state() == QAbstractSocket::ConnectedState) {
-        socket->write(message.toUtf8());
+        QString name = getClientName();
+        QString actMessage = name + ": " + message;
+        socket->write(actMessage.toUtf8());
     }
 }
 void Client::onConnected(){
@@ -40,5 +42,6 @@ void Client::onDisconnected(){
 }
 
 void Client::onReadyRead(){
-    socket->readAll();
+    QString message = socket->readAll();
+    emit messageReceived(message);
 }
