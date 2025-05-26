@@ -3,3 +3,4 @@
 #include "EWIEGA46WW/moc_client.cpp"
 #include "EWIEGA46WW/moc_dialog.cpp"
 #include "EWIEGA46WW/moc_mainwindow.cpp"
+#include "EWIEGA46WW/moc_manager.cpp"

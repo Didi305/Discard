@@ -1,11 +1,19 @@
 #include "mainwindow.h"
 #include "chatserver.h"
 #include "client.h"
+#include "manager.h"
+#include <QJsonObject>
 #include <QApplication>
 #include "dialog.h"
+#include <QSqlDatabase>
+#include <QSqlError>
+#include <QStandardPaths>
+#include <QFile>
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    QJsonObject DBConfig;
+    if(!)
     Client client;
     Dialog h;
     MainWindow w;
