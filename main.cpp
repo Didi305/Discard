@@ -2,9 +2,10 @@
 #include "chatserver.h"
 #include "client.h"
 #include "manager.h"
+#include "login.h"
+#include "register.h"
 #include <QJsonObject>
 #include <QApplication>
-#include "dialog.h"
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QStandardPaths>
@@ -12,10 +13,13 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    qDebug() << "Available Qt SQL drivers:" << QSqlDatabase::drivers();
+    Manager *mgr = Manager::get();
+    QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL", "probe");
     QJsonObject DBConfig;
-    if(!)
+    mgr->init(DBConfig, db);
     Client client;
-    Dialog h;
+    Login h;
     MainWindow w;
     h.setClient(&client);
     if (h.exec() == QDialog::Rejected) {

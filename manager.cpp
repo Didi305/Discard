@@ -16,9 +16,13 @@ Manager* Manager::get(){
     return &mgr;
 }
 
-bool Manager::init(QJsonObject &DBConfig){
+QSqlDatabase& Manager::db(){
+    return database;
+}
+bool Manager::init(QJsonObject &DBConfig, QSqlDatabase &dbex){
     QString path = QCoreApplication::applicationDirPath() + QLatin1String("/config.json");
     QFile file(path);
+    database = dbex;
 
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qWarning() << "Cannot open" << path << ":" << file.errorString();
@@ -33,5 +37,66 @@ bool Manager::init(QJsonObject &DBConfig){
         qWarning() << "JSON file doesnt contain an object";
     }
     DBConfig = doc.object();
+    database.setHostName(DBConfig.take("host").toString());
+    database.setPort(DBConfig.take("port").toString().toInt());
+    database.setDatabaseName(DBConfig.take("database").toString());
+    database.setUserName(DBConfig.take("user").toString());
+    database.setPassword(DBConfig.take("password").toString());
+    bool ok = database.open();
+    if (!ok) {
+        qCritical() << "Cannot open DB:" << database.lastError().text();
+    }
+    return ok;
+}
+
+bool Manager::checkUser(QString username, QString password){
+    QSqlQuery query(db());
+    QString sql = QStringLiteral(R"SQL(
+        SELECT id
+        FROM users
+        WHERE username = :u AND password_hash = :p
+    )SQL");
+    query.prepare(sql);
+    query.bindValue(":u" , username);
+    query.bindValue(":p", password);
+
+    if(!query.exec()){
+        qCritical() << query.lastError().text();
+    }
+    if(query.first()){
+        qDebug() << "User found with ID:" << query.value("id").toInt();
+        return true;
+    }else{
+        qDebug() << "Username or password wrong";
+        return false;
+    }
+}
+
+bool Manager::createUser(QString username, QString password){
+    QSqlQuery query(db());
+    static const QString sql = QStringLiteral(R"SQL(
+    INSERT INTO users (username, password_hash)
+    VALUES (
+        :user,
+        crypt(
+        :pass,
+        gen_salt('bf', 12)   -- cost factor 12; must be literal here
+    )
+  )
+)SQL");
+
+    // 2) Prepare the statement
+    if (!query.prepare(sql)) {
+        qWarning() << "prepare failed:" << query.lastError().text();
+    }
+    query.prepare(sql);
+
+    query.bindValue(":user", username);
+    query.bindValue(":pass", password);
+
+    if(!query.exec()){
+        qWarning() << "Insert failed" << query.lastError().text();
+        return false;
+    }
     return true;
 }

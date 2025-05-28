@@ -1,0 +1,31 @@
+#ifndef REGISTER_DIALOG_H
+#define REGISTER_DIALOG_H
+
+#include <QDialog>
+#include "client.h"
+#include "manager.h"// if you need it for immediate sign-in
+QT_BEGIN_NAMESPACE
+namespace Ui { class Register; }
+QT_END_NAMESPACE
+
+class Register : public QDialog
+{
+    Q_OBJECT
+
+public:
+    explicit Register(QWidget *parent = nullptr);
+    ~Register();
+
+    void setClient(Client *client);          // optional
+
+private slots:
+    void onRegisterButtonClicked();           // “Sign Up” button
+    void onCancelButtonClicked();            // closes dialog
+
+private:
+    Ui::Register *ui        {nullptr};       // generated from register.ui
+    Client       *client_   {nullptr};
+    Manager *manager {nullptr};
+};
+
+#endif // REGISTER_DIALOG_H
