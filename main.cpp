@@ -13,7 +13,6 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    qDebug() << "Available Qt SQL drivers:" << QSqlDatabase::drivers();
     Manager *mgr = Manager::get();
     QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL", "probe");
     QJsonObject DBConfig;

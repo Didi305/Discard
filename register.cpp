@@ -23,12 +23,12 @@ void Register::setClient(Client *client){
 void Register::onRegisterButtonClicked() {
     QString username = ui->registerUsername->text();
     QString password = ui->registerPassword->text();
-    if(!(manager->createUser(username, password))){
+    if (!(manager->createUser(username, password))) {
         qDebug() << "chi haja machi lhih";
-}
-    else{
+    }
+    else {
         reject();
-}
+    }
 }
 
 void Register::onCancelButtonClicked() {

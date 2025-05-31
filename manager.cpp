@@ -7,7 +7,7 @@
 #include <QFile>
 #include <QJsonObject>
 #include "manager.h"
-
+#include <QCryptographicHash>
 Manager::Manager(QObject *parent) : QObject(parent) {
 }
 
@@ -50,6 +50,7 @@ bool Manager::init(QJsonObject &DBConfig, QSqlDatabase &dbex){
 }
 
 bool Manager::checkUser(QString username, QString password){
+    QByteArray password_hash = (QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Sha256)).toHex();
     QSqlQuery query(db());
     QString sql = QStringLiteral(R"SQL(
         SELECT id
@@ -58,7 +59,7 @@ bool Manager::checkUser(QString username, QString password){
     )SQL");
     query.prepare(sql);
     query.bindValue(":u" , username);
-    query.bindValue(":p", password);
+    query.bindValue(":p", password_hash);
 
     if(!query.exec()){
         qCritical() << query.lastError().text();
@@ -73,17 +74,14 @@ bool Manager::checkUser(QString username, QString password){
 }
 
 bool Manager::createUser(QString username, QString password){
+    QByteArray pw = password.toUtf8();
+    QByteArray password_hash = QCryptographicHash::hash(pw, QCryptographicHash::Sha256);
+
     QSqlQuery query(db());
-    static const QString sql = QStringLiteral(R"SQL(
-    INSERT INTO users (username, password_hash)
-    VALUES (
-        :user,
-        crypt(
-        :pass,
-        gen_salt('bf', 12)   -- cost factor 12; must be literal here
-    )
-  )
-)SQL");
+    static const QString sql = QStringLiteral(
+        "INSERT INTO users (username, password_hash) "
+        "VALUES ( :user, :pass)"
+);
 
     // 2) Prepare the statement
     if (!query.prepare(sql)) {
@@ -92,7 +90,7 @@ bool Manager::createUser(QString username, QString password){
     query.prepare(sql);
 
     query.bindValue(":user", username);
-    query.bindValue(":pass", password);
+    query.bindValue(":pass", password_hash.toHex());
 
     if(!query.exec()){
         qWarning() << "Insert failed" << query.lastError().text();
