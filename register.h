@@ -16,14 +16,15 @@ public:
     explicit Register(QWidget *parent = nullptr);
     ~Register();
 
-    void setClient(Client *client);          // optional
+    void setClient(Client *client);
 
 private slots:
-    void onRegisterButtonClicked();           // “Sign Up” button
-    void onCancelButtonClicked();            // closes dialog
+    void onUsernameEditingFinished();
+    void onRegisterButtonClicked();
+    void onCancelButtonClicked();
 
 private:
-    Ui::Register *ui        {nullptr};       // generated from register.ui
+    Ui::Register *ui        {nullptr};
     Client       *client_   {nullptr};
     Manager *manager {nullptr};
 };

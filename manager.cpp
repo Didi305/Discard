@@ -48,15 +48,36 @@ bool Manager::init(QJsonObject &DBConfig, QSqlDatabase &dbex){
     }
     return ok;
 }
+bool Manager::checkAvailibity(QString username){
+    QSqlQuery query(db());
+    QString sql = QStringLiteral(
+        "SELECT id "
+        "FROM users "
+        "WHERE username = :u "
+        );
+    query.prepare(sql);
+    query.bindValue(":u", username);
 
+    if(!query.exec()){
+        qCritical() << query.lastError().text();
+    }
+    if(query.first()){
+        qCritical() << "username unavailable ^^";
+        return false;
+    }
+    else{
+        qCritical() << "Username available ^^";
+        return true;
+    }
+}
 bool Manager::checkUser(QString username, QString password){
     QByteArray password_hash = (QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Sha256)).toHex();
     QSqlQuery query(db());
-    QString sql = QStringLiteral(R"SQL(
-        SELECT id
-        FROM users
-        WHERE username = :u AND password_hash = :p
-    )SQL");
+    QString sql = QStringLiteral(
+        "SELECT id "
+        "FROM users "
+        "WHERE username = :u AND password_hash = :p "
+    );
     query.prepare(sql);
     query.bindValue(":u" , username);
     query.bindValue(":p", password_hash);

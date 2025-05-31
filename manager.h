@@ -18,6 +18,7 @@ public:
     QSqlDatabase& db();
     bool init(QJsonObject &DBConfig, QSqlDatabase &db);
     bool createUser(QString username, QString password);
+    bool checkAvailibity(QString username);
     bool checkUser(QString username, QString password);
     void postMessage(QString message);
 private:

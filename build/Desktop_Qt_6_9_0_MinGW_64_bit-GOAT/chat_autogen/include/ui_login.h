@@ -28,6 +28,7 @@ public:
     QLineEdit *loginPassword;
     QLabel *label_2;
     QLabel *label_3;
+    QLabel *loginErrorMessage;
 
     void setupUi(QDialog *Login)
     {
@@ -48,20 +49,27 @@ public:
         label->setFont(font);
         loginUsername = new QLineEdit(Login);
         loginUsername->setObjectName("loginUsername");
-        loginUsername->setGeometry(QRect(240, 190, 171, 24));
+        loginUsername->setGeometry(QRect(250, 200, 171, 24));
         loginPassword = new QLineEdit(Login);
         loginPassword->setObjectName("loginPassword");
-        loginPassword->setGeometry(QRect(240, 230, 171, 24));
+        loginPassword->setGeometry(QRect(250, 240, 171, 24));
         label_2 = new QLabel(Login);
         label_2->setObjectName("label_2");
-        label_2->setGeometry(QRect(140, 180, 91, 31));
+        label_2->setGeometry(QRect(150, 190, 91, 31));
         QFont font1;
         font1.setPointSize(14);
         label_2->setFont(font1);
         label_3 = new QLabel(Login);
         label_3->setObjectName("label_3");
-        label_3->setGeometry(QRect(140, 220, 91, 31));
+        label_3->setGeometry(QRect(150, 230, 91, 31));
         label_3->setFont(font1);
+        loginErrorMessage = new QLabel(Login);
+        loginErrorMessage->setObjectName("loginErrorMessage");
+        loginErrorMessage->setEnabled(false);
+        loginErrorMessage->setGeometry(QRect(250, 170, 211, 16));
+        loginErrorMessage->setMouseTracking(true);
+        loginErrorMessage->setFrameShape(QFrame::Shape::NoFrame);
+        loginErrorMessage->setScaledContents(false);
 
         retranslateUi(Login);
 
@@ -76,6 +84,7 @@ public:
         label->setText(QCoreApplication::translate("Login", "Login", nullptr));
         label_2->setText(QCoreApplication::translate("Login", "Username:", nullptr));
         label_3->setText(QCoreApplication::translate("Login", "Password:", nullptr));
+        loginErrorMessage->setText(QCoreApplication::translate("Login", "<html><head/><body><p><span style=\" font-size:10pt; font-weight:700; color:#aa0000;\">Username or password incorrect</span></p></body></html>", nullptr));
     } // retranslateUi
 
 };

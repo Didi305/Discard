@@ -4,6 +4,7 @@
 #include "manager.h"
 Login::Login(QWidget *parent) : QDialog(parent), ui(new Ui::Login), client_(nullptr), manager(Manager::get()) {
     ui->setupUi(this);
+    ui->loginErrorMessage->hide();
     connect(ui->loginButton, &QPushButton::clicked, this, &Login::onLoginButtonClicked);
     connect(ui->createAccountButton, &QPushButton::clicked, this, &Login::onCreateAccountButtonClicked);
 }
@@ -13,7 +14,7 @@ Login::~Login(){
 }
 
 void Login::setClient(Client *client){
-
+    this->client_ = client;
 }
 
 
@@ -22,6 +23,9 @@ void Login::onLoginButtonClicked(){
     QString password = ui->loginPassword->text();
     if(manager->checkUser(username, password)){
         accept();
+    }
+    else{
+        ui->loginErrorMessage->show();
     }
 }
 
