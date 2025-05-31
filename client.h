@@ -7,7 +7,7 @@ class Client : public QObject {
 public:
     Client(QObject *parent = nullptr);
     QString getClientName();
-    void setClientName(QString &name);
+    void setClientName(QString name);
     ~Client();
 
     void connectToServer(const QString &host, int port);

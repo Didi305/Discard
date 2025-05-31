@@ -17,9 +17,11 @@ public:
     static Manager* get();
     QSqlDatabase& db();
     bool init(QJsonObject &DBConfig, QSqlDatabase &db);
-    bool createUser(QString username, QString password);
-    bool checkAvailibity(QString username);
-    bool checkUser(QString username, QString password);
+    bool createUser(QString username, QString password, QString nickname);
+    QString checkUser(QString username, QString password);
+    bool checkUsernameAvailibity(QString username);
+    bool checkNicknameAvailibity(QString nickname);
+    void findNickname(QString username);
     void postMessage(QString message);
 private:
     Manager() = default;

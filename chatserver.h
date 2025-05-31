@@ -1,6 +1,6 @@
 #ifndef CHATSERVER_H
 #define CHATSERVER_H
-
+#include <QHash>
 #include <QTcpServer>
 class ChatServer : public QObject {
     Q_OBJECT
@@ -19,8 +19,7 @@ public slots:
     void clientDisconnected();
 private:
     QTcpServer *tcpServer;
-    QList<QTcpSocket*> clients;
-
+    QHash<QTcpSocket*, QString> clients;
 };
 
 

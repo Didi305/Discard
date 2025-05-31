@@ -20,12 +20,13 @@ public:
 
 private slots:
     void onUsernameEditingFinished();
+    void onNicknameEditingFinished();
     void onRegisterButtonClicked();
     void onCancelButtonClicked();
 
 private:
     Ui::Register *ui        {nullptr};
-    Client       *client_   {nullptr};
+    Client       *client   {nullptr};
     Manager *manager {nullptr};
 };
 

@@ -25,7 +25,7 @@ private slots:
 
 private:
     Ui::Login *ui           {nullptr};       // generated from login.ui
-    Client    *client_      {nullptr};
+    Client    *client      {nullptr};
     Register  *reg {nullptr};
     Manager *manager {nullptr};
 };

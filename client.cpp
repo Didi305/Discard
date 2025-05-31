@@ -14,7 +14,7 @@ Client::~Client() {
 QString Client::getClientName(){
     return name;
 }
-void Client::setClientName(QString &name){
+void Client::setClientName(QString name){
     this->name = name;
 }
 void Client::connectToServer(const QString &host, int port){
@@ -27,13 +27,13 @@ void Client::disconnectFromServer(){
 
 void Client::sendMessage(const QString &message) {
     if (socket->state() == QAbstractSocket::ConnectedState) {
-        QString name = getClientName();
-        QString actMessage = name + ": " + message;
-        socket->write(actMessage.toUtf8());
+        socket->write(message.toUtf8());
     }
 }
 void Client::onConnected(){
     emit connected();
+    QString clientName = getClientName();
+    socket->write(clientName.toUtf8());
     qDebug() << "Connected to server";
 }
 

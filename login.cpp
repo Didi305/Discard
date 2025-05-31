@@ -2,7 +2,9 @@
 #include "ui_login.h"
 #include "register.h"
 #include "manager.h"
-Login::Login(QWidget *parent) : QDialog(parent), ui(new Ui::Login), client_(nullptr), manager(Manager::get()) {
+#include "client.h"
+#include "mainwindow.h"
+Login::Login(QWidget *parent) : QDialog(parent), ui(new Ui::Login), client(nullptr), manager(Manager::get()) {
     ui->setupUi(this);
     ui->loginErrorMessage->hide();
     connect(ui->loginButton, &QPushButton::clicked, this, &Login::onLoginButtonClicked);
@@ -14,18 +16,22 @@ Login::~Login(){
 }
 
 void Login::setClient(Client *client){
-    this->client_ = client;
-}
+    this->client = client;
 
+}
 
 void Login::onLoginButtonClicked(){
     QString username = ui->loginUsername->text();
     QString password = ui->loginPassword->text();
-    if(manager->checkUser(username, password)){
-        accept();
+    if((manager->checkUser(username, password)).isEmpty()){
+        ui->loginErrorMessage->show();
     }
     else{
-        ui->loginErrorMessage->show();
+        client->setClientName(manager->checkUser(username, password));
+        QString host = "127.0.0.1";
+        int port = 1234;
+        client->connectToServer(host, port);
+        accept();
     }
 }
 

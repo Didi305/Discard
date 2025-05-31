@@ -1,6 +1,6 @@
 #include "chatserver.h"
 #include "qtcpsocket.h"
-
+#include "client.h"
 ChatServer::ChatServer(QObject *parent)
     : QObject(parent)
 {
@@ -18,19 +18,28 @@ ChatServer::~ChatServer() {
             QTcpSocket *clientSocket = tcpServer->nextPendingConnection();
             connect(clientSocket, &QTcpSocket::readyRead, this, &ChatServer::readClient);
             connect(clientSocket, &QTcpSocket::disconnected, this, &ChatServer::clientDisconnected);
-            clients.append(clientSocket);
+            clients.insert(clientSocket, "");
         }
     };
 
     void ChatServer::readClient(){
         qDebug() << "jerebti hadchi?";
         QTcpSocket* clientSocket = qobject_cast<QTcpSocket*>(sender());
+        QByteArray data = clientSocket->readAll();
+        qDebug() << data;
         qDebug() << "chmen client hada?" << clientSocket;
-        if(clientSocket){
-            QByteArray data = clientSocket->readAll();
-            qDebug() << data;
+        QString nickname = clients.value(clientSocket);
+        if(nickname.isEmpty()){
+            QString userNickname = data;
+            clients[clientSocket] = userNickname;
+            QString announcement = userNickname + " joined the server";
+            for(auto *c : clients.keys()){
+                c->write(announcement.toUtf8());
+            }
+        }
+        else{
             QString message = data;
-            for(QTcpSocket *c : clients){
+            for(auto *c : clients.keys()){
                 c->write(message.toUtf8());
             }
         }

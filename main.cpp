@@ -18,19 +18,16 @@ int main(int argc, char *argv[])
     QJsonObject DBConfig;
     mgr->init(DBConfig, db);
     Client client;
-    Login h;
     MainWindow w;
+    w.setClient(&client);
+    Login h;
     h.setClient(&client);
     if (h.exec() == QDialog::Rejected) {
         return 0;  // Exit application if dialog is rejected
     }
-    w.setClient(&client);
     w.show();
     ChatServer server;
 
     // Send a test message after connecting
-    QObject::connect(&client, &Client::connected, [&client]() {
-        client.sendMessage("Hello, Server!");
-    });
     return a.exec();
 }

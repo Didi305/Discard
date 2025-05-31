@@ -9,8 +9,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     connect(ui->sendMessageButton, &QPushButton::clicked, this, &::MainWindow::onSendMessageButtonclicked);
-    connect(ui->connectButton, &QPushButton::clicked, this, &::MainWindow::onConnectButtonClicked);
-
 }
 
 MainWindow::~MainWindow()
@@ -26,18 +24,15 @@ void MainWindow::setClient(Client *client){
 void MainWindow::onSendMessageButtonclicked()
 {
     QString message = ui->messageBox->text();
-    client->sendMessage(message);
+    client->sendMessage(client->getClientName() + ": " + message);
     ui->messageBox->clear();
 }
 
-void MainWindow::onConnectButtonClicked() {
-    QString host = "127.0.0.1";
-    int port = 1234;
-    client->connectToServer(host, port);
-}
+
 void MainWindow::onConnectionSuccess()
 {
-    qDebug("daba walo ya?");
+
+    qDebug() << "Nickname? :" << client->getClientName();
     QMessageBox::information(this, "Connection", "Successfully connected to the server!");
 }
 

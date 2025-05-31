@@ -19,7 +19,6 @@ public:
     void setClient(Client *client);
 
 private slots:
-    void onConnectButtonClicked();
     void onSendMessageButtonclicked();
     void onConnectionSuccess();
     void onMessageReceived(QString &str);

@@ -8,6 +8,7 @@
 #include <QJsonObject>
 #include "manager.h"
 #include <QCryptographicHash>
+#include <QDateTime>
 Manager::Manager(QObject *parent) : QObject(parent) {
 }
 
@@ -48,7 +49,7 @@ bool Manager::init(QJsonObject &DBConfig, QSqlDatabase &dbex){
     }
     return ok;
 }
-bool Manager::checkAvailibity(QString username){
+bool Manager::checkUsernameAvailibity(QString username){
     QSqlQuery query(db());
     QString sql = QStringLiteral(
         "SELECT id "
@@ -70,11 +71,34 @@ bool Manager::checkAvailibity(QString username){
         return true;
     }
 }
-bool Manager::checkUser(QString username, QString password){
-    QByteArray password_hash = (QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Sha256)).toHex();
+
+bool Manager::checkNicknameAvailibity(QString nickname){
     QSqlQuery query(db());
     QString sql = QStringLiteral(
         "SELECT id "
+        "FROM users "
+        "WHERE nickname = :n "
+        );
+    query.prepare(sql);
+    query.bindValue(":u", nickname);
+
+    if(!query.exec()){
+        qCritical() << query.lastError().text();
+    }
+    if(query.first()){
+        qCritical() << "nick unavailable ^^";
+        return false;
+    }
+    else{
+        qCritical() << "nick available ^^";
+        return true;
+    }
+}
+QString Manager::checkUser(QString username, QString password){
+    QByteArray password_hash = (QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Sha256)).toHex();
+    QSqlQuery query(db());
+    QString sql = QStringLiteral(
+        "SELECT id, nickname "
         "FROM users "
         "WHERE username = :u AND password_hash = :p "
     );
@@ -86,22 +110,22 @@ bool Manager::checkUser(QString username, QString password){
         qCritical() << query.lastError().text();
     }
     if(query.first()){
-        qDebug() << "User found with ID:" << query.value("id").toInt();
-        return true;
+        qDebug() << "User found with nickname:" << query.value("nickname").toString();
+        return query.value("nickname").toString();
     }else{
         qDebug() << "Username or password wrong";
-        return false;
+        return "";
     }
 }
 
-bool Manager::createUser(QString username, QString password){
+bool Manager::createUser(QString username, QString password, QString nickname){
     QByteArray pw = password.toUtf8();
     QByteArray password_hash = QCryptographicHash::hash(pw, QCryptographicHash::Sha256);
 
     QSqlQuery query(db());
     static const QString sql = QStringLiteral(
-        "INSERT INTO users (username, password_hash) "
-        "VALUES ( :user, :pass)"
+        "INSERT INTO users (username, password_hash, nickname, created_at) "
+        "VALUES ( :user, :pass, :nick, :date )"
 );
 
     // 2) Prepare the statement
@@ -112,7 +136,8 @@ bool Manager::createUser(QString username, QString password){
 
     query.bindValue(":user", username);
     query.bindValue(":pass", password_hash.toHex());
-
+    query.bindValue(":nick", nickname);
+    query.bindValue(":date", QDateTime::currentDateTime());
     if(!query.exec()){
         qWarning() << "Insert failed" << query.lastError().text();
         return false;

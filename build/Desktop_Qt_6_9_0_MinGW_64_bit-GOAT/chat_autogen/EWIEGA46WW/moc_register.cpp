@@ -41,6 +41,7 @@ template <> constexpr inline auto Register::qt_create_metaobjectdata<qt_meta_tag
         "Register",
         "onUsernameEditingFinished",
         "",
+        "onNicknameEditingFinished",
         "onRegisterButtonClicked",
         "onCancelButtonClicked"
     };
@@ -48,10 +49,12 @@ template <> constexpr inline auto Register::qt_create_metaobjectdata<qt_meta_tag
     QtMocHelpers::UintData qt_methods {
         // Slot 'onUsernameEditingFinished'
         QtMocHelpers::SlotData<void()>(1, 2, QMC::AccessPrivate, QMetaType::Void),
-        // Slot 'onRegisterButtonClicked'
+        // Slot 'onNicknameEditingFinished'
         QtMocHelpers::SlotData<void()>(3, 2, QMC::AccessPrivate, QMetaType::Void),
-        // Slot 'onCancelButtonClicked'
+        // Slot 'onRegisterButtonClicked'
         QtMocHelpers::SlotData<void()>(4, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onCancelButtonClicked'
+        QtMocHelpers::SlotData<void()>(5, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -76,8 +79,9 @@ void Register::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, vo
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
         case 0: _t->onUsernameEditingFinished(); break;
-        case 1: _t->onRegisterButtonClicked(); break;
-        case 2: _t->onCancelButtonClicked(); break;
+        case 1: _t->onNicknameEditingFinished(); break;
+        case 2: _t->onRegisterButtonClicked(); break;
+        case 3: _t->onCancelButtonClicked(); break;
         default: ;
         }
     }
@@ -103,14 +107,14 @@ int Register::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 3)
+        if (_id < 4)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 3;
+        _id -= 4;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 3)
+        if (_id < 4)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 3;
+        _id -= 4;
     }
     return _id;
 }
