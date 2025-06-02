@@ -1453,6 +1453,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/mainwindow.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qmargins.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qmath.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qmetacontainer.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qmetaobject.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qmetatype.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qminmax.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qnamespace.h
@@ -1513,6 +1514,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/mainwindow.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qtversionchecks.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qtypeinfo.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qtypes.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qurl.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qutf8stringview.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qvariant.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qvarlengtharray.h
@@ -1533,12 +1535,14 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/mainwindow.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qkeysequence.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qpaintdevice.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qpalette.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qpicture.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qpixelformat.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qpixmap.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qpolygon.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qregion.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qrgb.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qrgba64.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qtextdocument.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qtgui-config.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qtguiexports.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qtguiglobal.h
@@ -1552,8 +1556,18 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/mainwindow.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtNetwork/qtnetwork-config.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtNetwork/qtnetworkexports.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtNetwork/qtnetworkglobal.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtSql/qsqldatabase.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtSql/qtsql-config.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtSql/qtsqlexports.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtSql/qtsqlglobal.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtWidgets/QFrame
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtWidgets/QLabel
  mdp:C:/Qt/6.9.0/mingw_64/include/QtWidgets/QMainWindow
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtWidgets/qabstractbutton.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtWidgets/qframe.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtWidgets/qlabel.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtWidgets/qmainwindow.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtWidgets/qpushbutton.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtWidgets/qsizepolicy.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtWidgets/qtabwidget.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtWidgets/qtwidgets-config.h
@@ -1774,6 +1788,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/mainwindow.h
  mdp:C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/chat_autogen/moc_predefs.h
  mdp:C:/Users/giler/OneDrive/Desktop/C++/Chat/client.h
  mdp:C:/Users/giler/OneDrive/Desktop/C++/Chat/mainwindow.h
+ mdp:C:/Users/giler/OneDrive/Desktop/C++/Chat/manager.h
 C:/Users/giler/OneDrive/Desktop/C++/Chat/register.h
  mmc:Q_OBJECT
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/q17memory.h
@@ -2168,7 +2183,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/login.cpp
  uic:ui_login.h
 C:/Users/giler/OneDrive/Desktop/C++/Chat/main.cpp
 C:/Users/giler/OneDrive/Desktop/C++/Chat/mainwindow.cpp
- uic:ui_mainwindow.h
+ uic:ui_MainWindow.h
 C:/Users/giler/OneDrive/Desktop/C++/Chat/register.cpp
  uic:ui_register.h
 C:/Users/giler/OneDrive/Desktop/C++/Chat/manager.cpp

@@ -7,7 +7,9 @@ class Client : public QObject {
 public:
     Client(QObject *parent = nullptr);
     QString getClientName();
+    QString getClientAvatar();
     void setClientName(QString name);
+    void setClientAvatar(QString avatar);
     ~Client();
 
     void connectToServer(const QString &host, int port);
@@ -27,6 +29,7 @@ private slots:
 private:
     QTcpSocket *socket;
     QString name;
+    QString avatar;
 };
 
 #endif // CLIENT_H

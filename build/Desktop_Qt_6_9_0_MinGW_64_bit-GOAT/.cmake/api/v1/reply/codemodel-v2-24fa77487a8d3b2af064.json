@@ -7,7 +7,7 @@
 				{
 					"build" : ".",
 					"hasInstallRule" : true,
-					"jsonFile" : "directory-.-Release-d727d9d326520da5da00.json",
+					"jsonFile" : "directory-.-Release-329e9c5688e298323921.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.16"
@@ -44,7 +44,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "chat::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-chat-Release-2bd4b10c6de0bcc87a87.json",
+					"jsonFile" : "target-chat-Release-f9d68992de3f2ec834df.json",
 					"name" : "chat",
 					"projectIndex" : 0
 				},

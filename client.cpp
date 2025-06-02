@@ -14,8 +14,14 @@ Client::~Client() {
 QString Client::getClientName(){
     return name;
 }
+QString Client::getClientAvatar(){
+    return avatar;
+}
 void Client::setClientName(QString name){
     this->name = name;
+}
+void Client::setClientAvatar(QString avatar){
+    this->avatar = avatar;
 }
 void Client::connectToServer(const QString &host, int port){
     socket->connectToHost(host, port);

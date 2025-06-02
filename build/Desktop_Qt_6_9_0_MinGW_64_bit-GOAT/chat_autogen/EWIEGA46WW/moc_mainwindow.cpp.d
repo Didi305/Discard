@@ -60,6 +60,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOA
   C:/Qt/6.9.0/mingw_64/include/QtCore/qmargins.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qmath.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qmetacontainer.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/qmetaobject.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qmetatype.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qminmax.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qnamespace.h \
@@ -120,6 +121,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOA
   C:/Qt/6.9.0/mingw_64/include/QtCore/qtversionchecks.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qtypeinfo.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qtypes.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/qurl.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qutf8stringview.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qvariant.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qvarlengtharray.h \
@@ -140,12 +142,14 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOA
   C:/Qt/6.9.0/mingw_64/include/QtGui/qkeysequence.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qpaintdevice.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qpalette.h \
+  C:/Qt/6.9.0/mingw_64/include/QtGui/qpicture.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qpixelformat.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qpixmap.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qpolygon.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qregion.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qrgb.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qrgba64.h \
+  C:/Qt/6.9.0/mingw_64/include/QtGui/qtextdocument.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qtgui-config.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qtguiexports.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qtguiglobal.h \
@@ -159,8 +163,18 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOA
   C:/Qt/6.9.0/mingw_64/include/QtNetwork/qtnetwork-config.h \
   C:/Qt/6.9.0/mingw_64/include/QtNetwork/qtnetworkexports.h \
   C:/Qt/6.9.0/mingw_64/include/QtNetwork/qtnetworkglobal.h \
+  C:/Qt/6.9.0/mingw_64/include/QtSql/qsqldatabase.h \
+  C:/Qt/6.9.0/mingw_64/include/QtSql/qtsql-config.h \
+  C:/Qt/6.9.0/mingw_64/include/QtSql/qtsqlexports.h \
+  C:/Qt/6.9.0/mingw_64/include/QtSql/qtsqlglobal.h \
+  C:/Qt/6.9.0/mingw_64/include/QtWidgets/QFrame \
+  C:/Qt/6.9.0/mingw_64/include/QtWidgets/QLabel \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/QMainWindow \
+  C:/Qt/6.9.0/mingw_64/include/QtWidgets/qabstractbutton.h \
+  C:/Qt/6.9.0/mingw_64/include/QtWidgets/qframe.h \
+  C:/Qt/6.9.0/mingw_64/include/QtWidgets/qlabel.h \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/qmainwindow.h \
+  C:/Qt/6.9.0/mingw_64/include/QtWidgets/qpushbutton.h \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/qsizepolicy.h \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/qtabwidget.h \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/qtwidgets-config.h \
@@ -378,4 +392,5 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOA
   C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/time.h \
   C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/vadefs.h \
   C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wchar.h \
-  C:/Users/giler/OneDrive/Desktop/C++/Chat/client.h
+  C:/Users/giler/OneDrive/Desktop/C++/Chat/client.h \
+  C:/Users/giler/OneDrive/Desktop/C++/Chat/manager.h

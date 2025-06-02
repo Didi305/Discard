@@ -1,43 +1,175 @@
-#include "mainwindow.h"
-#include "ui_mainwindow.h"
-#include "client.h"
-#include <QMessageBox>
+#include <QFileDialog>
+#include <QWidget>
+#include <QPainterPath>
+#include <QFrame>
+#include <QStandardPaths>
+#include <QLabel>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QPixmap>
+#include <QDebug>
+#include <QPainter>
+#include <QPushButton>
+#include "ui_MainWindow.h"
+#include "MainWindow.h"
+#include "manager.h"
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
-    , client(nullptr)
+    : QMainWindow(parent),
+      ui(new Ui::MainWindow),
+      userPanel(new QFrame),
+      avatarButton(new QPushButton(userPanel)),
+      nameLabel(new QLabel(userPanel)),
+      client(nullptr),
+      manager(Manager::get())
 {
-    ui->setupUi(this);
-    connect(ui->sendMessageButton, &QPushButton::clicked, this, &::MainWindow::onSendMessageButtonclicked);
+    ui->setupUi(this);// 1) Configure userPanel’s size, style, and contents
+
+    userPanel->setParent(ui->centralwidget);
+    userPanel->setObjectName("userPanel");
+    userPanel->setFixedHeight(60);          // 50 px tall
+    userPanel->setFixedWidth(310);          // adjust width as needed
+    userPanel->setStyleSheet(R"(
+        QFrame#userPanel {
+            background-color: #2f3136;
+            border: 1px solid #232428;
+            border-radius: 4px;
+        }
+    )");
+
+    // Give it a horizontal layout to host avatarButton + username
+    auto *lay = new QHBoxLayout(userPanel);
+    lay->setContentsMargins(8, 4, 8, 4);
+    lay->setSpacing(6);
+
+    // avatarButton
+    avatarButton->setFixedSize(48, 48);
+    avatarButton->setIconSize({48, 48});
+    avatarButton->setFlat(true);
+    avatarButton->setCursor(Qt::PointingHandCursor);
+    avatarButton->setStyleSheet("background-color: #2f3136");        // no border
+
+
+
+    QPixmap placeholder(48, 48);
+    placeholder.fill(Qt::transparent);
+    {
+        QPainter p(&placeholder);
+        p.setRenderHint(QPainter::Antialiasing);
+        p.setBrush(Qt::gray);
+        p.setPen(Qt::NoPen);
+        p.drawEllipse(0, 0, 48, 48);
+    }
+    avatarButton->setIcon(QIcon(placeholder));
+
+    // Username QLabel
+    QFont f = nameLabel->font();
+    f.setPointSize(11);
+    f.setBold(true);
+    nameLabel->setFont(f);
+    nameLabel->setStyleSheet("color:white;");
+
+    lay->addWidget(avatarButton);
+    lay->addWidget(nameLabel);
+
+    userPanel->show();
+    connect(avatarButton, &QPushButton::clicked,
+            this,         &MainWindow::onAvatarButtonClicked);
+    // 2) Initially position it at the bottom-left
+    updateUserPanelPosition();
+
 }
 
-MainWindow::~MainWindow()
+void MainWindow::resizeEvent(QResizeEvent *event)
 {
-    delete ui;
+    QMainWindow::resizeEvent(event);
+    // Each time the window resizes, move the userPanel
+    updateUserPanelPosition();
+}
+
+void MainWindow::updateUserPanelPosition()
+{
+    // We want it 8 px from left edge, 8 px above the statusBar (if you have one)
+    const int margin = 8;
+    int sbHeight = 0;
+    if (this->statusBar()) {
+        sbHeight = this->statusBar()->height();
+    }
+
+    int x = margin;
+    int y = this->height()
+            - userPanel->height()
+            - sbHeight
+            - margin;
+
+    userPanel->move(x, y);
 }
 
 void MainWindow::setClient(Client *client){
     this->client = client;
+    nameLabel->setText(client->getClientName());
+    updateAvatar(client->getClientAvatar());
     connect(client, &Client::connected, this, &::MainWindow::onConnectionSuccess);
-    connect(client, &Client::messageReceived, this, &::MainWindow::onMessageReceived);
 }
-void MainWindow::onSendMessageButtonclicked()
+void MainWindow::onAvatarButtonClicked()
 {
-    QString message = ui->messageBox->text();
-    client->sendMessage(client->getClientName() + ": " + message);
-    ui->messageBox->clear();
+    // 1) Open file dialog to let the user pick an image
+    QString srcFile = QFileDialog::getOpenFileName(
+        this,
+        tr("Choose avatar image"),
+        QString(),
+        tr("Images (*.png *.jpg *.jpeg *.bmp *.gif)")
+        );
+    if (srcFile.isEmpty())
+        return;  // user canceled
+    // 2) Update avatarButton’s icon to the chosen file
+    QString userUploadFolder = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + "/C++/Chat/uploads/" + client->getClientName() + "/avatar.png";
+    if(QFile::exists(userUploadFolder)){
+        QFile::remove(userUploadFolder);
+    }
+    QFile file(userUploadFolder);
+    if(file.copy(srcFile, userUploadFolder)){
+        qDebug() << "copy done success";
+    }
+    else{
+        qDebug() << "could not copy";
+    }
+    manager->updateUserAvatar(userUploadFolder, client->getClientName());
+    updateAvatar(srcFile);
 }
 
+void MainWindow::updateAvatar(const QString &fileName)
+{
+    QPixmap pix(fileName);
+    if (pix.isNull()) {
+        qWarning() << "Failed to load avatar from" << fileName;
+        return;
+    }
 
+    // 1) Create a circular mask of size 48×48
+    QPixmap circular(48, 48);
+    circular.fill(Qt::transparent);
+    {
+        QPainter painter(&circular);
+        painter.setRenderHint(QPainter::Antialiasing);
+        QPainterPath path;
+        path.addEllipse(0, 0, 48, 48);
+        painter.setClipPath(path);
+
+        // Draw the loaded pixmap into that circular area, scaling it as needed
+        painter.drawPixmap(
+            0, 0, 48, 48,
+            pix.scaled(48, 48,
+                       Qt::KeepAspectRatioByExpanding,
+                       Qt::SmoothTransformation)
+            );
+    }
+    // 2) Set the circular pixmap as the button’s icon
+    avatarButton->setIcon(QIcon(circular));
+}
 void MainWindow::onConnectionSuccess()
 {
 
     qDebug() << "Nickname? :" << client->getClientName();
-    QMessageBox::information(this, "Connection", "Successfully connected to the server!");
 }
 
-void MainWindow::onMessageReceived(QString &message)
-{
-    ui->chatBox->append(message);
-}
 

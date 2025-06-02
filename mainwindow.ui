@@ -6,76 +6,35 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1093</width>
+    <height>739</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="sendMessageButton">
-    <property name="geometry">
-     <rect>
-      <x>420</x>
-      <y>350</y>
-      <width>80</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Send</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="connectButton">
-    <property name="geometry">
-     <rect>
-      <x>420</x>
-      <y>320</y>
-      <width>80</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Connect</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="messageBox">
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>340</y>
-      <width>171</width>
-      <height>31</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QTextEdit" name="chatBox">
-    <property name="geometry">
-     <rect>
-      <x>240</x>
-      <y>210</y>
-      <width>261</width>
-      <height>101</height>
-     </rect>
-    </property>
-   </widget>
+   <layout class="QHBoxLayout" name="horizontalLayout">
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayoutLeft"/>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayoutCenter"/>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="verticalLayoutRight"/>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1093</width>
      <height>21</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuChat">
-    <property name="title">
-     <string>Chat</string>
-    </property>
-   </widget>
-   <addaction name="menuChat"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

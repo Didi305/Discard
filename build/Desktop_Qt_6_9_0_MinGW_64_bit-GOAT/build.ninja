@@ -208,7 +208,7 @@ build chat_autogen_timestamp_deps: phony
 #############################################
 # Utility command for chat_autogen
 
-build chat_autogen: phony CMakeFiles/chat_autogen chat_autogen/include/ui_mainwindow.h chat_autogen/include/ui_login.h chat_autogen/include/ui_register.h chat_autogen/timestamp chat_autogen/mocs_compilation.cpp chat_autogen_timestamp_deps
+build chat_autogen: phony CMakeFiles/chat_autogen chat_autogen/include/ui_login.h chat_autogen/include/ui_register.h chat_autogen/include/ui_mainwindow.h chat_autogen/timestamp chat_autogen/mocs_compilation.cpp chat_autogen_timestamp_deps
 
 
 #############################################
@@ -225,7 +225,7 @@ build chat_autogen/timestamp chat_autogen/mocs_compilation.cpp | ${cmake_ninja_w
 #############################################
 # Phony custom command for CMakeFiles\chat_autogen
 
-build CMakeFiles/chat_autogen chat_autogen/include/ui_mainwindow.h chat_autogen/include/ui_login.h chat_autogen/include/ui_register.h | ${cmake_ninja_workdir}CMakeFiles/chat_autogen ${cmake_ninja_workdir}chat_autogen/include/ui_mainwindow.h ${cmake_ninja_workdir}chat_autogen/include/ui_login.h ${cmake_ninja_workdir}chat_autogen/include/ui_register.h: phony chat_autogen/timestamp || chat_autogen_timestamp_deps
+build CMakeFiles/chat_autogen chat_autogen/include/ui_login.h chat_autogen/include/ui_register.h chat_autogen/include/ui_mainwindow.h | ${cmake_ninja_workdir}CMakeFiles/chat_autogen ${cmake_ninja_workdir}chat_autogen/include/ui_login.h ${cmake_ninja_workdir}chat_autogen/include/ui_register.h ${cmake_ninja_workdir}chat_autogen/include/ui_mainwindow.h: phony chat_autogen/timestamp || chat_autogen_timestamp_deps
 
 # =============================================================================
 # Target aliases.

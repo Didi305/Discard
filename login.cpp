@@ -27,7 +27,10 @@ void Login::onLoginButtonClicked(){
         ui->loginErrorMessage->show();
     }
     else{
-        client->setClientName(manager->checkUser(username, password));
+        QString data = manager->checkUser(username, password);
+        QStringList parts = data.split(";");
+        client->setClientName(parts.value(0));
+        client->setClientAvatar(parts.value(1));
         QString host = "127.0.0.1";
         int port = 1234;
         client->connectToServer(host, port);

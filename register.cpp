@@ -3,6 +3,8 @@
 #include "client.h"
 #include "manager.h"
 #include <QErrorMessage>
+#include <QDir>
+#include <QFile>
 Register::Register(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::Register)
@@ -64,6 +66,13 @@ void Register::onRegisterButtonClicked() {
     validCreation = true;
     if(validCreation){
         if (manager->createUser(username, password, nickname)) {
+            QString userFolderPath = QCoreApplication::applicationDirPath() + "/../../uploads/" + nickname;
+            QDir dir;
+            if (dir.mkpath(userFolderPath)) {
+                qDebug() << "Folder created successfully.";
+            } else {
+                qDebug() << "Failed to create folder.";
+            }
             reject();
         }
     }

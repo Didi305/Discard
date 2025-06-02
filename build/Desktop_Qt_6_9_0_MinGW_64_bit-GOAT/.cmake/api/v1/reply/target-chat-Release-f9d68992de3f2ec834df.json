@@ -77,19 +77,19 @@
 			{
 				"command" : 4,
 				"file" : 1,
-				"line" : 76,
-				"parent" : 0
-			},
-			{
-				"command" : 5,
-				"file" : 1,
-				"line" : 58,
+				"line" : 77,
 				"parent" : 0
 			},
 			{
 				"command" : 5,
 				"file" : 1,
 				"line" : 59,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 1,
+				"line" : 60,
 				"parent" : 0
 			},
 			{
@@ -421,22 +421,22 @@
 				0,
 				1,
 				2,
-				6,
-				8,
+				5,
+				7,
+				9,
 				10,
-				11,
-				14
+				13
 			]
 		}
 	],
 	"dependencies" : 
 	[
 		{
-			"backtrace" : 0,
-			"id" : "chat_autogen::@6890427a1f51a3e7e1df"
+			"id" : "chat_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
 		},
 		{
-			"id" : "chat_autogen_timestamp_deps::@6890427a1f51a3e7e1df"
+			"backtrace" : 0,
+			"id" : "chat_autogen::@6890427a1f51a3e7e1df"
 		}
 	],
 	"id" : "chat::@6890427a1f51a3e7e1df",
@@ -564,11 +564,11 @@
 				0,
 				1,
 				2,
-				6,
-				8,
+				5,
+				7,
+				9,
 				10,
-				11,
-				14
+				13
 			]
 		},
 		{
@@ -576,11 +576,11 @@
 			"sourceIndexes" : 
 			[
 				3,
-				5,
-				7,
-				9,
-				12,
-				15,
+				4,
+				6,
+				8,
+				11,
+				14,
 				17,
 				18,
 				19
@@ -590,8 +590,8 @@
 			"name" : "Forms",
 			"sourceIndexes" : 
 			[
-				4,
-				13,
+				12,
+				15,
 				16
 			]
 		},
@@ -635,11 +635,6 @@
 			"backtrace" : 4,
 			"path" : "mainwindow.h",
 			"sourceGroupIndex" : 1
-		},
-		{
-			"backtrace" : 4,
-			"path" : "mainwindow.ui",
-			"sourceGroupIndex" : 2
 		},
 		{
 			"backtrace" : 4,
@@ -707,10 +702,9 @@
 			"sourceGroupIndex" : 2
 		},
 		{
-			"backtrace" : 0,
-			"isGenerated" : true,
-			"path" : "build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/chat_autogen/include/ui_mainwindow.h",
-			"sourceGroupIndex" : 1
+			"backtrace" : 4,
+			"path" : "mainwindow.ui",
+			"sourceGroupIndex" : 2
 		},
 		{
 			"backtrace" : 0,
@@ -722,6 +716,12 @@
 			"backtrace" : 0,
 			"isGenerated" : true,
 			"path" : "build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/chat_autogen/include/ui_register.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/chat_autogen/include/ui_mainwindow.h",
 			"sourceGroupIndex" : 1
 		},
 		{

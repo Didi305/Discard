@@ -21,6 +21,7 @@ public:
     QString checkUser(QString username, QString password);
     bool checkUsernameAvailibity(QString username);
     bool checkNicknameAvailibity(QString nickname);
+    void updateUserAvatar(QString path, QString nickname);
     void findNickname(QString username);
     void postMessage(QString message);
 private:

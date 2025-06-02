@@ -16,7 +16,7 @@ set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
         mainwindow.h
-        mainwindow.ui
+
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -35,6 +35,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         register.cpp
         register.h
         register.ui
+        mainwindow.ui
 
     )
 # Define target properties for Android with Qt 6 as:

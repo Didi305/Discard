@@ -98,7 +98,7 @@ QString Manager::checkUser(QString username, QString password){
     QByteArray password_hash = (QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Sha256)).toHex();
     QSqlQuery query(db());
     QString sql = QStringLiteral(
-        "SELECT id, nickname "
+        "SELECT avatar, nickname "
         "FROM users "
         "WHERE username = :u AND password_hash = :p "
     );
@@ -110,8 +110,8 @@ QString Manager::checkUser(QString username, QString password){
         qCritical() << query.lastError().text();
     }
     if(query.first()){
-        qDebug() << "User found with nickname:" << query.value("nickname").toString();
-        return query.value("nickname").toString();
+        qDebug() << "User found with nickname:" << query.value("nickname").toString() + "and avatar path: " + query.value("avatar").toString();
+        return query.value("nickname").toString() + ";" + query.value("avatar").toString();
     }else{
         qDebug() << "Username or password wrong";
         return "";
@@ -143,4 +143,20 @@ bool Manager::createUser(QString username, QString password, QString nickname){
         return false;
     }
     return true;
+}
+
+void Manager::updateUserAvatar(QString path, QString nickname){
+    QSqlQuery query(db());
+
+    static const QString sql = QStringLiteral(
+        "UPDATE users "
+        "SET avatar = :av "
+        "WHERE nickname = :nick "
+        );
+    query.prepare(sql);
+    query.bindValue(":av", path);
+    query.bindValue(":nick", nickname);
+    if(!query.exec()){
+        qCritical() << "avatar update failed" << query.lastError().text();
+    }
 }
