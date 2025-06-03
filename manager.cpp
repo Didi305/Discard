@@ -173,32 +173,42 @@ bool Manager::createUser(QString username, QString password, QString nickname){
     return true;
 }
 
-/*bool Manager::checkFriendship(QString nickname){
+QString Manager::checkFriendship(QString nickname){
     if(checkUser(nickname).isEmpty()){
-        return false;
+        return "";
     }
     int friendID = checkUser(nickname).toInt();
     QSqlQuery query(db());
     QString sql = QStringLiteral(
-        "SELECT user_id, friend_id "
+        "SELECT user_id, friend_id, status "
         "FROM friendship "
         "WHERE user_id = :u AND friend_id = :f "
         );
     query.prepare(sql);
-    query.bindValue(":u" , client.g);
-    query.bindValue(":f", password_hash);
+    query.bindValue(":u" , client->getClientID());
+    query.bindValue(":f", friendID);
 
     if(!query.exec()){
         qCritical() << query.lastError().text();
     }
     if(query.first()){
-        qDebug() << "User found with nickname:" << query.value("nickname").toString() + "and avatar path: " + query.value("avatar").toString();
-        return query.value("nickname").toString() + ";" + query.value("avatar").toString();
+        qDebug() << "Friend found with status:  " << query.value("status").toString();
+        return query.value("status").toString();
     }else{
-        qDebug() << "Username or password wrong";
-        return "";
+        qDebug() << "Not Amigos";
+        QString sql2 = QStringLiteral(
+            "INSERT INTO friendship (user_id, friend_id, status, start_date) "
+            "VALUES(:u, :f, :stat, :date) "
+            );
+        query.prepare(sql2);
+        query.bindValue(":u" , client->getClientID());
+        query.bindValue(":f", friendID);
+        query.bindValue(":stat" , "PENDING");
+        query.bindValue(":date", QDateTime::currentDateTime());
+        query.exec();
+        return "Request Sent";
     }
-}*/
+}
 
 void Manager::updateUserAvatar(QString path, QString nickname){
     QSqlQuery query(db());

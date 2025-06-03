@@ -24,7 +24,7 @@ public:
     QString checkUser(const QString& username, const QString& password = QString());
     bool checkUsernameAvailibity(QString username);
     bool checkNicknameAvailibity(QString nickname);
-    bool checkFriendship(QString nickname);
+    QString checkFriendship(QString nickname);
     void updateUserAvatar(QString path, QString nickname);
     void findNickname(QString username);
     void postMessage(QString message);

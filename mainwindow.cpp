@@ -2,6 +2,7 @@
 #include <QWidget>
 #include <QPainterPath>
 #include <QFrame>
+#include <QMessageBox>
 #include <QStandardPaths>
 #include <QLabel>
 #include <QHBoxLayout>
@@ -75,8 +76,8 @@ MainWindow::MainWindow(QWidget *parent)
     userPanel->show();
     connect(avatarButton, &QPushButton::clicked, this, &MainWindow::onAvatarButtonClicked);
     connect(client, &Client::connected, this, &::MainWindow::onConnectionSuccess);
+    connect(ui->addFriendButton, &QPushButton::clicked, this, &MainWindow::onAddFriendButtonClicked);
     updateUserPanelPosition();
-
 }
 
 
@@ -168,7 +169,10 @@ void MainWindow::onAvatarButtonClicked()
 
 void MainWindow::onAddFriendButtonClicked(){
     QString friendNickname = ui->addFriendInput->text();
-
+    QString status = manager->checkFriendship(friendNickname);
+    if(status.isEmpty() || status == "PENDING"){
+        QMessageBox::warning(this, "User not found", " or request is Pending");
+    }
 }
 
 void MainWindow::onConnectionSuccess()
