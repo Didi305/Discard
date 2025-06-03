@@ -6,9 +6,10 @@
 #include <QApplication>
 #include <QFile>
 #include <QJsonObject>
-#include "manager.h"
 #include <QCryptographicHash>
 #include <QDateTime>
+#include "manager.h"
+#include "client.h"
 Manager::Manager(QObject *parent) : QObject(parent) {
 }
 
@@ -16,7 +17,13 @@ Manager* Manager::get(){
     static Manager mgr(nullptr);
     return &mgr;
 }
+Client* Manager::getClient(){
+    return client;
+}
 
+void Manager::setClient(Client *client){
+    this->client = client;
+}
 QSqlDatabase& Manager::db(){
     return database;
 }
@@ -94,27 +101,48 @@ bool Manager::checkNicknameAvailibity(QString nickname){
         return true;
     }
 }
-QString Manager::checkUser(QString username, QString password){
-    QByteArray password_hash = (QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Sha256)).toHex();
+QString Manager::checkUser(const QString& username, const QString& password){
     QSqlQuery query(db());
-    QString sql = QStringLiteral(
-        "SELECT avatar, nickname "
-        "FROM users "
-        "WHERE username = :u AND password_hash = :p "
-    );
-    query.prepare(sql);
-    query.bindValue(":u" , username);
-    query.bindValue(":p", password_hash);
+    if(!password.isEmpty()){
+        QByteArray password_hash = (QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Sha256)).toHex();
+        QString sql = QStringLiteral(
+            "SELECT avatar, nickname, id "
+            "FROM users "
+            "WHERE username = :u AND password_hash = :p "
+            );
+        query.prepare(sql);
+        query.bindValue(":u" , username);
+        query.bindValue(":p", password_hash);
 
-    if(!query.exec()){
-        qCritical() << query.lastError().text();
+        if(!query.exec()){
+            qCritical() << query.lastError().text();
+        }
+        if(query.first()){
+            qDebug() << "User found with nickname:" << query.value("nickname").toString() + "and avatar path: " + query.value("avatar").toString();
+            return query.value("nickname").toString() + ";" + query.value("avatar").toString() + ";" + query.value("id").toString();
+        }else{
+            qDebug() << "Username or password wrong";
+            return "";
+        }
     }
-    if(query.first()){
-        qDebug() << "User found with nickname:" << query.value("nickname").toString() + "and avatar path: " + query.value("avatar").toString();
-        return query.value("nickname").toString() + ";" + query.value("avatar").toString();
-    }else{
-        qDebug() << "Username or password wrong";
-        return "";
+    else{
+        QString sql = QStringLiteral(
+            "SELECT id "
+            "FROM users "
+            "WHERE nickname = :u "
+            );
+        query.prepare(sql);
+        query.bindValue(":u" , username);
+        if(!query.exec()){
+            qCritical() << query.lastError().text();
+        }
+        if(query.first()){
+            qDebug() << "User found with ID" << query.value("id").toString();
+            return query.value("id").toString();
+        }else{
+            qDebug() << "User doesn't exist";
+            return "";
+        }
     }
 }
 
@@ -144,6 +172,33 @@ bool Manager::createUser(QString username, QString password, QString nickname){
     }
     return true;
 }
+
+/*bool Manager::checkFriendship(QString nickname){
+    if(checkUser(nickname).isEmpty()){
+        return false;
+    }
+    int friendID = checkUser(nickname).toInt();
+    QSqlQuery query(db());
+    QString sql = QStringLiteral(
+        "SELECT user_id, friend_id "
+        "FROM friendship "
+        "WHERE user_id = :u AND friend_id = :f "
+        );
+    query.prepare(sql);
+    query.bindValue(":u" , client.g);
+    query.bindValue(":f", password_hash);
+
+    if(!query.exec()){
+        qCritical() << query.lastError().text();
+    }
+    if(query.first()){
+        qDebug() << "User found with nickname:" << query.value("nickname").toString() + "and avatar path: " + query.value("avatar").toString();
+        return query.value("nickname").toString() + ";" + query.value("avatar").toString();
+    }else{
+        qDebug() << "Username or password wrong";
+        return "";
+    }
+}*/
 
 void Manager::updateUserAvatar(QString path, QString nickname){
     QSqlQuery query(db());

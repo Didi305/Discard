@@ -1,6 +1,4 @@
 #include "client.h"
-#include "mainwindow.h"
-
 Client::Client(QObject *parent) : QObject(parent){
     socket = new QTcpSocket(this);
 
@@ -17,11 +15,17 @@ QString Client::getClientName(){
 QString Client::getClientAvatar(){
     return avatar;
 }
+int Client::getClientID(){
+    return id;
+}
 void Client::setClientName(QString name){
     this->name = name;
 }
 void Client::setClientAvatar(QString avatar){
     this->avatar = avatar;
+}
+void Client::setClientID(int id){
+    this->id = id;
 }
 void Client::connectToServer(const QString &host, int port){
     socket->connectToHost(host, port);

@@ -19,15 +19,15 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override = default;
-    void setClient(Client *client);
 
 private slots:
     void onConnectionSuccess();
     void onAvatarButtonClicked();
+    void onAddFriendButtonClicked();
 private:
     Ui::MainWindow *ui;
-    Client *client;
     Manager *manager;
+    Client *client;
     QFrame         *userPanel;
     void updateUserPanelPosition();
     void resizeEvent(QResizeEvent *event);

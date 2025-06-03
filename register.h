@@ -2,7 +2,6 @@
 #define REGISTER_DIALOG_H
 
 #include <QDialog>
-#include "client.h"
 #include "manager.h"// if you need it for immediate sign-in
 QT_BEGIN_NAMESPACE
 namespace Ui { class Register; }
@@ -15,9 +14,6 @@ class Register : public QDialog
 public:
     explicit Register(QWidget *parent = nullptr);
     ~Register();
-
-    void setClient(Client *client);
-
 private slots:
     void onUsernameEditingFinished();
     void onNicknameEditingFinished();
@@ -26,7 +22,6 @@ private slots:
 
 private:
     Ui::Register *ui        {nullptr};
-    Client       *client   {nullptr};
     Manager *manager {nullptr};
 };
 

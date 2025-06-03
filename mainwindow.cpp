@@ -14,16 +14,15 @@
 #include "MainWindow.h"
 #include "manager.h"
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent),
-      ui(new Ui::MainWindow),
-      userPanel(new QFrame),
-      avatarButton(new QPushButton(userPanel)),
-      nameLabel(new QLabel(userPanel)),
-      client(nullptr),
-      manager(Manager::get())
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+    , userPanel(new QFrame)
+    , avatarButton(new QPushButton(userPanel))
+    , nameLabel(new QLabel(userPanel))
+    , manager(Manager::get())
+    , client(manager->getClient())
 {
     ui->setupUi(this);// 1) Configure userPanel’s size, style, and contents
-
     userPanel->setParent(ui->centralwidget);
     userPanel->setObjectName("userPanel");
     userPanel->setFixedHeight(60);          // 50 px tall
@@ -70,14 +69,18 @@ MainWindow::MainWindow(QWidget *parent)
 
     lay->addWidget(avatarButton);
     lay->addWidget(nameLabel);
+    nameLabel->setText(client->getClientName());
+    updateAvatar(client->getClientAvatar());
 
     userPanel->show();
-    connect(avatarButton, &QPushButton::clicked,
-            this,         &MainWindow::onAvatarButtonClicked);
-    // 2) Initially position it at the bottom-left
+    connect(avatarButton, &QPushButton::clicked, this, &MainWindow::onAvatarButtonClicked);
+    connect(client, &Client::connected, this, &::MainWindow::onConnectionSuccess);
     updateUserPanelPosition();
 
 }
+
+
+
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
@@ -86,15 +89,13 @@ void MainWindow::resizeEvent(QResizeEvent *event)
     updateUserPanelPosition();
 }
 
+
+
 void MainWindow::updateUserPanelPosition()
 {
     // We want it 8 px from left edge, 8 px above the statusBar (if you have one)
     const int margin = 8;
     int sbHeight = 0;
-    if (this->statusBar()) {
-        sbHeight = this->statusBar()->height();
-    }
-
     int x = margin;
     int y = this->height()
             - userPanel->height()
@@ -104,38 +105,6 @@ void MainWindow::updateUserPanelPosition()
     userPanel->move(x, y);
 }
 
-void MainWindow::setClient(Client *client){
-    this->client = client;
-    nameLabel->setText(client->getClientName());
-    updateAvatar(client->getClientAvatar());
-    connect(client, &Client::connected, this, &::MainWindow::onConnectionSuccess);
-}
-void MainWindow::onAvatarButtonClicked()
-{
-    // 1) Open file dialog to let the user pick an image
-    QString srcFile = QFileDialog::getOpenFileName(
-        this,
-        tr("Choose avatar image"),
-        QString(),
-        tr("Images (*.png *.jpg *.jpeg *.bmp *.gif)")
-        );
-    if (srcFile.isEmpty())
-        return;  // user canceled
-    // 2) Update avatarButton’s icon to the chosen file
-    QString userUploadFolder = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + "/C++/Chat/uploads/" + client->getClientName() + "/avatar.png";
-    if(QFile::exists(userUploadFolder)){
-        QFile::remove(userUploadFolder);
-    }
-    QFile file(userUploadFolder);
-    if(file.copy(srcFile, userUploadFolder)){
-        qDebug() << "copy done success";
-    }
-    else{
-        qDebug() << "could not copy";
-    }
-    manager->updateUserAvatar(userUploadFolder, client->getClientName());
-    updateAvatar(srcFile);
-}
 
 void MainWindow::updateAvatar(const QString &fileName)
 {
@@ -166,10 +135,47 @@ void MainWindow::updateAvatar(const QString &fileName)
     // 2) Set the circular pixmap as the button’s icon
     avatarButton->setIcon(QIcon(circular));
 }
+
+
+
+void MainWindow::onAvatarButtonClicked()
+{
+    // 1) Open file dialog to let the user pick an image
+    QString srcFile = QFileDialog::getOpenFileName(
+        this,
+        tr("Choose avatar image"),
+        QString(),
+        tr("Images (*.png *.jpg *.jpeg *.bmp *.gif)")
+        );
+    if (srcFile.isEmpty())
+        return;  // user canceled
+    // 2) Update avatarButton’s icon to the chosen file
+    QString userUploadFolder = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + "/C++/Chat/uploads/" + client->getClientName() + "/avatar.png";
+    if(QFile::exists(userUploadFolder)){
+        QFile::remove(userUploadFolder);
+    }
+    QFile file(userUploadFolder);
+    if(file.copy(srcFile, userUploadFolder)){
+        qDebug() << "copy done success";
+    }
+    else{
+        qDebug() << "could not copy";
+    }
+    manager->updateUserAvatar(userUploadFolder, client->getClientName());
+    updateAvatar(srcFile);
+}
+
+
+void MainWindow::onAddFriendButtonClicked(){
+    QString friendNickname = ui->addFriendInput->text();
+
+}
+
 void MainWindow::onConnectionSuccess()
 {
 
-    qDebug() << "Nickname? :" << client->getClientName();
+    qDebug() << "User: " << client->getClientName();
+    qDebug() << "ID: " << client->getClientID();
 }
 
 

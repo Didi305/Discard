@@ -2,6 +2,7 @@
 #define DATABASEMANAGER_H
 #include <qobject.h>
 #include <qsqldatabase.h>
+#include "client.h"
 struct DBConfig{
     QString host;
     int port;
@@ -15,12 +16,15 @@ class Manager : public QObject {
 public:
     Manager(QObject *parent = nullptr);
     static Manager* get();
+    void setClient(Client *client);
+    Client* getClient();
     QSqlDatabase& db();
     bool init(QJsonObject &DBConfig, QSqlDatabase &db);
     bool createUser(QString username, QString password, QString nickname);
-    QString checkUser(QString username, QString password);
+    QString checkUser(const QString& username, const QString& password = QString());
     bool checkUsernameAvailibity(QString username);
     bool checkNicknameAvailibity(QString nickname);
+    bool checkFriendship(QString nickname);
     void updateUserAvatar(QString path, QString nickname);
     void findNickname(QString username);
     void postMessage(QString message);
@@ -28,6 +32,7 @@ private:
     Manager() = default;
     ~Manager() = default;
     QSqlDatabase database;
+    Client *client;
 };
 
 #endif // DATABASEMANAGER_H

@@ -8,8 +8,10 @@ public:
     Client(QObject *parent = nullptr);
     QString getClientName();
     QString getClientAvatar();
+    int getClientID();
     void setClientName(QString name);
     void setClientAvatar(QString avatar);
+    void setClientID(int id);
     ~Client();
 
     void connectToServer(const QString &host, int port);
@@ -28,6 +30,7 @@ private slots:
 
 private:
     QTcpSocket *socket;
+    int id;
     QString name;
     QString avatar;
 };

@@ -1,6 +1,5 @@
 #include "register.h"
 #include "ui_register.h"
-#include "client.h"
 #include "manager.h"
 #include <QErrorMessage>
 #include <QDir>
@@ -8,7 +7,6 @@
 Register::Register(QWidget *parent)
     : QDialog(parent)
     , ui(new Ui::Register)
-    , client(nullptr)
     , manager(Manager::get())
 {
     ui->setupUi(this);
@@ -25,9 +23,6 @@ Register::Register(QWidget *parent)
 Register::~Register()
 {
     delete ui;
-}
-void Register::setClient(Client *client){
-    this->client = client;
 }
 
 void Register::onUsernameEditingFinished(){
