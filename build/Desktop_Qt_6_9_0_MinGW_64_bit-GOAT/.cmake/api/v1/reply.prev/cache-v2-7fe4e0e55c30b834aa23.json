@@ -6798,6 +6798,30 @@
 			"value" : "C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Sql"
 		},
 		{
+			"name" : "Qt6SvgPrivate_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for Qt6SvgPrivate."
+				}
+			],
+			"type" : "PATH",
+			"value" : "C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6SvgPrivate"
+		},
+		{
+			"name" : "Qt6Svg_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "The directory containing a CMake configuration file for Qt6Svg."
+				}
+			],
+			"type" : "PATH",
+			"value" : "C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Svg"
+		},
+		{
 			"name" : "Qt6WidgetsPrivate_DIR",
 			"properties" : 
 			[

@@ -4,4 +4,6 @@
 #include "EWIEGA46WW/moc_login.cpp"
 #include "EWIEGA46WW/moc_mainwindow.cpp"
 #include "EWIEGA46WW/moc_manager.cpp"
+#include "EWIEGA46WW/moc_pendingrequestswidget.cpp"
 #include "EWIEGA46WW/moc_register.cpp"
+#include "EWIEGA46WW/moc_requestrow.cpp"

@@ -8,6 +8,7 @@
 #include <QJsonObject>
 #include <QCryptographicHash>
 #include <QDateTime>
+#include <QStandardPaths>
 #include "manager.h"
 #include "client.h"
 Manager::Manager(QObject *parent) : QObject(parent) {
@@ -152,8 +153,8 @@ bool Manager::createUser(QString username, QString password, QString nickname){
 
     QSqlQuery query(db());
     static const QString sql = QStringLiteral(
-        "INSERT INTO users (username, password_hash, nickname, created_at) "
-        "VALUES ( :user, :pass, :nick, :date )"
+        "INSERT INTO users (username, password_hash, nickname, created_at, avatar) "
+        "VALUES ( :user, :pass, :nick, :date, :ava )"
 );
 
     // 2) Prepare the statement
@@ -165,7 +166,9 @@ bool Manager::createUser(QString username, QString password, QString nickname){
     query.bindValue(":user", username);
     query.bindValue(":pass", password_hash.toHex());
     query.bindValue(":nick", nickname);
+    query.bindValue(":ava", nickname);
     query.bindValue(":date", QDateTime::currentDateTime());
+    query.bindValue(":ava", QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + "/C++/Chat/uploads/image.png");
     if(!query.exec()){
         qWarning() << "Insert failed" << query.lastError().text();
         return false;
@@ -224,4 +227,32 @@ void Manager::updateUserAvatar(QString path, QString nickname){
     if(!query.exec()){
         qCritical() << "avatar update failed" << query.lastError().text();
     }
+}
+
+std::vector<RequestRow*> Manager::fetchPendingRequests(int id){
+    std::vector<RequestRow*> requests;
+    QSqlQuery query(db());
+    QString sql = QStringLiteral(
+        "SELECT users.nickname, users.avatar "
+        "FROM users "
+        "INNER JOIN friendship ON users.id = friendship.user_id "
+        "WHERE friendship.friend_id = :id AND friendship.status = :s"
+        );
+    query.prepare(sql);
+    query.bindValue(":id" , id);
+    query.bindValue(":s", "PENDING");
+
+    if(!query.exec()){
+        qCritical() << query.lastError().text();
+    }
+
+    while(query.next()){
+        RequestData d;
+        d.avatar = query.value("avatar").toString();
+        qDebug() << "avatar hamid: " << d.avatar;
+        d.displayName = query.value("nickname").toString();
+        RequestRow *row = new RequestRow(d);
+        requests.push_back(row);
+    }
+    return requests;
 }

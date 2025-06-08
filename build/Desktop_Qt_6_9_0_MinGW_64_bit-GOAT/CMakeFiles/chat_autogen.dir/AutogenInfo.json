@@ -323,6 +323,23 @@
 		"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Widgets/Qt6QModernWindowsStylePluginTargets-relwithdebinfo.cmake",
 		"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Widgets/Qt6QModernWindowsStylePluginAdditionalTargetInfo.cmake",
 		"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Widgets/Qt6WidgetsVersionlessAliasTargets.cmake",
+		"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Svg/Qt6SvgConfigVersion.cmake",
+		"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Svg/Qt6SvgConfigVersionImpl.cmake",
+		"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Svg/Qt6SvgConfig.cmake",
+		"C:/Qt/Tools/CMake_64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake",
+		"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Svg/Qt6SvgDependencies.cmake",
+		"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Svg/Qt6SvgTargets.cmake",
+		"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Svg/Qt6SvgTargets-relwithdebinfo.cmake",
+		"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Svg/Qt6SvgAdditionalTargetInfo.cmake",
+		"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6SvgPrivate/Qt6SvgPrivateConfigVersion.cmake",
+		"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6SvgPrivate/Qt6SvgPrivateConfigVersionImpl.cmake",
+		"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6SvgPrivate/Qt6SvgPrivateConfig.cmake",
+		"C:/Qt/Tools/CMake_64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake",
+		"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6SvgPrivate/Qt6SvgPrivateDependencies.cmake",
+		"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6SvgPrivate/Qt6SvgPrivateTargets.cmake",
+		"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6SvgPrivate/Qt6SvgPrivateAdditionalTargetInfo.cmake",
+		"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6SvgPrivate/Qt6SvgPrivateVersionlessAliasTargets.cmake",
+		"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Svg/Qt6SvgVersionlessAliasTargets.cmake",
 		"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Network/Qt6NetworkConfigVersion.cmake",
 		"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Network/Qt6NetworkConfigVersionImpl.cmake",
 		"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Network/Qt6NetworkConfig.cmake",
@@ -472,6 +489,12 @@
 			null
 		],
 		[
+			"C:/Users/giler/OneDrive/Desktop/C++/Chat/helpers.h",
+			"MU",
+			"EWIEGA46WW/moc_helpers.cpp",
+			null
+		],
+		[
 			"C:/Users/giler/OneDrive/Desktop/C++/Chat/login.h",
 			"MU",
 			"EWIEGA46WW/moc_login.cpp",
@@ -490,9 +513,21 @@
 			null
 		],
 		[
+			"C:/Users/giler/OneDrive/Desktop/C++/Chat/pendingrequestswidget.h",
+			"MU",
+			"EWIEGA46WW/moc_pendingrequestswidget.cpp",
+			null
+		],
+		[
 			"C:/Users/giler/OneDrive/Desktop/C++/Chat/register.h",
 			"MU",
 			"EWIEGA46WW/moc_register.cpp",
+			null
+		],
+		[
+			"C:/Users/giler/OneDrive/Desktop/C++/Chat/requestrow.h",
+			"MU",
+			"EWIEGA46WW/moc_requestrow.cpp",
 			null
 		]
 	],
@@ -508,6 +543,7 @@
 		"QT_NETWORK_LIB",
 		"QT_NO_DEBUG",
 		"QT_SQL_LIB",
+		"QT_SVG_LIB",
 		"QT_WIDGETS_LIB",
 		"UNICODE",
 		"WIN32",
@@ -532,6 +568,7 @@
 		"C:/Qt/6.9.0/mingw_64/include/QtGui",
 		"C:/Qt/6.9.0/mingw_64/include/QtNetwork",
 		"C:/Qt/6.9.0/mingw_64/include/QtSql",
+		"C:/Qt/6.9.0/mingw_64/include/QtSvg",
 		"C:/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++",
 		"C:/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/x86_64-w64-mingw32",
 		"C:/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/backward",
@@ -574,11 +611,18 @@
 	[
 		[ "C:/Users/giler/OneDrive/Desktop/C++/Chat/chatserver.cpp", "MU", null ],
 		[ "C:/Users/giler/OneDrive/Desktop/C++/Chat/client.cpp", "MU", null ],
+		[ "C:/Users/giler/OneDrive/Desktop/C++/Chat/helpers.cpp", "MU", null ],
 		[ "C:/Users/giler/OneDrive/Desktop/C++/Chat/login.cpp", "MU", null ],
 		[ "C:/Users/giler/OneDrive/Desktop/C++/Chat/main.cpp", "MU", null ],
 		[ "C:/Users/giler/OneDrive/Desktop/C++/Chat/mainwindow.cpp", "MU", null ],
 		[ "C:/Users/giler/OneDrive/Desktop/C++/Chat/manager.cpp", "MU", null ],
-		[ "C:/Users/giler/OneDrive/Desktop/C++/Chat/register.cpp", "MU", null ]
+		[
+			"C:/Users/giler/OneDrive/Desktop/C++/Chat/pendingrequestswidget.cpp",
+			"MU",
+			null
+		],
+		[ "C:/Users/giler/OneDrive/Desktop/C++/Chat/register.cpp", "MU", null ],
+		[ "C:/Users/giler/OneDrive/Desktop/C++/Chat/requestrow.cpp", "MU", null ]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],

@@ -10,13 +10,16 @@
 #define UI_MAINWINDOW_H
 
 #include <QtCore/QVariant>
+#include <QtGui/QIcon>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QFrame>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QScrollArea>
 #include <QtWidgets/QStackedWidget>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -33,9 +36,20 @@ public:
     QVBoxLayout *verticalLayoutCenter;
     QStackedWidget *stackedWidget;
     QWidget *friends;
-    QPushButton *addFriendButton;
-    QLineEdit *addFriendInput;
+    QVBoxLayout *verticalLayout;
+    QWidget *addFriend;
+    QVBoxLayout *verticalLayout_2;
     QLabel *label;
+    QFrame *frame;
+    QHBoxLayout *horizontalLayout_2;
+    QLineEdit *addFriendInput;
+    QPushButton *addFriendButton;
+    QWidget *PendingRequestList;
+    QHBoxLayout *horizontalLayout_3;
+    QScrollArea *scrollAreaPending;
+    QWidget *scrollAreaWidgetContents;
+    QVBoxLayout *verticalLayout_4;
+    QVBoxLayout *listLayout;
     QWidget *directMessages;
     QVBoxLayout *verticalLayoutRight;
     QWidget *widget;
@@ -46,6 +60,8 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
         MainWindow->resize(1093, 739);
+        QIcon icon(QIcon::fromTheme(QIcon::ThemeIcon::AddressBookNew));
+        MainWindow->setWindowIcon(icon);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName("centralwidget");
         horizontalLayout = new QHBoxLayout(centralwidget);
@@ -56,8 +72,97 @@ public:
         verticalLayoutLeft->setObjectName("verticalLayoutLeft");
         widget_2 = new QWidget(centralwidget);
         widget_2->setObjectName("widget_2");
-        widget_2->setMinimumSize(QSize(325, 0));
-        widget_2->setStyleSheet(QString::fromUtf8("background-color : red"));
+        widget_2->setMinimumSize(QSize(355, 0));
+        QPalette palette;
+        QBrush brush(QColor(255, 255, 255, 255));
+        brush.setStyle(Qt::BrushStyle::SolidPattern);
+        palette.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::WindowText, brush);
+        QBrush brush1(QColor(43, 45, 49, 255));
+        brush1.setStyle(Qt::BrushStyle::SolidPattern);
+        palette.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Button, brush1);
+        QBrush brush2(QColor(45, 45, 45, 255));
+        brush2.setStyle(Qt::BrushStyle::SolidPattern);
+        palette.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Light, brush2);
+        QBrush brush3(QColor(37, 37, 37, 255));
+        brush3.setStyle(Qt::BrushStyle::SolidPattern);
+        palette.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Midlight, brush3);
+        QBrush brush4(QColor(15, 15, 15, 255));
+        brush4.setStyle(Qt::BrushStyle::SolidPattern);
+        palette.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Dark, brush4);
+        QBrush brush5(QColor(20, 20, 20, 255));
+        brush5.setStyle(Qt::BrushStyle::SolidPattern);
+        palette.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Mid, brush5);
+        palette.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Text, brush);
+        palette.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::BrightText, brush);
+        palette.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::ButtonText, brush);
+        palette.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Base, brush1);
+        palette.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Window, brush1);
+        QBrush brush6(QColor(0, 0, 0, 255));
+        brush6.setStyle(Qt::BrushStyle::SolidPattern);
+        palette.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Shadow, brush6);
+        palette.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::AlternateBase, brush4);
+        QBrush brush7(QColor(255, 255, 220, 255));
+        brush7.setStyle(Qt::BrushStyle::SolidPattern);
+        palette.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::ToolTipBase, brush7);
+        palette.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::ToolTipText, brush6);
+        QBrush brush8(QColor(255, 255, 255, 127));
+        brush8.setStyle(Qt::BrushStyle::SolidPattern);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        palette.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::PlaceholderText, brush8);
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
+        palette.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Accent, brush6);
+#endif
+        palette.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::WindowText, brush);
+        palette.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Button, brush1);
+        palette.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Light, brush2);
+        palette.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Midlight, brush3);
+        palette.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Dark, brush4);
+        palette.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Mid, brush5);
+        palette.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Text, brush);
+        palette.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::BrightText, brush);
+        palette.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::ButtonText, brush);
+        palette.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Base, brush1);
+        palette.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Window, brush1);
+        palette.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Shadow, brush6);
+        palette.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::AlternateBase, brush4);
+        palette.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::ToolTipBase, brush7);
+        palette.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::ToolTipText, brush6);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        palette.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::PlaceholderText, brush8);
+#endif
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
+        palette.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Accent, brush6);
+#endif
+        palette.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::WindowText, brush4);
+        palette.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Button, brush1);
+        palette.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Light, brush2);
+        palette.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Midlight, brush3);
+        palette.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Dark, brush4);
+        palette.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Mid, brush5);
+        palette.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Text, brush4);
+        palette.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::BrightText, brush);
+        palette.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::ButtonText, brush4);
+        palette.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Base, brush1);
+        palette.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Window, brush1);
+        palette.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Shadow, brush6);
+        QBrush brush9(QColor(30, 30, 30, 255));
+        brush9.setStyle(Qt::BrushStyle::SolidPattern);
+        palette.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::AlternateBase, brush9);
+        palette.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::ToolTipBase, brush7);
+        palette.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::ToolTipText, brush6);
+        QBrush brush10(QColor(15, 15, 15, 127));
+        brush10.setStyle(Qt::BrushStyle::SolidPattern);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        palette.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::PlaceholderText, brush10);
+#endif
+        QBrush brush11(QColor(21, 21, 21, 255));
+        brush11.setStyle(Qt::BrushStyle::SolidPattern);
+#if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
+        palette.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Accent, brush11);
+#endif
+        widget_2->setPalette(palette);
+        widget_2->setStyleSheet(QString::fromUtf8("background-color: #2b2d31"));
 
         verticalLayoutLeft->addWidget(widget_2);
 
@@ -69,21 +174,95 @@ public:
         verticalLayoutCenter->setObjectName("verticalLayoutCenter");
         stackedWidget = new QStackedWidget(centralwidget);
         stackedWidget->setObjectName("stackedWidget");
-        stackedWidget->setStyleSheet(QString::fromUtf8("background-color: rgb(53, 53, 53)"));
+        QPalette palette1;
+        QBrush brush12(QColor(50, 53, 58, 255));
+        brush12.setStyle(Qt::BrushStyle::SolidPattern);
+        palette1.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Button, brush12);
+        palette1.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Base, brush12);
+        palette1.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Window, brush12);
+        palette1.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Button, brush12);
+        palette1.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Base, brush12);
+        palette1.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Window, brush12);
+        palette1.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Button, brush12);
+        palette1.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Base, brush12);
+        palette1.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Window, brush12);
+        stackedWidget->setPalette(palette1);
+        stackedWidget->setStyleSheet(QString::fromUtf8("background-color: #32353a"));
         friends = new QWidget();
         friends->setObjectName("friends");
-        addFriendButton = new QPushButton(friends);
-        addFriendButton->setObjectName("addFriendButton");
-        addFriendButton->setGeometry(QRect(340, 60, 80, 24));
-        addFriendInput = new QLineEdit(friends);
-        addFriendInput->setObjectName("addFriendInput");
-        addFriendInput->setGeometry(QRect(10, 60, 321, 24));
-        label = new QLabel(friends);
+        verticalLayout = new QVBoxLayout(friends);
+        verticalLayout->setSpacing(0);
+        verticalLayout->setObjectName("verticalLayout");
+        verticalLayout->setContentsMargins(0, 0, 0, 0);
+        addFriend = new QWidget(friends);
+        addFriend->setObjectName("addFriend");
+        verticalLayout_2 = new QVBoxLayout(addFriend);
+        verticalLayout_2->setObjectName("verticalLayout_2");
+        label = new QLabel(addFriend);
         label->setObjectName("label");
-        label->setGeometry(QRect(20, 20, 141, 31));
         QFont font;
         font.setPointSize(18);
         label->setFont(font);
+
+        verticalLayout_2->addWidget(label);
+
+        frame = new QFrame(addFriend);
+        frame->setObjectName("frame");
+        frame->setFrameShape(QFrame::Shape::StyledPanel);
+        frame->setFrameShadow(QFrame::Shadow::Raised);
+        horizontalLayout_2 = new QHBoxLayout(frame);
+        horizontalLayout_2->setObjectName("horizontalLayout_2");
+        addFriendInput = new QLineEdit(frame);
+        addFriendInput->setObjectName("addFriendInput");
+
+        horizontalLayout_2->addWidget(addFriendInput);
+
+        addFriendButton = new QPushButton(frame);
+        addFriendButton->setObjectName("addFriendButton");
+
+        horizontalLayout_2->addWidget(addFriendButton);
+
+
+        verticalLayout_2->addWidget(frame);
+
+
+        verticalLayout->addWidget(addFriend);
+
+        PendingRequestList = new QWidget(friends);
+        PendingRequestList->setObjectName("PendingRequestList");
+        horizontalLayout_3 = new QHBoxLayout(PendingRequestList);
+        horizontalLayout_3->setObjectName("horizontalLayout_3");
+        scrollAreaPending = new QScrollArea(PendingRequestList);
+        scrollAreaPending->setObjectName("scrollAreaPending");
+        scrollAreaPending->setStyleSheet(QString::fromUtf8(""));
+        scrollAreaPending->setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOn);
+        scrollAreaPending->setSizeAdjustPolicy(QAbstractScrollArea::SizeAdjustPolicy::AdjustIgnored);
+        scrollAreaPending->setWidgetResizable(true);
+        scrollAreaPending->setAlignment(Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing);
+        scrollAreaWidgetContents = new QWidget();
+        scrollAreaWidgetContents->setObjectName("scrollAreaWidgetContents");
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 343, 596));
+        QSizePolicy sizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Preferred);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(scrollAreaWidgetContents->sizePolicy().hasHeightForWidth());
+        scrollAreaWidgetContents->setSizePolicy(sizePolicy);
+        verticalLayout_4 = new QVBoxLayout(scrollAreaWidgetContents);
+        verticalLayout_4->setObjectName("verticalLayout_4");
+        listLayout = new QVBoxLayout();
+        listLayout->setSpacing(0);
+        listLayout->setObjectName("listLayout");
+
+        verticalLayout_4->addLayout(listLayout);
+
+        scrollAreaPending->setWidget(scrollAreaWidgetContents);
+
+        horizontalLayout_3->addWidget(scrollAreaPending);
+
+
+        verticalLayout->addWidget(PendingRequestList);
+
+        verticalLayout->setStretch(1, 1);
         stackedWidget->addWidget(friends);
         directMessages = new QWidget();
         directMessages->setObjectName("directMessages");
@@ -98,8 +277,19 @@ public:
         verticalLayoutRight->setObjectName("verticalLayoutRight");
         widget = new QWidget(centralwidget);
         widget->setObjectName("widget");
-        widget->setMinimumSize(QSize(325, 0));
-        widget->setStyleSheet(QString::fromUtf8("background-color : yellow"));
+        widget->setMinimumSize(QSize(355, 0));
+        QPalette palette2;
+        palette2.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Button, brush12);
+        palette2.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Base, brush12);
+        palette2.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Window, brush12);
+        palette2.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Button, brush12);
+        palette2.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Base, brush12);
+        palette2.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Window, brush12);
+        palette2.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Button, brush12);
+        palette2.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Base, brush12);
+        palette2.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Window, brush12);
+        widget->setPalette(palette2);
+        widget->setStyleSheet(QString::fromUtf8("background-color: #32353a"));
 
         verticalLayoutRight->addWidget(widget);
 
@@ -123,9 +313,9 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
-        addFriendButton->setText(QCoreApplication::translate("MainWindow", "Add Friend", nullptr));
-        label->setText(QCoreApplication::translate("MainWindow", "Add a friend", nullptr));
+        MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "Discard", nullptr));
+        label->setText(QCoreApplication::translate("MainWindow", "Add Friend", nullptr));
+        addFriendButton->setText(QCoreApplication::translate("MainWindow", "Add", nullptr));
     } // retranslateUi
 
 };

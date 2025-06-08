@@ -128,6 +128,7 @@ chat_autogen/timestamp: \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qversiontagging.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qxptype_traits.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qyieldcpu.h \
+	C:/Qt/6.9.0/mingw_64/include/QtGui/QPixmap \
 	C:/Qt/6.9.0/mingw_64/include/QtGui/qaction.h \
 	C:/Qt/6.9.0/mingw_64/include/QtGui/qbitmap.h \
 	C:/Qt/6.9.0/mingw_64/include/QtGui/qbrush.h \
@@ -173,12 +174,21 @@ chat_autogen/timestamp: \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/QFrame \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/QLabel \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/QMainWindow \
+	C:/Qt/6.9.0/mingw_64/include/QtWidgets/QScrollArea \
+	C:/Qt/6.9.0/mingw_64/include/QtWidgets/QVBoxLayout \
+	C:/Qt/6.9.0/mingw_64/include/QtWidgets/QWidget \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qabstractbutton.h \
+	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qabstractscrollarea.h \
+	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qboxlayout.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qdialog.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qframe.h \
+	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qgridlayout.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qlabel.h \
+	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qlayout.h \
+	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qlayoutitem.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qmainwindow.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qpushbutton.h \
+	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qscrollarea.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qsizepolicy.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qtabwidget.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qtwidgets-config.h \
@@ -394,6 +404,21 @@ chat_autogen/timestamp: \
 	C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6SqlPrivate/Qt6SqlPrivateDependencies.cmake \
 	C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6SqlPrivate/Qt6SqlPrivateTargets.cmake \
 	C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6SqlPrivate/Qt6SqlPrivateVersionlessAliasTargets.cmake \
+	C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Svg/Qt6SvgAdditionalTargetInfo.cmake \
+	C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Svg/Qt6SvgConfig.cmake \
+	C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Svg/Qt6SvgConfigVersion.cmake \
+	C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Svg/Qt6SvgConfigVersionImpl.cmake \
+	C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Svg/Qt6SvgDependencies.cmake \
+	C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Svg/Qt6SvgTargets-relwithdebinfo.cmake \
+	C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Svg/Qt6SvgTargets.cmake \
+	C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Svg/Qt6SvgVersionlessAliasTargets.cmake \
+	C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6SvgPrivate/Qt6SvgPrivateAdditionalTargetInfo.cmake \
+	C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6SvgPrivate/Qt6SvgPrivateConfig.cmake \
+	C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6SvgPrivate/Qt6SvgPrivateConfigVersion.cmake \
+	C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6SvgPrivate/Qt6SvgPrivateConfigVersionImpl.cmake \
+	C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6SvgPrivate/Qt6SvgPrivateDependencies.cmake \
+	C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6SvgPrivate/Qt6SvgPrivateTargets.cmake \
+	C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6SvgPrivate/Qt6SvgPrivateVersionlessAliasTargets.cmake \
 	C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Widgets/Qt6QModernWindowsStylePluginAdditionalTargetInfo.cmake \
 	C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Widgets/Qt6QModernWindowsStylePluginConfig.cmake \
 	C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Widgets/Qt6QModernWindowsStylePluginTargets-relwithdebinfo.cmake \
@@ -682,6 +707,8 @@ chat_autogen/timestamp: \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/chatserver.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/client.cpp \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/client.h \
+	C:/Users/giler/OneDrive/Desktop/C++/Chat/helpers.cpp \
+	C:/Users/giler/OneDrive/Desktop/C++/Chat/helpers.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/login.cpp \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/login.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/main.cpp \
@@ -689,8 +716,12 @@ chat_autogen/timestamp: \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/mainwindow.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/manager.cpp \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/manager.h \
+	C:/Users/giler/OneDrive/Desktop/C++/Chat/pendingrequestswidget.cpp \
+	C:/Users/giler/OneDrive/Desktop/C++/Chat/pendingrequestswidget.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/register.cpp \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/register.h \
+	C:/Users/giler/OneDrive/Desktop/C++/Chat/requestrow.cpp \
+	C:/Users/giler/OneDrive/Desktop/C++/Chat/requestrow.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/login.ui \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/mainwindow.ui \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/register.ui \

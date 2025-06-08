@@ -1,6 +1,8 @@
 #ifndef DATABASEMANAGER_H
 #define DATABASEMANAGER_H
 #include <qobject.h>
+#include "requestrow.h"
+#include <vector>
 #include <qsqldatabase.h>
 #include "client.h"
 struct DBConfig{
@@ -28,6 +30,7 @@ public:
     void updateUserAvatar(QString path, QString nickname);
     void findNickname(QString username);
     void postMessage(QString message);
+    std::vector<RequestRow*> fetchPendingRequests(int id);
 private:
     Manager() = default;
     ~Manager() = default;

@@ -29,21 +29,21 @@
 		[
 			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreMacros.cmake",
 			"CMakeLists.txt",
+			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Network/Qt6NetworkTargets.cmake",
+			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Network/Qt6NetworkConfig.cmake",
+			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6/Qt6Config.cmake",
 			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Widgets/Qt6WidgetsTargets.cmake",
 			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Widgets/Qt6WidgetsConfig.cmake",
-			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6/Qt6Config.cmake",
-			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Gui/Qt6GuiTargets.cmake",
-			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Gui/Qt6GuiConfig.cmake",
+			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreTargets.cmake",
+			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreConfig.cmake",
 			"C:/Qt/Tools/CMake_64/share/cmake-3.30/Modules/CMakeFindDependencyMacro.cmake",
 			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6/QtPublicDependencyHelpers.cmake",
 			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Widgets/Qt6WidgetsDependencies.cmake",
-			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Network/Qt6NetworkTargets.cmake",
-			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Network/Qt6NetworkConfig.cmake",
-			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreTargets.cmake",
-			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreConfig.cmake",
 			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6EntryPointPrivate/Qt6EntryPointPrivateTargets.cmake",
 			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6EntryPointPrivate/Qt6EntryPointPrivateConfig.cmake",
-			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreDependencies.cmake"
+			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Core/Qt6CoreDependencies.cmake",
+			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Gui/Qt6GuiTargets.cmake",
+			"C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Gui/Qt6GuiConfig.cmake"
 		],
 		"nodes" : 
 		[
@@ -77,19 +77,19 @@
 			{
 				"command" : 4,
 				"file" : 1,
-				"line" : 77,
+				"line" : 81,
 				"parent" : 0
 			},
 			{
 				"command" : 5,
 				"file" : 1,
-				"line" : 59,
+				"line" : 63,
 				"parent" : 0
 			},
 			{
 				"command" : 5,
 				"file" : 1,
-				"line" : 60,
+				"line" : 64,
 				"parent" : 0
 			},
 			{
@@ -129,78 +129,30 @@
 				"parent" : 13
 			},
 			{
-				"command" : 7,
-				"file" : 3,
-				"line" : 43,
-				"parent" : 11
-			},
-			{
-				"file" : 9,
-				"parent" : 15
-			},
-			{
-				"command" : 10,
-				"file" : 9,
-				"line" : 45,
-				"parent" : 16
-			},
-			{
-				"command" : 9,
-				"file" : 8,
-				"line" : 137,
-				"parent" : 17
-			},
-			{
-				"command" : 8,
-				"file" : 7,
-				"line" : 76,
-				"parent" : 18
-			},
-			{
-				"file" : 6,
-				"parent" : 19
-			},
-			{
-				"command" : 7,
-				"file" : 6,
-				"line" : 55,
-				"parent" : 20
-			},
-			{
-				"file" : 5,
-				"parent" : 21
-			},
-			{
-				"command" : 6,
-				"file" : 5,
-				"line" : 61,
-				"parent" : 22
-			},
-			{
 				"command" : 8,
 				"file" : 4,
 				"line" : 212,
 				"parent" : 9
 			},
 			{
-				"file" : 11,
-				"parent" : 24
+				"file" : 6,
+				"parent" : 15
 			},
 			{
 				"command" : 7,
-				"file" : 11,
+				"file" : 6,
 				"line" : 55,
-				"parent" : 25
+				"parent" : 16
 			},
 			{
-				"file" : 10,
-				"parent" : 26
+				"file" : 5,
+				"parent" : 17
 			},
 			{
 				"command" : 6,
-				"file" : 10,
+				"file" : 5,
 				"line" : 61,
-				"parent" : 27
+				"parent" : 18
 			},
 			{
 				"command" : 5,
@@ -209,90 +161,138 @@
 				"parent" : 2
 			},
 			{
+				"command" : 7,
+				"file" : 6,
+				"line" : 43,
+				"parent" : 16
+			},
+			{
+				"file" : 11,
+				"parent" : 21
+			},
+			{
+				"command" : 10,
+				"file" : 11,
+				"line" : 45,
+				"parent" : 22
+			},
+			{
 				"command" : 9,
-				"file" : 8,
+				"file" : 10,
 				"line" : 137,
-				"parent" : 17
+				"parent" : 23
 			},
 			{
 				"command" : 8,
-				"file" : 7,
+				"file" : 9,
 				"line" : 76,
-				"parent" : 30
+				"parent" : 24
 			},
 			{
-				"file" : 13,
-				"parent" : 31
+				"file" : 8,
+				"parent" : 25
 			},
 			{
 				"command" : 7,
-				"file" : 13,
+				"file" : 8,
 				"line" : 57,
-				"parent" : 32
+				"parent" : 26
 			},
 			{
-				"file" : 12,
-				"parent" : 33
+				"file" : 7,
+				"parent" : 27
 			},
 			{
 				"command" : 6,
-				"file" : 12,
+				"file" : 7,
 				"line" : 61,
+				"parent" : 28
+			},
+			{
+				"command" : 7,
+				"file" : 8,
+				"line" : 45,
+				"parent" : 26
+			},
+			{
+				"file" : 14,
+				"parent" : 30
+			},
+			{
+				"command" : 10,
+				"file" : 14,
+				"line" : 46,
+				"parent" : 31
+			},
+			{
+				"command" : 9,
+				"file" : 10,
+				"line" : 137,
+				"parent" : 32
+			},
+			{
+				"command" : 8,
+				"file" : 9,
+				"line" : 76,
+				"parent" : 33
+			},
+			{
+				"file" : 13,
 				"parent" : 34
 			},
 			{
 				"command" : 7,
 				"file" : 13,
-				"line" : 45,
-				"parent" : 32
+				"line" : 55,
+				"parent" : 35
 			},
 			{
-				"file" : 16,
+				"file" : 12,
 				"parent" : 36
 			},
 			{
-				"command" : 10,
-				"file" : 16,
-				"line" : 46,
+				"command" : 6,
+				"file" : 12,
+				"line" : 61,
+				"parent" : 37
+			},
+			{
+				"command" : 6,
+				"file" : 12,
+				"line" : 83,
 				"parent" : 37
 			},
 			{
 				"command" : 9,
-				"file" : 8,
+				"file" : 10,
 				"line" : 137,
-				"parent" : 38
+				"parent" : 23
 			},
 			{
 				"command" : 8,
-				"file" : 7,
+				"file" : 9,
 				"line" : 76,
-				"parent" : 39
-			},
-			{
-				"file" : 15,
 				"parent" : 40
 			},
 			{
-				"command" : 7,
-				"file" : 15,
-				"line" : 55,
+				"file" : 16,
 				"parent" : 41
 			},
 			{
-				"file" : 14,
+				"command" : 7,
+				"file" : 16,
+				"line" : 55,
 				"parent" : 42
 			},
 			{
-				"command" : 6,
-				"file" : 14,
-				"line" : 61,
+				"file" : 15,
 				"parent" : 43
 			},
 			{
 				"command" : 6,
-				"file" : 14,
-				"line" : 83,
-				"parent" : 43
+				"file" : 15,
+				"line" : 61,
+				"parent" : 44
 			}
 		]
 	},
@@ -308,11 +308,11 @@
 			"defines" : 
 			[
 				{
-					"backtrace" : 29,
+					"backtrace" : 20,
 					"define" : "MINGW_HAS_SECURE_API=1"
 				},
 				{
-					"backtrace" : 29,
+					"backtrace" : 20,
 					"define" : "QT_CORE_LIB"
 				},
 				{
@@ -320,7 +320,7 @@
 					"define" : "QT_GUI_LIB"
 				},
 				{
-					"backtrace" : 29,
+					"backtrace" : 20,
 					"define" : "QT_NEEDS_QMAIN"
 				},
 				{
@@ -328,7 +328,7 @@
 					"define" : "QT_NETWORK_LIB"
 				},
 				{
-					"backtrace" : 29,
+					"backtrace" : 20,
 					"define" : "QT_NO_DEBUG"
 				},
 				{
@@ -336,31 +336,35 @@
 					"define" : "QT_SQL_LIB"
 				},
 				{
+					"backtrace" : 7,
+					"define" : "QT_SVG_LIB"
+				},
+				{
 					"backtrace" : 6,
 					"define" : "QT_WIDGETS_LIB"
 				},
 				{
-					"backtrace" : 29,
+					"backtrace" : 20,
 					"define" : "UNICODE"
 				},
 				{
-					"backtrace" : 29,
+					"backtrace" : 20,
 					"define" : "WIN32"
 				},
 				{
-					"backtrace" : 29,
+					"backtrace" : 20,
 					"define" : "WIN64"
 				},
 				{
-					"backtrace" : 29,
+					"backtrace" : 20,
 					"define" : "_ENABLE_EXTENDED_ALIGNED_STORAGE"
 				},
 				{
-					"backtrace" : 29,
+					"backtrace" : 20,
 					"define" : "_UNICODE"
 				},
 				{
-					"backtrace" : 29,
+					"backtrace" : 20,
 					"define" : "_WIN64"
 				}
 			],
@@ -371,17 +375,17 @@
 					"path" : "C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/chat_autogen/include"
 				},
 				{
-					"backtrace" : 29,
+					"backtrace" : 20,
 					"isSystem" : true,
 					"path" : "C:/Qt/6.9.0/mingw_64/include/QtCore"
 				},
 				{
-					"backtrace" : 29,
+					"backtrace" : 20,
 					"isSystem" : true,
 					"path" : "C:/Qt/6.9.0/mingw_64/include"
 				},
 				{
-					"backtrace" : 29,
+					"backtrace" : 20,
 					"isSystem" : true,
 					"path" : "C:/Qt/6.9.0/mingw_64/mkspecs/win32-g++"
 				},
@@ -404,6 +408,11 @@
 					"backtrace" : 7,
 					"isSystem" : true,
 					"path" : "C:/Qt/6.9.0/mingw_64/include/QtSql"
+				},
+				{
+					"backtrace" : 7,
+					"isSystem" : true,
+					"path" : "C:/Qt/6.9.0/mingw_64/include/QtSvg"
 				}
 			],
 			"language" : "CXX",
@@ -411,8 +420,8 @@
 			{
 				"backtraces" : 
 				[
-					29,
-					29
+					20,
+					20
 				],
 				"standard" : "17"
 			},
@@ -425,7 +434,10 @@
 				7,
 				9,
 				10,
-				13
+				13,
+				18,
+				20,
+				21
 			]
 		}
 	],
@@ -482,63 +494,68 @@
 				"role" : "libraries"
 			},
 			{
+				"backtrace" : 7,
+				"fragment" : "C:\\Qt\\6.9.0\\mingw_64\\lib\\libQt6Svg.a",
+				"role" : "libraries"
+			},
+			{
 				"backtrace" : 14,
-				"fragment" : "C:\\Qt\\6.9.0\\mingw_64\\lib\\libQt6Gui.a",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 23,
-				"fragment" : "-ld3d11",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 23,
-				"fragment" : "-ldxgi",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 23,
-				"fragment" : "-ldxguid",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 23,
-				"fragment" : "-ld3d12",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 28,
 				"fragment" : "-lws2_32",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 29,
+				"backtrace" : 19,
+				"fragment" : "C:\\Qt\\6.9.0\\mingw_64\\lib\\libQt6Gui.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 20,
 				"fragment" : "C:\\Qt\\6.9.0\\mingw_64\\lib\\libQt6Core.a",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 35,
+				"backtrace" : 29,
 				"fragment" : "-lmpr",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 35,
+				"backtrace" : 29,
 				"fragment" : "-luserenv",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 44,
+				"backtrace" : 38,
 				"fragment" : "-lmingw32",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 44,
+				"backtrace" : 38,
 				"fragment" : "C:\\Qt\\6.9.0\\mingw_64\\lib\\libQt6EntryPoint.a",
 				"role" : "libraries"
 			},
 			{
-				"backtrace" : 45,
+				"backtrace" : 39,
 				"fragment" : "-lshell32",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 45,
+				"fragment" : "-ld3d11",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 45,
+				"fragment" : "-ldxgi",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 45,
+				"fragment" : "-ldxguid",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 45,
+				"fragment" : "-ld3d12",
 				"role" : "libraries"
 			},
 			{
@@ -568,7 +585,10 @@
 				7,
 				9,
 				10,
-				13
+				13,
+				18,
+				20,
+				21
 			]
 		},
 		{
@@ -582,8 +602,11 @@
 				11,
 				14,
 				17,
-				18,
-				19
+				19,
+				22,
+				23,
+				24,
+				25
 			]
 		},
 		{
@@ -599,14 +622,14 @@
 			"name" : "",
 			"sourceIndexes" : 
 			[
-				20
+				26
 			]
 		},
 		{
 			"name" : "CMake Rules",
 			"sourceIndexes" : 
 			[
-				21
+				27
 			]
 		}
 	],
@@ -705,6 +728,39 @@
 			"backtrace" : 4,
 			"path" : "mainwindow.ui",
 			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 4,
+			"path" : "requestrow.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "requestrow.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"path" : "pendingrequestswidget.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "pendingrequestswidget.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "helpers.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"path" : "helpers.h",
+			"sourceGroupIndex" : 1
 		},
 		{
 			"backtrace" : 0,

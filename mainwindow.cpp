@@ -11,6 +11,7 @@
 #include <QDebug>
 #include <QPainter>
 #include <QPushButton>
+#include "requestrow.h"
 #include "ui_MainWindow.h"
 #include "MainWindow.h"
 #include "manager.h"
@@ -23,15 +24,23 @@ MainWindow::MainWindow(QWidget *parent)
     , manager(Manager::get())
     , client(manager->getClient())
 {
-    ui->setupUi(this);// 1) Configure userPanel’s size, style, and contents
+    ui->setupUi(this);
+    auto *list = ui->scrollAreaPending->widget()->findChild<QVBoxLayout*>("listLayout");      // scrollAreaWidgetContent
+    list->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    std::vector<RequestRow*> pendingRequests = manager->fetchPendingRequests(client->getClientID());
+    for (auto row : pendingRequests)           // row is a raw pointer
+    {
+        row->setParent(ui->scrollAreaWidgetContents);
+        list->addWidget(row);
+    }
+
     userPanel->setParent(ui->centralwidget);
     userPanel->setObjectName("userPanel");
     userPanel->setFixedHeight(60);          // 50 px tall
-    userPanel->setFixedWidth(310);          // adjust width as needed
+    userPanel->setFixedWidth(335);          // adjust width as needed
     userPanel->setStyleSheet(R"(
         QFrame#userPanel {
-            background-color: #2f3136;
-            border: 1px solid #232428;
+            background-color: #32353a;
             border-radius: 4px;
         }
     )");
@@ -47,7 +56,6 @@ MainWindow::MainWindow(QWidget *parent)
     avatarButton->setFlat(true);
     avatarButton->setCursor(Qt::PointingHandCursor);
     avatarButton->setStyleSheet("background-color: #2f3136");        // no border
-
 
 
     QPixmap placeholder(48, 48);
@@ -78,6 +86,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(client, &Client::connected, this, &::MainWindow::onConnectionSuccess);
     connect(ui->addFriendButton, &QPushButton::clicked, this, &MainWindow::onAddFriendButtonClicked);
     updateUserPanelPosition();
+
 }
 
 

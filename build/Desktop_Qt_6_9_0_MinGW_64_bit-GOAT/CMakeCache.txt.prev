@@ -346,6 +346,12 @@ Qt6SqlPrivate_DIR:PATH=C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6SqlPrivate
 //The directory containing a CMake configuration file for Qt6Sql.
 Qt6Sql_DIR:PATH=C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Sql
 
+//The directory containing a CMake configuration file for Qt6SvgPrivate.
+Qt6SvgPrivate_DIR:PATH=C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6SvgPrivate
+
+//The directory containing a CMake configuration file for Qt6Svg.
+Qt6Svg_DIR:PATH=C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6Svg
+
 //The directory containing a CMake configuration file for Qt6WidgetsPrivate.
 Qt6WidgetsPrivate_DIR:PATH=C:/Qt/6.9.0/mingw_64/lib/cmake/Qt6WidgetsPrivate
 
