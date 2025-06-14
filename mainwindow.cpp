@@ -33,17 +33,11 @@ MainWindow::MainWindow(QWidget *parent)
         row->setParent(ui->scrollAreaWidgetContents);
         list->addWidget(row);
     }
-
+    ui->addFriendFrame->setAttribute(Qt::WA_StyledBackground, true);
     userPanel->setParent(ui->centralwidget);
     userPanel->setObjectName("userPanel");
     userPanel->setFixedHeight(60);          // 50 px tall
-    userPanel->setFixedWidth(335);          // adjust width as needed
-    userPanel->setStyleSheet(R"(
-        QFrame#userPanel {
-            background-color: #32353a;
-            border-radius: 4px;
-        }
-    )");
+    userPanel->setFixedWidth(335);
 
     // Give it a horizontal layout to host avatarButton + username
     auto *lay = new QHBoxLayout(userPanel);

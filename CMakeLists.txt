@@ -40,6 +40,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         pendingrequestswidget.h pendingrequestswidget.cpp
         helpers.cpp
         helpers.h
+        styles/dark.qss
 
     )
 # Define target properties for Android with Qt 6 as:

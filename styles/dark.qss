@@ -1,0 +1,70 @@
+/* === VERTICAL SCROLLBAR ======================================= */
+QScrollBar:vertical {
+    background: transparent;      /* track disappears      */
+    width: 8px;                   /* slim like Discord     */
+    margin: 0px;                  /* no top/bottom margin  */
+}
+
+QScrollBar::handle:vertical {
+    background:rgb(70, 72, 75);          /* dark grey “thumb”     */
+    min-height: 40px;             /* keeps it usable       */
+    border-radius: 4px;           /* rounded edges         */
+}
+
+QScrollBar::handle:vertical:hover,
+QScrollBar::handle:vertical:pressed {
+    background:rgb(78, 79, 85);          /* Discord accent blue   */
+}
+
+/* remove the arrows */
+QScrollBar::sub-line:vertical,
+QScrollBar::add-line:vertical {
+    width: 0px;
+    height: 0px;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background: none;             /* keeps track invisible */
+}
+
+
+/* === HORIZONTAL (same vibe, rarely shown in Discord) ========= */
+QScrollBar:horizontal {
+    background: transparent;
+    height: 8px;
+    margin: 0px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #2b2d31;
+    min-width: 40px;
+    border-radius: 4px;
+}
+
+QScrollBar::handle:horizontal:hover,
+QScrollBar::handle:horizontal:pressed {
+    background: #5865f2;
+}
+
+QScrollBar::sub-line:horizontal,
+QScrollBar::add-line:horizontal {
+    width: 0px;
+    height: 0px;
+}
+
+QScrollBar::add-page:horizontal,
+QScrollBar::sub-page:horizontal {
+    background: none;
+}
+
+
+QFrame#addFriendFrame {
+            background-color:rgb(223, 22, 22);
+            border-radius: 4px;
+        }
+
+QFrame#userPanel {
+            background-color: #32353a;
+            border-radius: 4px;
+        }

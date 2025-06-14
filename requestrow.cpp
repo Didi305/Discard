@@ -87,8 +87,8 @@ void RequestRow::paintEvent(QPaintEvent *e)
     }        // hover colour
 
     /* thin separator across bottom – skip last pixel at right to mimic Discord */
-    p.setPen(QColor("#424242"));
-    p.drawLine(0, height()-1, width()-1, height()-1);
+    p.setPen(QColor("#3a3c43"));
+    p.drawLine(6, height()-1, width()-6, height()-1);
 
     QWidget::paintEvent(e);
 }

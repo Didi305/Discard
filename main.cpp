@@ -10,9 +10,20 @@
 #include <QSqlError>
 #include <QStandardPaths>
 #include <QFile>
+
+const QString path = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + "/C++/Chat";
+QString loadStyle(const QString &path)
+{
+    QFile f(path);
+    if (!f.open(QFile::ReadOnly | QFile::Text))
+        return {};
+    return QTextStream(&f).readAll();
+}
+
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+    qApp->setStyleSheet(loadStyle(path + "/styles/dark.qss"));
     Client client;
     Manager *mgr = Manager::get();
     mgr->setClient(&client);

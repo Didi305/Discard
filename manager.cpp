@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QtSql>
 #include <QSqlError>
 #include <QApplication>
 #include <QFile>
@@ -52,6 +53,15 @@ bool Manager::init(QJsonObject &DBConfig, QSqlDatabase &dbex){
     database.setUserName(DBConfig.take("user").toString());
     database.setPassword(DBConfig.take("password").toString());
     bool ok = database.open();
+    database.driver()->subscribeToNotification("friendship");
+
+
+    QObject::connect(database.driver(), &QSqlDriver::notification,
+                     [](const QString &channel, QSqlDriver::NotificationSource source, const QVariant &payload){
+                         qDebug() << "Received NOTIFY on channel:" << channel << ", payload:" << payload.toString();
+                     });
+
+
     if (!ok) {
         qCritical() << "Cannot open DB:" << database.lastError().text();
     }
@@ -168,7 +178,7 @@ bool Manager::createUser(QString username, QString password, QString nickname){
     query.bindValue(":nick", nickname);
     query.bindValue(":ava", nickname);
     query.bindValue(":date", QDateTime::currentDateTime());
-    query.bindValue(":ava", QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + "/C++/Chat/uploads/image.png");
+    query.bindValue(":ava", QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + "/C++/Chat/uploads/imag.png");
     if(!query.exec()){
         qWarning() << "Insert failed" << query.lastError().text();
         return false;
