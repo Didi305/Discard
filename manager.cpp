@@ -12,6 +12,7 @@
 #include <QStandardPaths>
 #include "manager.h"
 #include "client.h"
+#include "addfriendpage.h"
 Manager::Manager(QObject *parent) : QObject(parent) {
 }
 
@@ -239,21 +240,28 @@ void Manager::updateUserAvatar(QString path, QString nickname){
     }
 }
 
-std::vector<RequestRow*> Manager::fetchPendingRequests(int id){
-    std::vector<RequestRow*> requests;
+std::vector<std::unique_ptr<RequestRow>> Manager::fetchRequests(int id, requestType type){
+    QString arg1 = "friend";
+    QString arg2 = "user";
+    if(type == requestType::amigo){
+        arg1 = "user";
+        arg2 = "friend";
+    }
+    std::vector<std::unique_ptr<RequestRow>> requests;
     QSqlQuery query(db());
     QString sql = QStringLiteral(
         "SELECT users.nickname, users.avatar "
         "FROM users "
-        "INNER JOIN friendship ON users.id = friendship.user_id "
-        "WHERE friendship.friend_id = :id AND friendship.status = :s"
-        );
+        "INNER JOIN friendship ON users.id = friendship.%1_id "
+        "WHERE friendship.%2_id = :id AND friendship.status = :s"
+        ).arg(arg1, arg2);
     query.prepare(sql);
     query.bindValue(":id" , id);
     query.bindValue(":s", "PENDING");
 
     if(!query.exec()){
         qCritical() << query.lastError().text();
+        return {};
     }
 
     while(query.next()){
@@ -261,8 +269,7 @@ std::vector<RequestRow*> Manager::fetchPendingRequests(int id){
         d.avatar = query.value("avatar").toString();
         qDebug() << "avatar hamid: " << d.avatar;
         d.displayName = query.value("nickname").toString();
-        RequestRow *row = new RequestRow(d);
-        requests.push_back(row);
+        requests.emplace_back(std::make_unique<RequestRow>(d));
     }
     return requests;
 }

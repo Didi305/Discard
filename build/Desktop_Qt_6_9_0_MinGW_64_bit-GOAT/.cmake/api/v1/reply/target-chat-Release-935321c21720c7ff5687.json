@@ -77,19 +77,19 @@
 			{
 				"command" : 4,
 				"file" : 1,
-				"line" : 82,
+				"line" : 86,
 				"parent" : 0
 			},
 			{
 				"command" : 5,
 				"file" : 1,
-				"line" : 64,
+				"line" : 68,
 				"parent" : 0
 			},
 			{
 				"command" : 5,
 				"file" : 1,
-				"line" : 65,
+				"line" : 69,
 				"parent" : 0
 			},
 			{
@@ -437,7 +437,9 @@
 				13,
 				18,
 				20,
-				21
+				21,
+				25,
+				28
 			]
 		}
 	],
@@ -588,7 +590,9 @@
 				13,
 				18,
 				20,
-				21
+				21,
+				25,
+				28
 			]
 		},
 		{
@@ -605,8 +609,12 @@
 				19,
 				22,
 				24,
-				25,
-				26
+				27,
+				30,
+				31,
+				32,
+				33,
+				34
 			]
 		},
 		{
@@ -615,7 +623,9 @@
 			[
 				12,
 				15,
-				16
+				16,
+				26,
+				29
 			]
 		},
 		{
@@ -623,14 +633,14 @@
 			"sourceIndexes" : 
 			[
 				23,
-				27
+				35
 			]
 		},
 		{
 			"name" : "CMake Rules",
 			"sourceIndexes" : 
 			[
-				28
+				36
 			]
 		}
 	],
@@ -769,6 +779,38 @@
 			"sourceGroupIndex" : 3
 		},
 		{
+			"backtrace" : 4,
+			"path" : "addfriendpage.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "addfriendpage.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"path" : "addfriendpage.ui",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 4,
+			"path" : "outgoingpage.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 4,
+			"compileGroupIndex" : 0,
+			"path" : "outgoingpage.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 4,
+			"path" : "outgoingpage.ui",
+			"sourceGroupIndex" : 2
+		},
+		{
 			"backtrace" : 0,
 			"isGenerated" : true,
 			"path" : "build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/chat_autogen/include/ui_login.h",
@@ -784,6 +826,18 @@
 			"backtrace" : 0,
 			"isGenerated" : true,
 			"path" : "build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/chat_autogen/include/ui_mainwindow.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/chat_autogen/include/ui_addfriendpage.h",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 0,
+			"isGenerated" : true,
+			"path" : "build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/chat_autogen/include/ui_outgoingpage.h",
 			"sourceGroupIndex" : 1
 		},
 		{

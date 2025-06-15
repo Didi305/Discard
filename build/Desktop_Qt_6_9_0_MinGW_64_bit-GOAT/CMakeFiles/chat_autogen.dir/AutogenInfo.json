@@ -477,6 +477,12 @@
 	"HEADERS" : 
 	[
 		[
+			"C:/Users/giler/OneDrive/Desktop/C++/Chat/addfriendpage.h",
+			"MU",
+			"EWIEGA46WW/moc_addfriendpage.cpp",
+			null
+		],
+		[
 			"C:/Users/giler/OneDrive/Desktop/C++/Chat/chatserver.h",
 			"MU",
 			"EWIEGA46WW/moc_chatserver.cpp",
@@ -510,6 +516,12 @@
 			"C:/Users/giler/OneDrive/Desktop/C++/Chat/manager.h",
 			"MU",
 			"EWIEGA46WW/moc_manager.cpp",
+			null
+		],
+		[
+			"C:/Users/giler/OneDrive/Desktop/C++/Chat/outgoingpage.h",
+			"MU",
+			"EWIEGA46WW/moc_outgoingpage.cpp",
 			null
 		],
 		[
@@ -609,6 +621,11 @@
 	"SETTINGS_FILE" : "C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/CMakeFiles/chat_autogen.dir/AutogenUsed.txt",
 	"SOURCES" : 
 	[
+		[
+			"C:/Users/giler/OneDrive/Desktop/C++/Chat/addfriendpage.cpp",
+			"MU",
+			null
+		],
 		[ "C:/Users/giler/OneDrive/Desktop/C++/Chat/chatserver.cpp", "MU", null ],
 		[ "C:/Users/giler/OneDrive/Desktop/C++/Chat/client.cpp", "MU", null ],
 		[ "C:/Users/giler/OneDrive/Desktop/C++/Chat/helpers.cpp", "MU", null ],
@@ -616,6 +633,11 @@
 		[ "C:/Users/giler/OneDrive/Desktop/C++/Chat/main.cpp", "MU", null ],
 		[ "C:/Users/giler/OneDrive/Desktop/C++/Chat/mainwindow.cpp", "MU", null ],
 		[ "C:/Users/giler/OneDrive/Desktop/C++/Chat/manager.cpp", "MU", null ],
+		[
+			"C:/Users/giler/OneDrive/Desktop/C++/Chat/outgoingpage.cpp",
+			"MU",
+			null
+		],
 		[
 			"C:/Users/giler/OneDrive/Desktop/C++/Chat/pendingrequestswidget.cpp",
 			"MU",

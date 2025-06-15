@@ -14,7 +14,7 @@ class RequestRow : public QWidget
     Q_OBJECT
 public:
     explicit RequestRow(const RequestData &d, QWidget *parent = nullptr);
-
+    const RequestData& data() const { return m_data; }
 signals:
     void accepted(const RequestData &);
     void declined(const RequestData &);

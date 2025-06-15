@@ -6,6 +6,8 @@
 #include <QLabel>
 #include "client.h"
 #include "manager.h"
+#include "outgoingpage.h"
+#include "addfriendpage.h"
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -19,20 +21,20 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override = default;
-
+    void updateUserPanelPosition();
+    void resizeEvent(QResizeEvent *event);
+    void updateAvatar(const QString &fileName);
 private slots:
     void onConnectionSuccess();
     void onAvatarButtonClicked();
-    void onAddFriendButtonClicked();
 private:
     Ui::MainWindow *ui;
+    AddFriendPage*    m_addFriendPage;
+    OutgoingPage*   m_outgoingPage;
     Manager *manager;
     Client *client;
     QFrame         *userPanel;
-    void updateUserPanelPosition();
-    void resizeEvent(QResizeEvent *event);
     QPushButton *avatarButton;
     QLabel *nameLabel;
-    void updateAvatar(const QString &fileName);
 };
 #endif // MAINWINDOW_H

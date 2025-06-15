@@ -15,11 +15,10 @@
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
-#include <QtWidgets/QScrollArea>
+#include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStackedWidget>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -29,48 +28,45 @@ QT_BEGIN_NAMESPACE
 class Ui_MainWindow
 {
 public:
-    QWidget *centralwidget;
-    QHBoxLayout *horizontalLayout;
+    QWidget *mainContainer;
+    QHBoxLayout *horizontalLayout_3;
     QVBoxLayout *verticalLayoutLeft;
     QWidget *widget_2;
-    QVBoxLayout *verticalLayoutCenter;
-    QStackedWidget *stackedWidget;
+    QStackedWidget *topBarColumnsContainer;
     QWidget *friends;
-    QVBoxLayout *verticalLayout;
-    QWidget *addFriend;
-    QVBoxLayout *verticalLayout_2;
-    QLabel *label;
-    QFrame *addFriendFrame;
-    QHBoxLayout *addFriendLayout;
-    QLineEdit *addFriendInput;
-    QPushButton *addFriendButton;
-    QWidget *PendingRequestList;
-    QHBoxLayout *horizontalLayout_3;
-    QScrollArea *scrollAreaPending;
-    QWidget *scrollAreaWidgetContents;
     QVBoxLayout *verticalLayout_4;
-    QVBoxLayout *listLayout;
-    QWidget *directMessages;
+    QFrame *topBarFrame;
+    QHBoxLayout *horizontalLayout_2;
+    QLabel *label;
+    QPushButton *outgoing;
+    QPushButton *addFriend;
+    QSpacerItem *horizontalSpacer;
+    QWidget *columnsContainer;
+    QHBoxLayout *horizontalLayout;
+    QVBoxLayout *verticalLayoutCenter;
+    QStackedWidget *ADD_OUTGOING;
     QVBoxLayout *verticalLayoutRight;
     QWidget *widget;
+    QWidget *directMessages;
     QMenuBar *menubar;
 
     void setupUi(QMainWindow *MainWindow)
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(1093, 739);
+        MainWindow->resize(1093, 751);
         QIcon icon(QIcon::fromTheme(QIcon::ThemeIcon::AddressBookNew));
         MainWindow->setWindowIcon(icon);
-        centralwidget = new QWidget(MainWindow);
-        centralwidget->setObjectName("centralwidget");
-        horizontalLayout = new QHBoxLayout(centralwidget);
-        horizontalLayout->setSpacing(0);
-        horizontalLayout->setObjectName("horizontalLayout");
-        horizontalLayout->setContentsMargins(0, 0, 0, 0);
+        mainContainer = new QWidget(MainWindow);
+        mainContainer->setObjectName("mainContainer");
+        horizontalLayout_3 = new QHBoxLayout(mainContainer);
+        horizontalLayout_3->setSpacing(0);
+        horizontalLayout_3->setObjectName("horizontalLayout_3");
+        horizontalLayout_3->setContentsMargins(0, 0, 0, 0);
         verticalLayoutLeft = new QVBoxLayout();
+        verticalLayoutLeft->setSpacing(0);
         verticalLayoutLeft->setObjectName("verticalLayoutLeft");
-        widget_2 = new QWidget(centralwidget);
+        widget_2 = new QWidget(mainContainer);
         widget_2->setObjectName("widget_2");
         widget_2->setMinimumSize(QSize(355, 0));
         QPalette palette;
@@ -162,18 +158,120 @@ public:
         palette.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Accent, brush11);
 #endif
         widget_2->setPalette(palette);
-        widget_2->setStyleSheet(QString::fromUtf8("background-color: #2b2d31"));
+        widget_2->setStyleSheet(QString::fromUtf8("background-color: #2b2d31;\n"
+"\n"
+"border: 1px solid #3a3c43;"));
 
         verticalLayoutLeft->addWidget(widget_2);
 
 
-        horizontalLayout->addLayout(verticalLayoutLeft);
+        horizontalLayout_3->addLayout(verticalLayoutLeft);
 
+        topBarColumnsContainer = new QStackedWidget(mainContainer);
+        topBarColumnsContainer->setObjectName("topBarColumnsContainer");
+        topBarColumnsContainer->setStyleSheet(QString::fromUtf8(""));
+        friends = new QWidget();
+        friends->setObjectName("friends");
+        verticalLayout_4 = new QVBoxLayout(friends);
+        verticalLayout_4->setSpacing(0);
+        verticalLayout_4->setObjectName("verticalLayout_4");
+        verticalLayout_4->setContentsMargins(0, 0, 0, 0);
+        topBarFrame = new QFrame(friends);
+        topBarFrame->setObjectName("topBarFrame");
+        topBarFrame->setMinimumSize(QSize(50, 50));
+        topBarFrame->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
+        topBarFrame->setStyleSheet(QString::fromUtf8("#topBarFrame {\n"
+"    border-bottom:1px solid #3a3c43;\n"
+"	background: #32353a;\n"
+"}"));
+        topBarFrame->setFrameShape(QFrame::Shape::NoFrame);
+        topBarFrame->setFrameShadow(QFrame::Shadow::Raised);
+        topBarFrame->setLineWidth(0);
+        horizontalLayout_2 = new QHBoxLayout(topBarFrame);
+        horizontalLayout_2->setSpacing(20);
+        horizontalLayout_2->setObjectName("horizontalLayout_2");
+        horizontalLayout_2->setContentsMargins(15, 5, 10, 10);
+        label = new QLabel(topBarFrame);
+        label->setObjectName("label");
+        QSizePolicy sizePolicy(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Preferred);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
+        label->setSizePolicy(sizePolicy);
+        label->setMaximumSize(QSize(100, 20));
+        QFont font;
+        font.setPointSize(14);
+        font.setWeight(QFont::ExtraBold);
+        label->setFont(font);
+
+        horizontalLayout_2->addWidget(label);
+
+        outgoing = new QPushButton(topBarFrame);
+        outgoing->setObjectName("outgoing");
+        QSizePolicy sizePolicy1(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(outgoing->sizePolicy().hasHeightForWidth());
+        outgoing->setSizePolicy(sizePolicy1);
+        outgoing->setMaximumSize(QSize(75, 16777215));
+        QFont font1;
+        font1.setPointSize(11);
+        font1.setBold(true);
+        font1.setItalic(false);
+        font1.setUnderline(false);
+        font1.setStrikeOut(false);
+        font1.setKerning(true);
+        outgoing->setFont(font1);
+        outgoing->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        outgoing->setStyleSheet(QString::fromUtf8("#outgoing { \n"
+"	background: #32353a; \n"
+"}\n"
+"\n"
+"#outgoing:hover { \n"
+"	background: #2f8f54; \n"
+"}"));
+        outgoing->setFlat(true);
+
+        horizontalLayout_2->addWidget(outgoing);
+
+        addFriend = new QPushButton(topBarFrame);
+        addFriend->setObjectName("addFriend");
+        sizePolicy1.setHeightForWidth(addFriend->sizePolicy().hasHeightForWidth());
+        addFriend->setSizePolicy(sizePolicy1);
+        addFriend->setMinimumSize(QSize(100, 0));
+        addFriend->setMaximumSize(QSize(75, 16777215));
+        QFont font2;
+        font2.setPointSize(12);
+        font2.setBold(true);
+        addFriend->setFont(font2);
+        addFriend->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        addFriend->setAutoFillBackground(false);
+        addFriend->setStyleSheet(QString::fromUtf8("#addFriend:hover { background:#2f8f54; }\n"
+"\n"
+"#addFriend{background: #32353a;}"));
+        addFriend->setFlat(true);
+
+        horizontalLayout_2->addWidget(addFriend);
+
+        horizontalSpacer = new QSpacerItem(40, 20, QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Minimum);
+
+        horizontalLayout_2->addItem(horizontalSpacer);
+
+
+        verticalLayout_4->addWidget(topBarFrame);
+
+        columnsContainer = new QWidget(friends);
+        columnsContainer->setObjectName("columnsContainer");
+        columnsContainer->setStyleSheet(QString::fromUtf8(""));
+        horizontalLayout = new QHBoxLayout(columnsContainer);
+        horizontalLayout->setSpacing(0);
+        horizontalLayout->setObjectName("horizontalLayout");
+        horizontalLayout->setContentsMargins(0, 0, 0, 0);
         verticalLayoutCenter = new QVBoxLayout();
-        verticalLayoutCenter->setSpacing(2);
+        verticalLayoutCenter->setSpacing(0);
         verticalLayoutCenter->setObjectName("verticalLayoutCenter");
-        stackedWidget = new QStackedWidget(centralwidget);
-        stackedWidget->setObjectName("stackedWidget");
+        ADD_OUTGOING = new QStackedWidget(columnsContainer);
+        ADD_OUTGOING->setObjectName("ADD_OUTGOING");
         QPalette palette1;
         QBrush brush12(QColor(50, 53, 58, 255));
         brush12.setStyle(Qt::BrushStyle::SolidPattern);
@@ -186,110 +284,17 @@ public:
         palette1.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Button, brush12);
         palette1.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Base, brush12);
         palette1.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Window, brush12);
-        stackedWidget->setPalette(palette1);
-        stackedWidget->setStyleSheet(QString::fromUtf8("background-color: #32353a"));
-        friends = new QWidget();
-        friends->setObjectName("friends");
-        verticalLayout = new QVBoxLayout(friends);
-        verticalLayout->setSpacing(0);
-        verticalLayout->setObjectName("verticalLayout");
-        verticalLayout->setContentsMargins(0, 0, 0, 0);
-        addFriend = new QWidget(friends);
-        addFriend->setObjectName("addFriend");
-        addFriend->setAutoFillBackground(false);
-        addFriend->setStyleSheet(QString::fromUtf8(""));
-        verticalLayout_2 = new QVBoxLayout(addFriend);
-        verticalLayout_2->setObjectName("verticalLayout_2");
-        label = new QLabel(addFriend);
-        label->setObjectName("label");
-        QFont font;
-        font.setPointSize(18);
-        font.setBold(true);
-        label->setFont(font);
+        ADD_OUTGOING->setPalette(palette1);
+        ADD_OUTGOING->setStyleSheet(QString::fromUtf8("background-color: #32353a"));
 
-        verticalLayout_2->addWidget(label);
-
-        addFriendFrame = new QFrame(addFriend);
-        addFriendFrame->setObjectName("addFriendFrame");
-        addFriendFrame->setAutoFillBackground(false);
-        addFriendFrame->setStyleSheet(QString::fromUtf8("background-color: rgb(24, 26, 27)"));
-        addFriendFrame->setFrameShape(QFrame::Shape::NoFrame);
-        addFriendFrame->setFrameShadow(QFrame::Shadow::Raised);
-        addFriendLayout = new QHBoxLayout(addFriendFrame);
-        addFriendLayout->setObjectName("addFriendLayout");
-        addFriendInput = new QLineEdit(addFriendFrame);
-        addFriendInput->setObjectName("addFriendInput");
-        addFriendInput->setFrame(false);
-
-        addFriendLayout->addWidget(addFriendInput);
-
-        addFriendButton = new QPushButton(addFriendFrame);
-        addFriendButton->setObjectName("addFriendButton");
-        addFriendButton->setMinimumSize(QSize(100, 30));
-        QFont font1;
-        font1.setPointSize(11);
-        font1.setBold(true);
-        addFriendButton->setFont(font1);
-        addFriendButton->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        addFriendButton->setStyleSheet(QString::fromUtf8("background-color: green"));
-        addFriendButton->setFlat(false);
-
-        addFriendLayout->addWidget(addFriendButton);
-
-
-        verticalLayout_2->addWidget(addFriendFrame);
-
-
-        verticalLayout->addWidget(addFriend);
-
-        PendingRequestList = new QWidget(friends);
-        PendingRequestList->setObjectName("PendingRequestList");
-        horizontalLayout_3 = new QHBoxLayout(PendingRequestList);
-        horizontalLayout_3->setObjectName("horizontalLayout_3");
-        scrollAreaPending = new QScrollArea(PendingRequestList);
-        scrollAreaPending->setObjectName("scrollAreaPending");
-        scrollAreaPending->setStyleSheet(QString::fromUtf8(""));
-        scrollAreaPending->setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOn);
-        scrollAreaPending->setSizeAdjustPolicy(QAbstractScrollArea::SizeAdjustPolicy::AdjustIgnored);
-        scrollAreaPending->setWidgetResizable(true);
-        scrollAreaPending->setAlignment(Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing);
-        scrollAreaWidgetContents = new QWidget();
-        scrollAreaWidgetContents->setObjectName("scrollAreaWidgetContents");
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 343, 592));
-        QSizePolicy sizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Preferred);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(scrollAreaWidgetContents->sizePolicy().hasHeightForWidth());
-        scrollAreaWidgetContents->setSizePolicy(sizePolicy);
-        verticalLayout_4 = new QVBoxLayout(scrollAreaWidgetContents);
-        verticalLayout_4->setObjectName("verticalLayout_4");
-        listLayout = new QVBoxLayout();
-        listLayout->setSpacing(0);
-        listLayout->setObjectName("listLayout");
-
-        verticalLayout_4->addLayout(listLayout);
-
-        scrollAreaPending->setWidget(scrollAreaWidgetContents);
-
-        horizontalLayout_3->addWidget(scrollAreaPending);
-
-
-        verticalLayout->addWidget(PendingRequestList);
-
-        verticalLayout->setStretch(1, 1);
-        stackedWidget->addWidget(friends);
-        directMessages = new QWidget();
-        directMessages->setObjectName("directMessages");
-        stackedWidget->addWidget(directMessages);
-
-        verticalLayoutCenter->addWidget(stackedWidget);
+        verticalLayoutCenter->addWidget(ADD_OUTGOING);
 
 
         horizontalLayout->addLayout(verticalLayoutCenter);
 
         verticalLayoutRight = new QVBoxLayout();
         verticalLayoutRight->setObjectName("verticalLayoutRight");
-        widget = new QWidget(centralwidget);
+        widget = new QWidget(columnsContainer);
         widget->setObjectName("widget");
         widget->setMinimumSize(QSize(355, 0));
         QPalette palette2;
@@ -303,15 +308,26 @@ public:
         palette2.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Base, brush12);
         palette2.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Window, brush12);
         widget->setPalette(palette2);
-        widget->setStyleSheet(QString::fromUtf8("background-color: #32353a"));
+        widget->setStyleSheet(QString::fromUtf8("background-color: #32353a;\n"
+"\n"
+"border: 1px solid #3a3c43;"));
 
         verticalLayoutRight->addWidget(widget);
 
 
         horizontalLayout->addLayout(verticalLayoutRight);
 
-        horizontalLayout->setStretch(1, 1);
-        MainWindow->setCentralWidget(centralwidget);
+
+        verticalLayout_4->addWidget(columnsContainer);
+
+        topBarColumnsContainer->addWidget(friends);
+        directMessages = new QWidget();
+        directMessages->setObjectName("directMessages");
+        topBarColumnsContainer->addWidget(directMessages);
+
+        horizontalLayout_3->addWidget(topBarColumnsContainer);
+
+        MainWindow->setCentralWidget(mainContainer);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
         menubar->setGeometry(QRect(0, 0, 1093, 21));
@@ -319,7 +335,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(0);
+        ADD_OUTGOING->setCurrentIndex(-1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -328,8 +344,9 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "Discard", nullptr));
-        label->setText(QCoreApplication::translate("MainWindow", "Add Friend", nullptr));
-        addFriendButton->setText(QCoreApplication::translate("MainWindow", "Add Friend", nullptr));
+        label->setText(QCoreApplication::translate("MainWindow", "Friends", nullptr));
+        outgoing->setText(QCoreApplication::translate("MainWindow", "Pending", nullptr));
+        addFriend->setText(QCoreApplication::translate("MainWindow", "Add Friend", nullptr));
     } // retranslateUi
 
 };

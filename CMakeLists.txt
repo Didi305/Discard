@@ -41,6 +41,10 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         helpers.cpp
         helpers.h
         styles/dark.qss
+        addfriendpage.h addfriendpage.cpp addfriendpage.ui
+        outgoingpage.h outgoingpage.cpp outgoingpage.ui
+
+
 
     )
 # Define target properties for Android with Qt 6 as:

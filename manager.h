@@ -3,6 +3,7 @@
 #include <qobject.h>
 #include "requestrow.h"
 #include <vector>
+#include <utility>
 #include <qsqldatabase.h>
 #include "client.h"
 struct DBConfig{
@@ -12,7 +13,10 @@ struct DBConfig{
     QString user;
     QString password;
 };
-
+enum class requestType {
+    amigo,
+    user
+};
 class Manager : public QObject {
     Q_OBJECT
 public:
@@ -30,7 +34,7 @@ public:
     void updateUserAvatar(QString path, QString nickname);
     void findNickname(QString username);
     void postMessage(QString message);
-    std::vector<RequestRow*> fetchPendingRequests(int id);
+    std::vector<std::unique_ptr<RequestRow>> fetchRequests(int id, requestType type);
 private:
     Manager() = default;
     ~Manager() = default;

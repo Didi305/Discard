@@ -15,6 +15,8 @@
 #include "ui_MainWindow.h"
 #include "MainWindow.h"
 #include "manager.h"
+#include "addfriendpage.h"
+#include "outgoingpage.h"
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -23,18 +25,18 @@ MainWindow::MainWindow(QWidget *parent)
     , nameLabel(new QLabel(userPanel))
     , manager(Manager::get())
     , client(manager->getClient())
+    , m_addFriendPage(new AddFriendPage(this))
+    , m_outgoingPage(new OutgoingPage(this))
 {
     ui->setupUi(this);
-    auto *list = ui->scrollAreaPending->widget()->findChild<QVBoxLayout*>("listLayout");      // scrollAreaWidgetContent
-    list->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-    std::vector<RequestRow*> pendingRequests = manager->fetchPendingRequests(client->getClientID());
-    for (auto row : pendingRequests)           // row is a raw pointer
-    {
-        row->setParent(ui->scrollAreaWidgetContents);
-        list->addWidget(row);
-    }
-    ui->addFriendFrame->setAttribute(Qt::WA_StyledBackground, true);
-    userPanel->setParent(ui->centralwidget);
+
+    ui->ADD_OUTGOING->addWidget(m_addFriendPage);
+    ui->ADD_OUTGOING->addWidget(m_outgoingPage); // index 1
+
+    m_addFriendPage->load(client->getClientID());
+    m_outgoingPage->setRequests(client->getClientID());
+
+    userPanel->setParent(ui->mainContainer);
     userPanel->setObjectName("userPanel");
     userPanel->setFixedHeight(60);          // 50 px tall
     userPanel->setFixedWidth(335);
@@ -78,11 +80,18 @@ MainWindow::MainWindow(QWidget *parent)
     userPanel->show();
     connect(avatarButton, &QPushButton::clicked, this, &MainWindow::onAvatarButtonClicked);
     connect(client, &Client::connected, this, &::MainWindow::onConnectionSuccess);
-    connect(ui->addFriendButton, &QPushButton::clicked, this, &MainWindow::onAddFriendButtonClicked);
+    connect(ui->addFriend, &QPushButton::clicked, this, [=]() { ui->ADD_OUTGOING->setCurrentIndex(0);});
+    connect(ui->outgoing, &QPushButton::clicked, this, [=]() { ui->ADD_OUTGOING->setCurrentIndex(1);});
+    connect(m_addFriendPage, &AddFriendPage::addFriendRequested,
+            this, [this](const QString &nick){
+            QString status = manager->checkFriendship(nick);
+            if(status.isEmpty() || status == "PENDING"){
+                QMessageBox::warning(this, "User not found", " or request is Pending");
+                }
+            });
     updateUserPanelPosition();
 
 }
-
 
 
 
@@ -170,13 +179,6 @@ void MainWindow::onAvatarButtonClicked()
 }
 
 
-void MainWindow::onAddFriendButtonClicked(){
-    QString friendNickname = ui->addFriendInput->text();
-    QString status = manager->checkFriendship(friendNickname);
-    if(status.isEmpty() || status == "PENDING"){
-        QMessageBox::warning(this, "User not found", " or request is Pending");
-    }
-}
 
 void MainWindow::onConnectionSuccess()
 {
