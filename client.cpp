@@ -9,6 +9,7 @@ Client::Client(QObject *parent) : QObject(parent){
 Client::~Client() {
     delete socket;
 }
+
 QString Client::getClientName(){
     return name;
 }

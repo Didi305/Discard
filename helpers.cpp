@@ -38,3 +38,5 @@ QPixmap renderSvg(const QString &resourcePath, int sidePx)
     svg.render(&p);                          // draw entire SVG into pixmap
     return canvas;
 }
+
+

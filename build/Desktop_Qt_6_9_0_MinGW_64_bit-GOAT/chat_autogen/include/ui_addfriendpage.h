@@ -43,7 +43,9 @@ public:
             AddFriendPage->setObjectName("AddFriendPage");
         AddFriendPage->resize(400, 738);
         verticalLayout = new QVBoxLayout(AddFriendPage);
+        verticalLayout->setSpacing(0);
         verticalLayout->setObjectName("verticalLayout");
+        verticalLayout->setContentsMargins(0, 0, 0, 0);
         verticalLayout_2 = new QVBoxLayout();
         verticalLayout_2->setSpacing(20);
         verticalLayout_2->setObjectName("verticalLayout_2");
@@ -96,28 +98,26 @@ public:
 
         scrollAreaPending = new QScrollArea(AddFriendPage);
         scrollAreaPending->setObjectName("scrollAreaPending");
-        scrollAreaPending->setStyleSheet(QString::fromUtf8("#scrollAreaPending {\n"
-"	border-top: 1px solid #3a3c43;\n"
-"}"));
+        scrollAreaPending->setAutoFillBackground(true);
+        scrollAreaPending->setStyleSheet(QString::fromUtf8(""));
         scrollAreaPending->setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOn);
         scrollAreaPending->setSizeAdjustPolicy(QAbstractScrollArea::SizeAdjustPolicy::AdjustIgnored);
         scrollAreaPending->setWidgetResizable(true);
         scrollAreaPending->setAlignment(Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName("scrollAreaWidgetContents");
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 368, 501));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 384, 525));
         QSizePolicy sizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(scrollAreaWidgetContents->sizePolicy().hasHeightForWidth());
         scrollAreaWidgetContents->setSizePolicy(sizePolicy);
-        scrollAreaWidgetContents->setStyleSheet(QString::fromUtf8("#scrollAreaWidgetContents {\n"
-"	border-top: 1px solid #3a3c43;\n"
-"}"));
+        scrollAreaWidgetContents->setAutoFillBackground(true);
+        scrollAreaWidgetContents->setStyleSheet(QString::fromUtf8(""));
         verticalLayout_13 = new QVBoxLayout(scrollAreaWidgetContents);
         verticalLayout_13->setSpacing(0);
         verticalLayout_13->setObjectName("verticalLayout_13");
-        verticalLayout_13->setContentsMargins(0, 0, 0, 0);
+        verticalLayout_13->setContentsMargins(15, 0, 0, 0);
         listLayout = new QVBoxLayout();
         listLayout->setSpacing(0);
         listLayout->setObjectName("listLayout");

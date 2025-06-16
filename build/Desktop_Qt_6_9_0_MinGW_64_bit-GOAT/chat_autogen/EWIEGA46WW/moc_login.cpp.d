@@ -168,6 +168,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOA
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/QDialog \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/QWidget \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/qdialog.h \
+  C:/Qt/6.9.0/mingw_64/include/QtWidgets/qframe.h \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/qsizepolicy.h \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/qtwidgets-config.h \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/qtwidgetsexports.h \
@@ -387,4 +388,4 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOA
   C:/Users/giler/OneDrive/Desktop/C++/Chat/client.h \
   C:/Users/giler/OneDrive/Desktop/C++/Chat/manager.h \
   C:/Users/giler/OneDrive/Desktop/C++/Chat/register.h \
-  C:/Users/giler/OneDrive/Desktop/C++/Chat/requestrow.h
+  C:/Users/giler/OneDrive/Desktop/C++/Chat/row.h

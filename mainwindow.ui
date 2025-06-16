@@ -529,7 +529,10 @@ border: 1px solid #3a3c43;</string>
       <property name="styleSheet">
        <string notr="true"/>
       </property>
-      <widget class="QWidget" name="friends" native="true">
+      <widget class="QWidget" name="friends">
+       <property name="autoFillBackground">
+        <bool>true</bool>
+       </property>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <property name="spacing">
          <number>0</number>
@@ -644,10 +647,7 @@ border: 1px solid #3a3c43;</string>
               <string notr="true">#outgoing { 
 	background: #32353a; 
 }
-
-#outgoing:hover { 
-	background: #2f8f54; 
-}</string>
+</string>
              </property>
              <property name="text">
               <string>Pending</string>
@@ -690,8 +690,7 @@ border: 1px solid #3a3c43;</string>
               <bool>false</bool>
              </property>
              <property name="styleSheet">
-              <string notr="true">#addFriend:hover { background:#2f8f54; }
-
+              <string notr="true">
 #addFriend{background: #32353a;}</string>
              </property>
              <property name="text">
@@ -720,6 +719,9 @@ border: 1px solid #3a3c43;</string>
         </item>
         <item>
          <widget class="QWidget" name="columnsContainer" native="true">
+          <property name="autoFillBackground">
+           <bool>true</bool>
+          </property>
           <property name="styleSheet">
            <string notr="true"/>
           </property>
@@ -837,8 +839,11 @@ border: 1px solid #3a3c43;</string>
                  </disabled>
                 </palette>
                </property>
+               <property name="autoFillBackground">
+                <bool>true</bool>
+               </property>
                <property name="styleSheet">
-                <string notr="true">background-color: #32353a</string>
+                <string notr="true"/>
                </property>
                <property name="currentIndex">
                 <number>-1</number>

@@ -1,6 +1,6 @@
 // pendingrequestswidget.cpp
 #include "pendingrequestswidget.h"
-#include "requestrow.h"
+#include "row.h"
 #include <QVBoxLayout>
 
 PendingRequestsWidget::PendingRequestsWidget(QWidget *parent)
@@ -28,10 +28,10 @@ PendingRequestsWidget::PendingRequestsWidget(QWidget *parent)
     setWidget(content);
 }
 
-void PendingRequestsWidget::setRequests(const std::vector<RequestRow*> &list)
+void PendingRequestsWidget::setRequests(const std::vector<Row*> &list)
 {
     // remove old rows -------------------------------------------------
-    while (auto *w = content->findChild<RequestRow*>())
+    while (auto *w = content->findChild<Row*>())
         delete w;
 
     // add new rows ----------------------------------------------------
@@ -40,7 +40,7 @@ void PendingRequestsWidget::setRequests(const std::vector<RequestRow*> &list)
         rowsLayout->addWidget(row);
 
         // When × is clicked remove the row *and* notify whoever owns the list.
-        connect(row, &RequestRow::declined, this, [this, row]{
+        connect(row, &Row::declined, this, [this, row]{
             row->deleteLater();
             // TODO: emit something like requestCancelled(id);
         });

@@ -1,7 +1,7 @@
 #ifndef LOGIN_DIALOG_H
 #define LOGIN_DIALOG_H
 
-#include <QDialog>            // forward declaration of your network class
+#include <QDialog>
 #include "register.h"
 #include "manager.h"
 QT_BEGIN_NAMESPACE

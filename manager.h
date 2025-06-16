@@ -1,7 +1,7 @@
 #ifndef DATABASEMANAGER_H
 #define DATABASEMANAGER_H
 #include <qobject.h>
-#include "requestrow.h"
+#include "row.h"
 #include <vector>
 #include <utility>
 #include <qsqldatabase.h>
@@ -34,7 +34,10 @@ public:
     void updateUserAvatar(QString path, QString nickname);
     void findNickname(QString username);
     void postMessage(QString message);
-    std::vector<std::unique_ptr<RequestRow>> fetchRequests(int id, requestType type);
+    std::vector<std::unique_ptr<Row>> fetchRequests(int id, RowType type);
+    void acceptRequest(int user_id);
+    void declineRequest(int user_id);
+    void cancelRequest(int user_id);
 private:
     Manager() = default;
     ~Manager() = default;

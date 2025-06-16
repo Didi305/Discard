@@ -537,9 +537,9 @@
 			null
 		],
 		[
-			"C:/Users/giler/OneDrive/Desktop/C++/Chat/requestrow.h",
+			"C:/Users/giler/OneDrive/Desktop/C++/Chat/row.h",
 			"MU",
-			"EWIEGA46WW/moc_requestrow.cpp",
+			"EWIEGA46WW/moc_row.cpp",
 			null
 		]
 	],
@@ -644,7 +644,7 @@
 			null
 		],
 		[ "C:/Users/giler/OneDrive/Desktop/C++/Chat/register.cpp", "MU", null ],
-		[ "C:/Users/giler/OneDrive/Desktop/C++/Chat/requestrow.cpp", "MU", null ]
+		[ "C:/Users/giler/OneDrive/Desktop/C++/Chat/row.cpp", "MU", null ]
 	],
 	"UIC_OPTIONS" : [],
 	"UIC_SEARCH_PATHS" : [],

@@ -8,4 +8,4 @@
 #include "EWIEGA46WW/moc_outgoingpage.cpp"
 #include "EWIEGA46WW/moc_pendingrequestswidget.cpp"
 #include "EWIEGA46WW/moc_register.cpp"
-#include "EWIEGA46WW/moc_requestrow.cpp"
+#include "EWIEGA46WW/moc_row.cpp"

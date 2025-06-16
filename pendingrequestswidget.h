@@ -2,7 +2,7 @@
 #define PENDINGREQUESTWIDGET_H
 #include <QScrollArea>
 #include <QVBoxLayout>
-#include "requestrow.h"
+#include "row.h"
 #include <vector>
 
 class PendingRequestsWidget : public QScrollArea
@@ -12,11 +12,11 @@ public:
     explicit PendingRequestsWidget(QWidget *parent = nullptr);
 
     // call this whenever your backend delivers new data
-    void setRequests(const std::vector<RequestRow*> &list);
+    void setRequests(const std::vector<Row*> &list);
 
 private:
     QWidget *content;
-    RequestRow *r;    // the container inside the scroll area
-    QVBoxLayout *rowsLayout;    // vertical layout that holds RequestRow widgets
+    Row *r;    // the container inside the scroll area
+    QVBoxLayout *rowsLayout;    // vertical layout that holds Row widgets
 };
 #endif

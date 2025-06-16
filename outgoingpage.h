@@ -2,7 +2,7 @@
 #define OUTGOINGPAGE_H
 
 #include "manager.h"
-#include "requestrow.h"
+#include "row.h"
 #include "ui_outgoingpage.h"
 #include <QWidget>
 #include <qlayoutitem.h>
@@ -25,6 +25,6 @@ public slots:
 private:
     Ui::OutgoingPage *ui;
     Manager *m_manager {nullptr};
-    std::vector<std::unique_ptr<RequestRow>>  m_outgoingRows;
+    std::vector<std::unique_ptr<Row>>  m_outgoingRows;
 };
 #endif // OUTGOINGPAGE_H

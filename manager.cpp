@@ -240,17 +240,17 @@ void Manager::updateUserAvatar(QString path, QString nickname){
     }
 }
 
-std::vector<std::unique_ptr<RequestRow>> Manager::fetchRequests(int id, requestType type){
+std::vector<std::unique_ptr<Row>> Manager::fetchRequests(int id, RowType type){
     QString arg1 = "friend";
     QString arg2 = "user";
-    if(type == requestType::amigo){
+    if(type == RowType::Pending){
         arg1 = "user";
         arg2 = "friend";
     }
-    std::vector<std::unique_ptr<RequestRow>> requests;
+    std::vector<std::unique_ptr<Row>> requests;
     QSqlQuery query(db());
     QString sql = QStringLiteral(
-        "SELECT users.nickname, users.avatar "
+        "SELECT users.id, users.nickname, users.avatar "
         "FROM users "
         "INNER JOIN friendship ON users.id = friendship.%1_id "
         "WHERE friendship.%2_id = :id AND friendship.status = :s"
@@ -265,11 +265,63 @@ std::vector<std::unique_ptr<RequestRow>> Manager::fetchRequests(int id, requestT
     }
 
     while(query.next()){
-        RequestData d;
+        Data d;
         d.avatar = query.value("avatar").toString();
         qDebug() << "avatar hamid: " << d.avatar;
         d.displayName = query.value("nickname").toString();
-        requests.emplace_back(std::make_unique<RequestRow>(d));
+        d.user_id = query.value("id").toInt();
+        requests.emplace_back(std::make_unique<Row>(d, type));
     }
+    qDebug() << "crashes here?";
+
     return requests;
+}
+
+void Manager::acceptRequest(int user_id){
+    QSqlQuery query(db());
+
+    static const QString sql = QStringLiteral(
+        "UPDATE friendship "
+        "SET status = :s "
+        "WHERE user_id = :id AND friend_id = :f "
+        );
+    query.prepare(sql);
+    query.bindValue(":id", user_id);
+    query.bindValue(":f", client->getClientID());
+    query.bindValue(":s", "ACTIVE");
+    if(!query.exec()){
+        qCritical() << query.lastError().text();
+    }
+    qDebug() << "New Friends ^^: " << user_id << "and " << client->getClientID();
+}
+
+void Manager::declineRequest(int user_id){
+    QSqlQuery query(db());
+
+    static const QString sql = QStringLiteral(
+        "DELETE FROM friendship "
+        "WHERE user_id = :id AND friend_id = :f "
+        );
+    query.prepare(sql);
+    query.bindValue(":id", user_id);
+    query.bindValue(":f", client->getClientID());
+    if(!query.exec()){
+        qCritical() << query.lastError().text();
+    }
+    qDebug() << "no Friends -_-: " << user_id << "and " << client->getClientID();
+}
+void Manager::cancelRequest(int friend_id){
+    QSqlQuery query(db());
+
+    static const QString sql = QStringLiteral(
+        "DELETE FROM friendship "
+        "WHERE user_id = :id AND friend_id = :f "
+        );
+    query.prepare(sql);
+    query.bindValue(":id", client->getClientID());
+    query.bindValue(":f", friend_id);
+    if(!query.exec()){
+        qCritical() << query.lastError().text();
+    }
+    qDebug() << "no Friends -_-: " << friend_id << "and " << client->getClientID();
 }

@@ -7,6 +7,7 @@ AddFriendPage::AddFriendPage(QWidget *parent)
 {
     ui->setupUi(this);
     ui->listLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+
     connect(ui->addFriendButton, &QPushButton::clicked,
             this, &AddFriendPage::onAddFriendButtonClicked);
 }
@@ -17,13 +18,26 @@ AddFriendPage::~AddFriendPage()
 }
 
 void AddFriendPage::load(int userId) {
-    // 1) Fetch into your member container
-    m_pendingRows = manager->fetchRequests(userId, requestType::amigo);
+    QLayoutItem *child;
+    while ((child = ui->listLayout->takeAt(0))) {
+        delete child->widget();
+        delete child;
+    }
+    m_pendingRows = manager->fetchRequests(userId, RowType::Pending);
     // 2) Add each widget to your layout
     for (auto& uptr : m_pendingRows) {
-        ui->listLayout->addWidget(uptr.get());
-        qDebug() << uptr.get()->data().displayName;
+        Row* raw = uptr.release();
+        ui->listLayout->addWidget(raw);
+        connect(raw, &Row::accepted, this, [this, raw](Data d){
+            manager->acceptRequest(d.user_id);
+            raw->deleteLater();
+        });
+        connect(raw, &Row::declined, this, [this, raw](Data d){
+            manager->declineRequest(d.user_id);
+            raw->deleteLater();
+        });
     }
+
 }
 
 void AddFriendPage::onAddFriendButtonClicked(){

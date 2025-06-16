@@ -43,7 +43,9 @@ public:
             OutgoingPage->setObjectName("OutgoingPage");
         OutgoingPage->resize(400, 714);
         verticalLayout = new QVBoxLayout(OutgoingPage);
+        verticalLayout->setSpacing(0);
         verticalLayout->setObjectName("verticalLayout");
+        verticalLayout->setContentsMargins(0, 0, 0, 0);
         verticalLayout_2 = new QVBoxLayout();
         verticalLayout_2->setSpacing(20);
         verticalLayout_2->setObjectName("verticalLayout_2");
@@ -105,7 +107,7 @@ public:
         scrollAreaOutgoing->setAlignment(Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName("scrollAreaWidgetContents");
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 366, 541));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 384, 565));
         QSizePolicy sizePolicy(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
@@ -117,7 +119,7 @@ public:
         verticalLayout_5 = new QVBoxLayout(scrollAreaWidgetContents);
         verticalLayout_5->setSpacing(0);
         verticalLayout_5->setObjectName("verticalLayout_5");
-        verticalLayout_5->setContentsMargins(0, 0, 0, 0);
+        verticalLayout_5->setContentsMargins(15, 0, 0, 0);
         listLayout = new QVBoxLayout();
         listLayout->setSpacing(0);
         listLayout->setObjectName("listLayout");

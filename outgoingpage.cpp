@@ -16,16 +16,21 @@ OutgoingPage::~OutgoingPage()
 }
 
 void OutgoingPage::setRequests(int userID) {
-    // clear existing
     QLayoutItem *child;
     while ((child = ui->listLayout->takeAt(0))) {
         delete child->widget();
         delete child;
     }
-    m_outgoingRows = m_manager->fetchRequests(userID, requestType::user);
+    m_outgoingRows = m_manager->fetchRequests(userID, RowType::Outgoing);
     // 2) Add each widget to your layout
     for (auto& uptr : m_outgoingRows) {
-        ui->listLayout->addWidget(uptr.get());
+        Row* raw = uptr.release();
+        ui->listLayout->addWidget(raw);
+        connect(raw, &Row::canceled, this,
+                [this, raw](Data d) {
+                    m_manager->cancelRequest(d.user_id);
+                    raw->deleteLater();
+                });
     }
 }
 

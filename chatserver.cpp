@@ -47,6 +47,8 @@ ChatServer::~ChatServer() {
 
     void ChatServer::clientDisconnected(){
         QTcpSocket* clientSocket = qobject_cast<QTcpSocket*>(sender());
+        qDebug() << "deleting Socket: " << clientSocket;
+        clients.remove(clientSocket);
         clientSocket->deleteLater();
     };
 

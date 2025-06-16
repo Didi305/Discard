@@ -23,7 +23,7 @@ QString loadStyle(const QString &path)
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    qApp->setStyleSheet(loadStyle(path + "/styles/dark.qss"));
+    a.setStyleSheet(loadStyle(path + "/styles/dark.qss"));
     Client client;
     Manager *mgr = Manager::get();
     mgr->setClient(&client);
@@ -37,7 +37,6 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     ChatServer server;
-
-    // Send a test message after connecting
+    qDebug() << a.styleSheet().count("#row");
     return a.exec();
 }

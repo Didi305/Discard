@@ -24,9 +24,11 @@ public:
     void updateUserPanelPosition();
     void resizeEvent(QResizeEvent *event);
     void updateAvatar(const QString &fileName);
+    void refreshForUser();
 private slots:
     void onConnectionSuccess();
     void onAvatarButtonClicked();
+    void onDisconnectClicked();
 private:
     Ui::MainWindow *ui;
     AddFriendPage*    m_addFriendPage;

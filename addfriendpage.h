@@ -5,7 +5,7 @@
 #include "ui_addfriendpage.h"
 #include <QWidget>
 #include <qboxlayout.h>
-#include "requestrow.h"
+#include "row.h"
 namespace Ui {
 class AddFriendPage;
 }
@@ -29,7 +29,7 @@ private slots:
 private:
     Ui::AddFriendPage *ui;
     Manager *manager;
-    std::vector<std::unique_ptr<RequestRow>>  m_pendingRows;
+    std::vector<std::unique_ptr<Row>>  m_pendingRows;
 };
 
 #endif // ADDFRIENDPAGE_H

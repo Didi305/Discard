@@ -1,21 +1,135 @@
-/* === VERTICAL SCROLLBAR ======================================= */
+
+#scrollAreaPending{
+    border-top: 1px solid #3a3c43;
+}
+
+#scrollAreaWidgetContents,
+#scrollAreaPending{
+    background:#32353a;
+}
+
+#ADD_OUTGOING QPushButton {
+    background: transparent;
+    qproperty-flat: true;
+}
+#decline:hover,
+#cancel:hover{
+    background: red;
+}
+
+#accept:hover{
+    background: green;
+}
+
+QFrame#Row {
+  background-color:red;
+}
+
+#avatar {
+    color:yellow;
+    background: transparent;
+}
+
+#name {
+    color:#fff;
+    font: 16px Arial, sans-serif;
+}
+
+QFrame#userPanel {
+            background-color:#32353a;
+            border-radius: 4px;
+        }
+
+#disconnectButton{
+    qproperty-flat: true;
+    background: red;
+}        
+#disconnectButton:hover{color: #fff; background: white;}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 QScrollBar:vertical {
-    background: transparent;      /* track disappears      */
-    width: 8px;                   /* slim like Discord     */                  /* no top/bottom margin  */
+    background: transparent;      
+    width: 8px;              
 }
 
 QScrollBar::handle:vertical {
-    background:rgb(70, 72, 75);          /* dark grey “thumb”     */
-    min-height: 40px;             /* keeps it usable       */
-    border-radius: 4px;           /* rounded edges         */
+    background:rgb(70, 72, 75);          
+    min-height: 40px;             
+    border-radius: 4px;           
 }
 
 QScrollBar::handle:vertical:hover,
 QScrollBar::handle:vertical:pressed {
-    background:rgb(78, 79, 85);          /* Discord accent blue   */
+    background:rgb(78, 79, 85);          
 }
 
-/* remove the arrows */
+
 QScrollBar::sub-line:vertical,
 QScrollBar::add-line:vertical {
     width: 0px;
@@ -24,11 +138,11 @@ QScrollBar::add-line:vertical {
 
 QScrollBar::add-page:vertical,
 QScrollBar::sub-page:vertical {
-    background: none;             /* keeps track invisible */
+    background: none;             
 }
 
 
-/* === HORIZONTAL (same vibe, rarely shown in Discord) ========= */
+
 QScrollBar:horizontal {
     background: transparent;
     height: 8px;
@@ -58,12 +172,3 @@ QScrollBar::sub-page:horizontal {
 }
 
 
-QFrame#addFriendFrame {
-            background-color:rgb(223, 22, 22);
-            border-radius: 4px;
-        }
-
-QFrame#userPanel {
-            background-color:#32353a;
-            border-radius: 4px;
-        }

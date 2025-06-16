@@ -36,7 +36,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         register.h
         register.ui
         mainwindow.ui
-        requestrow.h requestrow.cpp
+        row.h row.cpp
         pendingrequestswidget.h pendingrequestswidget.cpp
         helpers.cpp
         helpers.h

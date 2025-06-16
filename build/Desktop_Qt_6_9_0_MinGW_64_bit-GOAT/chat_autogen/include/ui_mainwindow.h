@@ -172,6 +172,7 @@ public:
         topBarColumnsContainer->setStyleSheet(QString::fromUtf8(""));
         friends = new QWidget();
         friends->setObjectName("friends");
+        friends->setAutoFillBackground(true);
         verticalLayout_4 = new QVBoxLayout(friends);
         verticalLayout_4->setSpacing(0);
         verticalLayout_4->setObjectName("verticalLayout_4");
@@ -226,10 +227,7 @@ public:
         outgoing->setStyleSheet(QString::fromUtf8("#outgoing { \n"
 "	background: #32353a; \n"
 "}\n"
-"\n"
-"#outgoing:hover { \n"
-"	background: #2f8f54; \n"
-"}"));
+""));
         outgoing->setFlat(true);
 
         horizontalLayout_2->addWidget(outgoing);
@@ -246,8 +244,7 @@ public:
         addFriend->setFont(font2);
         addFriend->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
         addFriend->setAutoFillBackground(false);
-        addFriend->setStyleSheet(QString::fromUtf8("#addFriend:hover { background:#2f8f54; }\n"
-"\n"
+        addFriend->setStyleSheet(QString::fromUtf8("\n"
 "#addFriend{background: #32353a;}"));
         addFriend->setFlat(true);
 
@@ -262,6 +259,7 @@ public:
 
         columnsContainer = new QWidget(friends);
         columnsContainer->setObjectName("columnsContainer");
+        columnsContainer->setAutoFillBackground(true);
         columnsContainer->setStyleSheet(QString::fromUtf8(""));
         horizontalLayout = new QHBoxLayout(columnsContainer);
         horizontalLayout->setSpacing(0);
@@ -285,7 +283,8 @@ public:
         palette1.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Base, brush12);
         palette1.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Window, brush12);
         ADD_OUTGOING->setPalette(palette1);
-        ADD_OUTGOING->setStyleSheet(QString::fromUtf8("background-color: #32353a"));
+        ADD_OUTGOING->setAutoFillBackground(true);
+        ADD_OUTGOING->setStyleSheet(QString::fromUtf8(""));
 
         verticalLayoutCenter->addWidget(ADD_OUTGOING);
 

@@ -4,6 +4,7 @@
 #include <QFrame>
 #include <QMessageBox>
 #include <QStandardPaths>
+#include <QStyle>
 #include <QLabel>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -11,10 +12,12 @@
 #include <QDebug>
 #include <QPainter>
 #include <QPushButton>
-#include "requestrow.h"
+#include "row.h"
 #include "ui_MainWindow.h"
 #include "MainWindow.h"
+#include "helpers.h"
 #include "manager.h"
+#include "login.h"
 #include "addfriendpage.h"
 #include "outgoingpage.h"
 MainWindow::MainWindow(QWidget *parent)
@@ -29,7 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
     , m_outgoingPage(new OutgoingPage(this))
 {
     ui->setupUi(this);
-
+    ui->ADD_OUTGOING->setAttribute(Qt::WA_StyledBackground, true);
     ui->ADD_OUTGOING->addWidget(m_addFriendPage);
     ui->ADD_OUTGOING->addWidget(m_outgoingPage); // index 1
 
@@ -47,11 +50,18 @@ MainWindow::MainWindow(QWidget *parent)
     lay->setSpacing(6);
 
     // avatarButton
+    auto* disconnectButton = new QPushButton(userPanel);
+    disconnectButton->setFixedSize(35, 35);
+    disconnectButton->setObjectName("disconnectButton");
+    disconnectButton->setIcon(
+        this->style()->standardIcon(QStyle::SP_TitleBarCloseButton)
+        );
+    disconnectButton->setCursor(Qt::PointingHandCursor);
     avatarButton->setFixedSize(48, 48);
     avatarButton->setIconSize({48, 48});
     avatarButton->setFlat(true);
     avatarButton->setCursor(Qt::PointingHandCursor);
-    avatarButton->setStyleSheet("background-color: #2f3136");        // no border
+    avatarButton->setStyleSheet("background-color: transparent");        // no border
 
 
     QPixmap placeholder(48, 48);
@@ -74,14 +84,24 @@ MainWindow::MainWindow(QWidget *parent)
 
     lay->addWidget(avatarButton);
     lay->addWidget(nameLabel);
+    lay->addWidget(disconnectButton);
     nameLabel->setText(client->getClientName());
     updateAvatar(client->getClientAvatar());
 
     userPanel->show();
     connect(avatarButton, &QPushButton::clicked, this, &MainWindow::onAvatarButtonClicked);
+    connect(disconnectButton, &QPushButton::clicked, this, &MainWindow::onDisconnectClicked);
     connect(client, &Client::connected, this, &::MainWindow::onConnectionSuccess);
-    connect(ui->addFriend, &QPushButton::clicked, this, [=]() { ui->ADD_OUTGOING->setCurrentIndex(0);});
+    connect(ui->addFriend, &QPushButton::clicked, this, [=]() { ui->ADD_OUTGOING->setCurrentIndex(0); m_addFriendPage->load(client->getClientID());});
     connect(ui->outgoing, &QPushButton::clicked, this, [=]() { ui->ADD_OUTGOING->setCurrentIndex(1);});
+    connect(ui->ADD_OUTGOING,
+            &QStackedWidget::currentChanged,
+            this,
+            [=](int idx){
+                // if we just switched _to_ your outgoing-page…
+                if (idx == ui->ADD_OUTGOING->indexOf(m_outgoingPage))
+                    m_outgoingPage->setRequests(client->getClientID());
+            });
     connect(m_addFriendPage, &AddFriendPage::addFriendRequested,
             this, [this](const QString &nick){
             QString status = manager->checkFriendship(nick);
@@ -127,26 +147,7 @@ void MainWindow::updateAvatar(const QString &fileName)
         return;
     }
 
-    // 1) Create a circular mask of size 48×48
-    QPixmap circular(48, 48);
-    circular.fill(Qt::transparent);
-    {
-        QPainter painter(&circular);
-        painter.setRenderHint(QPainter::Antialiasing);
-        QPainterPath path;
-        path.addEllipse(0, 0, 48, 48);
-        painter.setClipPath(path);
-
-        // Draw the loaded pixmap into that circular area, scaling it as needed
-        painter.drawPixmap(
-            0, 0, 48, 48,
-            pix.scaled(48, 48,
-                       Qt::KeepAspectRatioByExpanding,
-                       Qt::SmoothTransformation)
-            );
-    }
-    // 2) Set the circular pixmap as the button’s icon
-    avatarButton->setIcon(QIcon(circular));
+    avatarButton->setIcon(QIcon(makeRoundedAvatar(pix, 48)));
 }
 
 
@@ -178,8 +179,25 @@ void MainWindow::onAvatarButtonClicked()
     updateAvatar(srcFile);
 }
 
+void MainWindow::refreshForUser(){
+    updateAvatar(client->getClientAvatar());
+    nameLabel->setText(client->getClientName());
+    ui->ADD_OUTGOING->setCurrentWidget(m_addFriendPage);
+    m_addFriendPage->load(client->getClientID());
 
+}
 
+void MainWindow::onDisconnectClicked(){
+    qCritical() << "User li kan: " << client->getClientName();
+    client->disconnectFromServer();
+    Login h;
+    this->hide();
+    if (h.exec() == QDialog::Rejected) {
+        this->close();      // Exit application if dialog is rejected
+    }
+    refreshForUser();
+    this->show();
+}
 void MainWindow::onConnectionSuccess()
 {
 

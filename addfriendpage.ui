@@ -14,6 +14,21 @@
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0">
      <property name="spacing">
@@ -125,10 +140,11 @@
    </item>
    <item>
     <widget class="QScrollArea" name="scrollAreaPending">
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
      <property name="styleSheet">
-      <string notr="true">#scrollAreaPending {
-	border-top: 1px solid #3a3c43;
-}</string>
+      <string notr="true"/>
      </property>
      <property name="verticalScrollBarPolicy">
       <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
@@ -147,8 +163,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>368</width>
-        <height>501</height>
+        <width>384</width>
+        <height>525</height>
        </rect>
       </property>
       <property name="sizePolicy">
@@ -157,17 +173,18 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
       <property name="styleSheet">
-       <string notr="true">#scrollAreaWidgetContents {
-	border-top: 1px solid #3a3c43;
-}</string>
+       <string notr="true"/>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_13">
        <property name="spacing">
         <number>0</number>
        </property>
        <property name="leftMargin">
-        <number>0</number>
+        <number>15</number>
        </property>
        <property name="topMargin">
         <number>0</number>
