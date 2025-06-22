@@ -39,15 +39,15 @@ template <> constexpr inline auto OutgoingPage::qt_create_metaobjectdata<qt_meta
     namespace QMC = QtMocConstants;
     QtMocHelpers::StringRefStorage qt_stringData {
         "OutgoingPage",
-        "reload",
+        "update",
         "",
         "clientId"
     };
 
     QtMocHelpers::UintData qt_methods {
-        // Slot 'reload'
-        QtMocHelpers::SlotData<void(int)>(1, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::Int, 3 },
+        // Slot 'update'
+        QtMocHelpers::SlotData<void(QString)>(1, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 3 },
         }}),
     };
     QtMocHelpers::UintData qt_properties {
@@ -72,7 +72,7 @@ void OutgoingPage::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
     auto *_t = static_cast<OutgoingPage *>(_o);
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: _t->reload((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 0: _t->update((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
         default: ;
         }
     }

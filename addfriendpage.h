@@ -26,9 +26,10 @@ signals:
     void addFriendRequested(const QString &nick);
 private slots:
     void onAddFriendButtonClicked();
+    void update(QString id);
 private:
     Ui::AddFriendPage *ui;
-    Manager *manager;
+    Manager *m_manager;
     std::vector<std::unique_ptr<Row>>  m_pendingRows;
 };
 

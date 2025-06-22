@@ -21,7 +21,7 @@ public:
     QVBoxLayout* outgoingList();
     void setRequests(int userID);
 public slots:
-    void reload(int clientId);
+    void update(QString clientId);
 private:
     Ui::OutgoingPage *ui;
     Manager *m_manager {nullptr};

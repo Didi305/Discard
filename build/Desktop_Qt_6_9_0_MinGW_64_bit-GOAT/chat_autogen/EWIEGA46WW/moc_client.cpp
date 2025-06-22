@@ -45,6 +45,9 @@ template <> constexpr inline auto Client::qt_create_metaobjectdata<qt_meta_tag_Z
         "messageReceived",
         "QString&",
         "data",
+        "updatePendingRequests",
+        "friend_id",
+        "updateAcceptRequests",
         "onConnected",
         "onDisconnected",
         "onReadyRead"
@@ -59,12 +62,20 @@ template <> constexpr inline auto Client::qt_create_metaobjectdata<qt_meta_tag_Z
         QtMocHelpers::SignalData<void(QString &)>(4, 2, QMC::AccessPublic, QMetaType::Void, {{
             { 0x80000000 | 5, 6 },
         }}),
+        // Signal 'updatePendingRequests'
+        QtMocHelpers::SignalData<void(QString)>(7, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 8 },
+        }}),
+        // Signal 'updateAcceptRequests'
+        QtMocHelpers::SignalData<void(QString)>(9, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::QString, 8 },
+        }}),
         // Slot 'onConnected'
-        QtMocHelpers::SlotData<void()>(7, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(10, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onDisconnected'
-        QtMocHelpers::SlotData<void()>(8, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(11, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onReadyRead'
-        QtMocHelpers::SlotData<void()>(9, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(12, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -91,9 +102,11 @@ void Client::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         case 0: _t->connected(); break;
         case 1: _t->disconnected(); break;
         case 2: _t->messageReceived((*reinterpret_cast< std::add_pointer_t<QString&>>(_a[1]))); break;
-        case 3: _t->onConnected(); break;
-        case 4: _t->onDisconnected(); break;
-        case 5: _t->onReadyRead(); break;
+        case 3: _t->updatePendingRequests((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 4: _t->updateAcceptRequests((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
+        case 5: _t->onConnected(); break;
+        case 6: _t->onDisconnected(); break;
+        case 7: _t->onReadyRead(); break;
         default: ;
         }
     }
@@ -103,6 +116,10 @@ void Client::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         if (QtMocHelpers::indexOfMethod<void (Client::*)()>(_a, &Client::disconnected, 1))
             return;
         if (QtMocHelpers::indexOfMethod<void (Client::*)(QString & )>(_a, &Client::messageReceived, 2))
+            return;
+        if (QtMocHelpers::indexOfMethod<void (Client::*)(QString )>(_a, &Client::updatePendingRequests, 3))
+            return;
+        if (QtMocHelpers::indexOfMethod<void (Client::*)(QString )>(_a, &Client::updateAcceptRequests, 4))
             return;
     }
 }
@@ -126,14 +143,14 @@ int Client::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 6)
+        if (_id < 8)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 6;
+        _id -= 8;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 6)
+        if (_id < 8)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 6;
+        _id -= 8;
     }
     return _id;
 }
@@ -154,5 +171,17 @@ void Client::disconnected()
 void Client::messageReceived(QString & _t1)
 {
     QMetaObject::activate<void>(this, &staticMetaObject, 2, nullptr, _t1);
+}
+
+// SIGNAL 3
+void Client::updatePendingRequests(QString _t1)
+{
+    QMetaObject::activate<void>(this, &staticMetaObject, 3, nullptr, _t1);
+}
+
+// SIGNAL 4
+void Client::updateAcceptRequests(QString _t1)
+{
+    QMetaObject::activate<void>(this, &staticMetaObject, 4, nullptr, _t1);
 }
 QT_WARNING_POP

@@ -1,6 +1,6 @@
 #include "outgoingpage.h"
 #include "ui_outgoingpage.h"
-
+#include "row.h"
 OutgoingPage::OutgoingPage(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::OutgoingPage)
@@ -8,6 +8,7 @@ OutgoingPage::OutgoingPage(QWidget *parent)
 {
     ui->setupUi(this);
     ui->listLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    connect(m_manager->getClient(), &Client::updatePendingRequests, this, &::OutgoingPage::update);
 }
 
 OutgoingPage::~OutgoingPage()
@@ -35,6 +36,13 @@ void OutgoingPage::setRequests(int userID) {
 }
 
 
-void OutgoingPage::reload(int clientId) {
-
+void OutgoingPage::update(QString friend_id) {
+    QLayoutItem *child;
+    for (int i = 0; i < ui->listLayout->count(); ++i) {
+        child = ui->listLayout->itemAt(i);
+        Row *row = qobject_cast<Row *>(child->widget());  // ✅ Safely gets the widget
+        if (!row) continue;
+        int rowID = row->data().user_id;
+        if(QString::number(rowID) == friend_id) delete child->widget();
+    }
 }

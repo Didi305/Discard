@@ -16,13 +16,14 @@ public:
 
     void connectToServer(const QString &host, int port);
     void disconnectFromServer();
-    void sendMessage(const QString &message);
+    void sendMessage(const QString &message, QString typ, QString status);
 
 signals:
     void connected();
     void disconnected();
     void messageReceived(QString &data);
-
+    void updatePendingRequests(QString friend_id);
+    void updateAcceptRequests(QString friend_id);
 private slots:
     void onConnected();
     void onDisconnected();

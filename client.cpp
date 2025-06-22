@@ -1,4 +1,6 @@
 #include "client.h"
+#include <qjsonobject.h>
+#include "helpers.h"
 Client::Client(QObject *parent) : QObject(parent){
     socket = new QTcpSocket(this);
 
@@ -30,21 +32,31 @@ void Client::setClientID(int id){
 }
 void Client::connectToServer(const QString &host, int port){
     socket->connectToHost(host, port);
+    if(socket->state() == QAbstractSocket::ConnectedState){
+        socket->write("shitype");
+    }
 }
 
 void Client::disconnectFromServer(){
     socket->disconnectFromHost();
 }
 
-void Client::sendMessage(const QString &message) {
-    if (socket->state() == QAbstractSocket::ConnectedState) {
-        socket->write(message.toUtf8());
-    }
+void Client::sendMessage(const QString &message, QString typ, QString status) {
+    QMap<QString, QString> dataInfo = {
+        {"type" , typ},
+        {"content" , message},
+        {"status", status}
+    };
+    qDebug() << "client send message was called and the reception id is: " << message;
+    QString jsonString = buildJson(dataInfo);
+    socket->write(jsonString.toUtf8());
+
 }
 void Client::onConnected(){
     emit connected();
-    QString clientName = getClientName();
-    socket->write(clientName.toUtf8());
+    int clientID = getClientID();
+    QString id = QString::number(clientID);
+    socket->write(id.toUtf8());
     qDebug() << "Connected to server";
 }
 
@@ -53,6 +65,15 @@ void Client::onDisconnected(){
 }
 
 void Client::onReadyRead(){
-    QString message = socket->readAll();
-    emit messageReceived(message);
+    QByteArray data = socket->readAll();
+    QJsonObject obj = parseJson(data);
+    QString dataType = obj["status"].toString();
+    QString friend_id = obj["content"].toString();
+    //maybe in the future QMap to handle multipe types of signals
+    if(dataType == "update_accept"){
+        emit updateAcceptRequests(friend_id);
+    }
+    else if(dataType == "update_pending"){
+        emit updatePendingRequests(friend_id);
+    }
 }

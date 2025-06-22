@@ -37,6 +37,5 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     ChatServer server;
-    qDebug() << a.styleSheet().count("#row");
     return a.exec();
 }

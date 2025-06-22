@@ -12,7 +12,7 @@
 #include <QStandardPaths>
 #include "manager.h"
 #include "client.h"
-#include "addfriendpage.h"
+
 Manager::Manager(QObject *parent) : QObject(parent) {
 }
 
@@ -55,13 +55,6 @@ bool Manager::init(QJsonObject &DBConfig, QSqlDatabase &dbex){
     database.setPassword(DBConfig.take("password").toString());
     bool ok = database.open();
     database.driver()->subscribeToNotification("friendship");
-
-
-    QObject::connect(database.driver(), &QSqlDriver::notification,
-                     [](const QString &channel, QSqlDriver::NotificationSource source, const QVariant &payload){
-                         qDebug() << "Received NOTIFY on channel:" << channel << ", payload:" << payload.toString();
-                     });
-
 
     if (!ok) {
         qCritical() << "Cannot open DB:" << database.lastError().text();
@@ -130,7 +123,6 @@ QString Manager::checkUser(const QString& username, const QString& password){
             qCritical() << query.lastError().text();
         }
         if(query.first()){
-            qDebug() << "User found with nickname:" << query.value("nickname").toString() + "and avatar path: " + query.value("avatar").toString();
             return query.value("nickname").toString() + ";" + query.value("avatar").toString() + ";" + query.value("id").toString();
         }else{
             qDebug() << "Username or password wrong";
@@ -149,10 +141,8 @@ QString Manager::checkUser(const QString& username, const QString& password){
             qCritical() << query.lastError().text();
         }
         if(query.first()){
-            qDebug() << "User found with ID" << query.value("id").toString();
             return query.value("id").toString();
         }else{
-            qDebug() << "User doesn't exist";
             return "";
         }
     }
@@ -267,12 +257,11 @@ std::vector<std::unique_ptr<Row>> Manager::fetchRequests(int id, RowType type){
     while(query.next()){
         Data d;
         d.avatar = query.value("avatar").toString();
-        qDebug() << "avatar hamid: " << d.avatar;
         d.displayName = query.value("nickname").toString();
         d.user_id = query.value("id").toInt();
         requests.emplace_back(std::make_unique<Row>(d, type));
     }
-    qDebug() << "crashes here?";
+
 
     return requests;
 }
@@ -292,7 +281,7 @@ void Manager::acceptRequest(int user_id){
     if(!query.exec()){
         qCritical() << query.lastError().text();
     }
-    qDebug() << "New Friends ^^: " << user_id << "and " << client->getClientID();
+    client->sendMessage(QString::number(user_id), "friend_request", "update_pending");
 }
 
 void Manager::declineRequest(int user_id){
@@ -308,7 +297,7 @@ void Manager::declineRequest(int user_id){
     if(!query.exec()){
         qCritical() << query.lastError().text();
     }
-    qDebug() << "no Friends -_-: " << user_id << "and " << client->getClientID();
+    client->sendMessage(QString::number(user_id), "friend_request", "update_pending");
 }
 void Manager::cancelRequest(int friend_id){
     QSqlQuery query(db());
@@ -323,5 +312,5 @@ void Manager::cancelRequest(int friend_id){
     if(!query.exec()){
         qCritical() << query.lastError().text();
     }
-    qDebug() << "no Friends -_-: " << friend_id << "and " << client->getClientID();
+    client->sendMessage(QString::number(friend_id), "friend_request", "update_accept");
 }

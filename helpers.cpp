@@ -1,5 +1,6 @@
 #include "helpers.h"
 #include <QtSvg/QSvgRenderer>
+#include <qjsonobject.h>
 
 
 
@@ -39,4 +40,17 @@ QPixmap renderSvg(const QString &resourcePath, int sidePx)
     return canvas;
 }
 
+QJsonObject parseJson(const QByteArray &data){
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    QJsonObject obj = doc.object();
+    return obj;
+}
 
+QByteArray buildJson(const QMap<QString, QString> &fields){
+    QJsonObject obj;
+    for(auto it = fields.constBegin(); it != fields.constEnd(); ++it){
+        obj[it.key()] = it.value();
+    }
+    QJsonDocument doc(obj);
+    return doc.toJson(QJsonDocument::Compact);
+}

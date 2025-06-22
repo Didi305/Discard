@@ -1,6 +1,7 @@
 C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/chat_autogen/EWIEGA46WW/moc_chatserver.cpp: C:/Users/giler/OneDrive/Desktop/C++/Chat/chatserver.h \
   C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/chat_autogen/moc_predefs.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/QHash \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/QMap \
   C:/Qt/6.9.0/mingw_64/include/QtCore/q17memory.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/q20functional.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/q20iterator.h \
@@ -51,6 +52,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOA
   C:/Qt/6.9.0/mingw_64/include/QtCore/qlist.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qlogging.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qmalloc.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/qmap.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qmath.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qmetacontainer.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qmetatype.h \
@@ -68,6 +70,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOA
   C:/Qt/6.9.0/mingw_64/include/QtCore/qscopedpointer.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qscopeguard.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qshareddata.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/qshareddata_impl.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qspan.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qstdlibdetection.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qstring.h \
