@@ -855,7 +855,7 @@ border: 1px solid #3a3c43;</string>
            <item>
             <layout class="QVBoxLayout" name="verticalLayoutRight">
              <item>
-              <widget class="QWidget" name="widget" native="true">
+              <widget class="QWidget" name="friendsList" native="true">
                <property name="minimumSize">
                 <size>
                  <width>355</width>
@@ -958,6 +958,67 @@ border: 1px solid #3a3c43;</string>
 
 border: 1px solid #3a3c43;</string>
                </property>
+               <layout class="QVBoxLayout" name="verticalLayout_3">
+                <property name="spacing">
+                 <number>0</number>
+                </property>
+                <property name="leftMargin">
+                 <number>0</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
+                </property>
+                <property name="rightMargin">
+                 <number>0</number>
+                </property>
+                <property name="bottomMargin">
+                 <number>0</number>
+                </property>
+                <item>
+                 <widget class="QScrollArea" name="scrollArea">
+                  <property name="widgetResizable">
+                   <bool>true</bool>
+                  </property>
+                  <widget class="QWidget" name="scrollAreaWidgetContents">
+                   <property name="geometry">
+                    <rect>
+                     <x>0</x>
+                     <y>0</y>
+                     <width>364</width>
+                     <height>676</height>
+                    </rect>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_5">
+                    <property name="spacing">
+                     <number>0</number>
+                    </property>
+                    <property name="leftMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="topMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="rightMargin">
+                     <number>0</number>
+                    </property>
+                    <property name="bottomMargin">
+                     <number>0</number>
+                    </property>
+                    <item>
+                     <layout class="QVBoxLayout" name="onlineFriends"/>
+                    </item>
+                    <item>
+                     <layout class="QVBoxLayout" name="offlineFriends">
+                      <property name="spacing">
+                       <number>0</number>
+                      </property>
+                     </layout>
+                    </item>
+                   </layout>
+                  </widget>
+                 </widget>
+                </item>
+               </layout>
               </widget>
              </item>
             </layout>

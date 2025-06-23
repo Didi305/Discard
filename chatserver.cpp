@@ -1,7 +1,7 @@
 #include "chatserver.h"
 #include "helpers.h"
 #include "qtcpsocket.h"
-#include "client.h"
+
 #include <qjsondocument.h>
 #include <qjsonobject.h>
 ChatServer::ChatServer(QObject *parent)
@@ -39,6 +39,7 @@ ChatServer::~ChatServer() {
         QString dataType = obj["type"].toString();
         if(dataType.isEmpty()){
             clients[clientSocket] = data.toInt();
+            qDebug() << "client ID received by the server" << clients[clientSocket];
             return;
         }
         for(auto it = handlers.constBegin(); it != handlers.constEnd(); ++it){
@@ -49,7 +50,8 @@ ChatServer::~ChatServer() {
     };
 
     void ChatServer::updateRequest(QJsonObject &obj, QTcpSocket* socket){
-        int receiver_id = obj["content"].toString().toInt();
+        int receiver_id = obj["id"].toString().toInt();
+        qDebug() << "the guy that needs to update his shit from server POV: " << receiver_id;
         QTcpSocket* foundKey = nullptr;
         for (auto it = clients.constBegin(); it != clients.constEnd(); ++it) {
             if (it.value() == receiver_id) {
@@ -58,11 +60,11 @@ ChatServer::~ChatServer() {
             }
         }
         if (foundKey != nullptr) {
-            QMap<QString, QString> dataInfo = {
-                {"status" , obj["status"].toString()},
-                {"content", QString::number(clients[socket])}
-            };
-            QString jsonString = buildJson(dataInfo);
+            obj["id"] = clients[socket];
+            qDebug() << "and he has to update the request of the client ID1: " << clients[socket];;
+            qDebug() << "and he has to update the request of the client ID2: " << obj["id"].toInt();
+            QJsonDocument doc(obj);
+            QString jsonString = doc.toJson(QJsonDocument::Compact);
             foundKey->write(jsonString.toUtf8());
         }
     }

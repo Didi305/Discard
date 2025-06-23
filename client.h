@@ -1,7 +1,9 @@
 #ifndef CLIENT_H
 #define CLIENT_H
-
 #include <QTcpSocket>
+#include "row.h"
+class Manager;
+
 class Client : public QObject {
     Q_OBJECT
 public:
@@ -9,6 +11,8 @@ public:
     QString getClientName();
     QString getClientAvatar();
     int getClientID();
+    std::vector<Data> getFriends();
+    void setFriends(std::vector<Data> friends);
     void setClientName(QString name);
     void setClientAvatar(QString avatar);
     void setClientID(int id);
@@ -16,14 +20,15 @@ public:
 
     void connectToServer(const QString &host, int port);
     void disconnectFromServer();
-    void sendMessage(const QString &message, QString typ, QString status);
+    void sendMessage(Data &d, QString typ, QString status);
 
 signals:
     void connected();
     void disconnected();
     void messageReceived(QString &data);
-    void updatePendingRequests(QString friend_id);
-    void updateAcceptRequests(QString friend_id);
+    void updatePendingRequests(int friend_id);
+    void updateAcceptRequests(Data &d, QString dataType);
+    void newFriendRequest(Data &d, QString dataType);
 private slots:
     void onConnected();
     void onDisconnected();
@@ -34,6 +39,8 @@ private:
     int id;
     QString name;
     QString avatar;
+    Manager* m_manager;
+    std::vector<Data> friends;
 };
 
 #endif // CLIENT_H

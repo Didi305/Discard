@@ -36,13 +36,13 @@ void OutgoingPage::setRequests(int userID) {
 }
 
 
-void OutgoingPage::update(QString friend_id) {
+void OutgoingPage::update(int friend_id) {
     QLayoutItem *child;
     for (int i = 0; i < ui->listLayout->count(); ++i) {
         child = ui->listLayout->itemAt(i);
-        Row *row = qobject_cast<Row *>(child->widget());  // ✅ Safely gets the widget
+        Row *row = qobject_cast<Row *>(child->widget());  //
         if (!row) continue;
         int rowID = row->data().user_id;
-        if(QString::number(rowID) == friend_id) delete child->widget();
+        if(rowID == friend_id) delete child->widget();
     }
 }

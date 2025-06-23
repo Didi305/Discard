@@ -24,12 +24,12 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     a.setStyleSheet(loadStyle(path + "/styles/dark.qss"));
-    Client client;
     Manager *mgr = Manager::get();
-    mgr->setClient(&client);
     QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL", "probe");
     QJsonObject DBConfig;
     mgr->init(DBConfig, db);
+    Client client;
+    mgr->setClient(&client);
     Login h;
     if (h.exec() == QDialog::Rejected) {
         return 0;  // Exit application if dialog is rejected

@@ -26,7 +26,7 @@ signals:
     void addFriendRequested(const QString &nick);
 private slots:
     void onAddFriendButtonClicked();
-    void update(QString id);
+    void update(Data &d, QString type);
 private:
     Ui::AddFriendPage *ui;
     Manager *m_manager;

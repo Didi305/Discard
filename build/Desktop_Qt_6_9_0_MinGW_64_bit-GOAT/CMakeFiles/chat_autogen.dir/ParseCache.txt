@@ -756,6 +756,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/client.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qdarwinhelpers.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qdatastream.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qdebug.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qendian.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qexceptionhandling.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qflags.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qfloat16.h
@@ -772,10 +773,12 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/client.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qiterable.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qiterator.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qlatin1stringview.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qline.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qlist.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qlogging.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qmalloc.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qmap.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qmargins.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qmath.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qmetacontainer.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qmetatype.h
@@ -788,7 +791,9 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/client.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qobjectdefs_impl.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qoverload.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qpair.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qpoint.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qprocessordetection.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qrect.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qrefcount.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qscopedpointer.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qscopeguard.h
@@ -797,6 +802,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/client.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qshareddata_impl.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qsharedpointer.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qsharedpointer_impl.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qsize.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qspan.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qstdlibdetection.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qstring.h
@@ -841,6 +847,33 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/client.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qversiontagging.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qxptype_traits.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/qyieldcpu.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/QPixmap
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qaction.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qbitmap.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qbrush.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qcolor.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qcursor.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qfont.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qfontinfo.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qfontmetrics.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qfontvariableaxis.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qicon.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qimage.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qkeysequence.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qpaintdevice.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qpalette.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qpixelformat.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qpixmap.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qpolygon.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qregion.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qrgb.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qrgba64.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qtgui-config.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qtguiexports.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qtguiglobal.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qtransform.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qwindowdefs.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtGui/qwindowdefs_win.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtNetwork/QTcpSocket
  mdp:C:/Qt/6.9.0/mingw_64/include/QtNetwork/qabstractsocket.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtNetwork/qhostaddress.h
@@ -848,6 +881,13 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/client.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtNetwork/qtnetwork-config.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtNetwork/qtnetworkexports.h
  mdp:C:/Qt/6.9.0/mingw_64/include/QtNetwork/qtnetworkglobal.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtWidgets/QWidget
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtWidgets/qframe.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtWidgets/qsizepolicy.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtWidgets/qtwidgets-config.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtWidgets/qtwidgetsexports.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtWidgets/qtwidgetsglobal.h
+ mdp:C:/Qt/6.9.0/mingw_64/include/QtWidgets/qwidget.h
  mdp:C:/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/algorithm
  mdp:C:/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/array
  mdp:C:/Qt/Tools/mingw1310_64/lib/gcc/x86_64-w64-mingw32/13.1.0/include/c++/atomic
@@ -1061,6 +1101,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/client.h
  mdp:C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wchar.h
  mdp:C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/chat_autogen/moc_predefs.h
  mdp:C:/Users/giler/OneDrive/Desktop/C++/Chat/client.h
+ mdp:C:/Users/giler/OneDrive/Desktop/C++/Chat/row.h
 C:/Users/giler/OneDrive/Desktop/C++/Chat/pendingrequestswidget.h
  mmc:Q_OBJECT
  mdp:C:/Qt/6.9.0/mingw_64/include/QtCore/q17memory.h

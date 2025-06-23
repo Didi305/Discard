@@ -11,7 +11,6 @@
 #include <QDateTime>
 #include <QStandardPaths>
 #include "manager.h"
-#include "client.h"
 
 Manager::Manager(QObject *parent) : QObject(parent) {
 }
@@ -184,10 +183,11 @@ QString Manager::checkFriendship(QString nickname){
     int friendID = checkUser(nickname).toInt();
     QSqlQuery query(db());
     QString sql = QStringLiteral(
-        "SELECT user_id, friend_id, status "
-        "FROM friendship "
-        "WHERE user_id = :u AND friend_id = :f "
-        );
+        "SELECT users.id, users.avatar, users.nickname, friendship.status "
+        "FROM users "
+        "LEFT JOIN friendship ON (friendship.friend_id = users.id AND friendship.user_id = :u ) OR (friendship.user_id = users.id AND friendship.friend_id = :u ) "
+        "WHERE users.id = :f "
+    );
     query.prepare(sql);
     query.bindValue(":u" , client->getClientID());
     query.bindValue(":f", friendID);
@@ -195,23 +195,37 @@ QString Manager::checkFriendship(QString nickname){
     if(!query.exec()){
         qCritical() << query.lastError().text();
     }
+
     if(query.first()){
-        qDebug() << "Friend found with status:  " << query.value("status").toString();
-        return query.value("status").toString();
-    }else{
-        qDebug() << "Not Amigos";
-        QString sql2 = QStringLiteral(
-            "INSERT INTO friendship (user_id, friend_id, status, start_date) "
-            "VALUES(:u, :f, :stat, :date) "
-            );
-        query.prepare(sql2);
-        query.bindValue(":u" , client->getClientID());
-        query.bindValue(":f", friendID);
-        query.bindValue(":stat" , "PENDING");
-        query.bindValue(":date", QDateTime::currentDateTime());
-        query.exec();
-        return "Request Sent";
+        QString status = query.value("friendship.status").toString();
+        qDebug() << "status is: " << status;
+        if(status.isNull()){
+            Data d;
+            d.avatar = client->getClientAvatar();
+            d.displayName = client->getClientName();
+            d.user_id = query.value("users.id").toString().toInt();
+            qDebug() << "receiver's ID: " << d.user_id;
+            qDebug() << "Not Amigos";
+            QString sql2 = QStringLiteral(
+                "INSERT INTO friendship (user_id, friend_id, status, start_date) "
+                "VALUES(:u, :f, :stat, :date) "
+                );
+            query.prepare(sql2);
+            query.bindValue(":u" , client->getClientID());
+            query.bindValue(":f", friendID);
+            query.bindValue(":stat" , "PENDING");
+            query.bindValue(":date", QDateTime::currentDateTime());
+            query.exec();
+            client->sendMessage(d, "friend_request", "add_request");
+            return "Request Sent";
+        }
+        else{
+            qDebug() << "Found Friendship with status" << query.value("friendship.status").toString();
+            qDebug() << "friend id hiya " <<query.value("users.id");
+            return query.value("friendship.status").toString();
+        }
     }
+    return "zemla hadi";
 }
 
 void Manager::updateUserAvatar(QString path, QString nickname){
@@ -261,10 +275,46 @@ std::vector<std::unique_ptr<Row>> Manager::fetchRequests(int id, RowType type){
         d.user_id = query.value("id").toInt();
         requests.emplace_back(std::make_unique<Row>(d, type));
     }
-
-
     return requests;
 }
+
+std::vector<Data> Manager::fetchFriends(int user_id){
+    std::vector<Data> friends;
+    QSqlQuery query(db());
+    QString sql = QStringLiteral(
+        "SELECT users.id, users.nickname, users.avatar "
+        "FROM users "
+        "WHERE users.id IN ( "
+        "SELECT friend_id "
+        "FROM friendship "
+        "WHERE user_id = :u AND status = :s "
+        "UNION "
+        "SELECT user_id "
+        "FROM friendship "
+        "WHERE friend_id = :u AND status = :s "
+        ")"
+    );
+    query.prepare(sql);
+    query.bindValue(":u", user_id);
+    query.bindValue(":s", "ACTIVE");
+    if(!query.exec()){
+        qCritical() << query.lastError().text();
+    }
+    while(query.next()){
+        qDebug() << "dkholti hna?";
+        Data d;
+        d.avatar = query.value("users.avatar").toString();
+        d.displayName = query.value("users.nickname").toString();
+        d.user_id = query.value("users.id").toString().toInt();
+        friends.emplace_back(d);
+    }
+
+    for (auto &f : friends){
+        qDebug() << f.displayName << " " << f.user_id;
+    }
+    return friends;
+}
+
 
 void Manager::acceptRequest(int user_id){
     QSqlQuery query(db());
@@ -281,7 +331,9 @@ void Manager::acceptRequest(int user_id){
     if(!query.exec()){
         qCritical() << query.lastError().text();
     }
-    client->sendMessage(QString::number(user_id), "friend_request", "update_pending");
+    Data d;
+    d.user_id = user_id;
+    client->sendMessage(d, "friend_request", "update_pending");
 }
 
 void Manager::declineRequest(int user_id){
@@ -297,7 +349,9 @@ void Manager::declineRequest(int user_id){
     if(!query.exec()){
         qCritical() << query.lastError().text();
     }
-    client->sendMessage(QString::number(user_id), "friend_request", "update_pending");
+    Data d;
+    d.user_id = user_id;
+    client->sendMessage(d, "friend_request", "update_pending");
 }
 void Manager::cancelRequest(int friend_id){
     QSqlQuery query(db());
@@ -312,5 +366,7 @@ void Manager::cancelRequest(int friend_id){
     if(!query.exec()){
         qCritical() << query.lastError().text();
     }
-    client->sendMessage(QString::number(friend_id), "friend_request", "update_accept");
+    Data d;
+    d.user_id = friend_id;
+    client->sendMessage(d, "friend_request", "update_accept");
 }

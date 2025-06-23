@@ -203,6 +203,7 @@ void MainWindow::onConnectionSuccess()
 
     qDebug() << "User: " << client->getClientName();
     qDebug() << "ID: " << client->getClientID();
+    qDebug() << "Friends" << client->getFriends().data();
 }
 
 

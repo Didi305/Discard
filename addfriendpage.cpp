@@ -41,14 +41,22 @@ void AddFriendPage::load(int userId) {
 
 }
 
-void AddFriendPage::update(QString friend_id) {
+void AddFriendPage::update(Data& d, QString type) {
     QLayoutItem *child;
-    for (int i = 0; i < ui->listLayout->count(); ++i) {
-        child = ui->listLayout->itemAt(i);
-        Row *row = qobject_cast<Row *>(child->widget());
-        if (!row) continue;
-        int rowID = row->data().user_id;
-        if(QString::number(rowID) == friend_id) delete child->widget();
+    qDebug() << "ID of the user to be updated: " << d.user_id;
+    if(type == "add_request"){
+        Row* friendRequestRow = new Row(d, RowType::Pending);
+        ui->listLayout->addWidget(friendRequestRow);
+    }
+    else{
+        for (int i = 0; i < ui->listLayout->count(); ++i) {
+            child = ui->listLayout->itemAt(i);
+            Row *row = qobject_cast<Row *>(child->widget());
+            if (!row) continue;
+            int rowID = row->data().user_id;
+            qDebug() << "Row ID: " << rowID << " and user to be updated: " << d.user_id;
+            if(rowID == d.user_id) delete child->widget();
+        }
     }
 }
 

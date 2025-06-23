@@ -31,6 +31,7 @@ void Login::onLoginButtonClicked(){
         QString host = "127.0.0.1";
         int port = 1234;
         client->connectToServer(host, port);
+        client->setFriends(manager->fetchFriends(client->getClientID()));
         accept();
     }
 }

@@ -4,11 +4,11 @@
 #include <QPixmap>
 #include <qframe.h>
 
-struct Data         // feed your real data into this
+struct Data
 {
     int user_id;
-    QString avatar;        // 40×40 image – can be empty
-    QString displayName;   // “Greedoux”           // “@greedoux”  (optional)
+    QString avatar;
+    QString displayName;
 };
 
 enum class RowType { Pending, Outgoing, Friend};
