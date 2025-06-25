@@ -2,6 +2,7 @@
 #include "EWIEGA46WW/moc_addfriendpage.cpp"
 #include "EWIEGA46WW/moc_chatserver.cpp"
 #include "EWIEGA46WW/moc_client.cpp"
+#include "EWIEGA46WW/moc_friends.cpp"
 #include "EWIEGA46WW/moc_login.cpp"
 #include "EWIEGA46WW/moc_mainwindow.cpp"
 #include "EWIEGA46WW/moc_manager.cpp"

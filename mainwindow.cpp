@@ -1,25 +1,5 @@
-#include <QFileDialog>
-#include <QWidget>
-#include <QPainterPath>
-#include <QFrame>
-#include <QMessageBox>
-#include <QStandardPaths>
-#include <QStyle>
-#include <QLabel>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
-#include <QPixmap>
-#include <QDebug>
-#include <QPainter>
-#include <QPushButton>
-#include "row.h"
-#include "ui_MainWindow.h"
-#include "MainWindow.h"
-#include "helpers.h"
-#include "manager.h"
-#include "login.h"
-#include "addfriendpage.h"
-#include "outgoingpage.h"
+#include "mainwindow.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -30,11 +10,13 @@ MainWindow::MainWindow(QWidget *parent)
     , client(manager->getClient())
     , m_addFriendPage(new AddFriendPage(this))
     , m_outgoingPage(new OutgoingPage(this))
+    , m_FriendsPage(new Friends(this))
 {
     ui->setupUi(this);
     ui->ADD_OUTGOING->setAttribute(Qt::WA_StyledBackground, true);
     ui->ADD_OUTGOING->addWidget(m_addFriendPage);
     ui->ADD_OUTGOING->addWidget(m_outgoingPage); // index 1
+    ui->verticalLayoutRight->addWidget(m_FriendsPage);
 
     m_addFriendPage->load(client->getClientID());
     m_outgoingPage->setRequests(client->getClientID());
@@ -203,7 +185,7 @@ void MainWindow::onConnectionSuccess()
 
     qDebug() << "User: " << client->getClientName();
     qDebug() << "ID: " << client->getClientID();
-    qDebug() << "Friends" << client->getFriends().data();
+    m_FriendsPage->load(client->getClientID());
 }
 
 

@@ -278,8 +278,7 @@ std::vector<std::unique_ptr<Row>> Manager::fetchRequests(int id, RowType type){
     return requests;
 }
 
-std::vector<Data> Manager::fetchFriends(int user_id){
-    std::vector<Data> friends;
+QHash<Data , int>& Manager::fetchFriends(int user_id, QHash<Data , int> &friends){
     QSqlQuery query(db());
     QString sql = QStringLiteral(
         "SELECT users.id, users.nickname, users.avatar "
@@ -301,17 +300,14 @@ std::vector<Data> Manager::fetchFriends(int user_id){
         qCritical() << query.lastError().text();
     }
     while(query.next()){
-        qDebug() << "dkholti hna?";
         Data d;
         d.avatar = query.value("users.avatar").toString();
         d.displayName = query.value("users.nickname").toString();
         d.user_id = query.value("users.id").toString().toInt();
-        friends.emplace_back(d);
+        friends.insert(d, 0);
     }
+    client->checkFriendsStatus(friends);
 
-    for (auto &f : friends){
-        qDebug() << f.displayName << " " << f.user_id;
-    }
     return friends;
 }
 

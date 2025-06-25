@@ -23,7 +23,8 @@ public slots:
 private:
     QTcpServer *tcpServer;
     QHash<QTcpSocket*, int> clients;
-    QMap<QString, std::function<void(QJsonObject &, QTcpSocket*)>> handlers;
+    QHash<int, QTcpSocket*> clientsR;
+    QHash<QString, std::function<void(QJsonObject &, QTcpSocket*)>> handlers;
 };
 
 

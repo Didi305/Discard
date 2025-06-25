@@ -35,7 +35,7 @@ public:
     void findNickname(QString username);
     void postMessage(QString message);
     std::vector<std::unique_ptr<Row>> fetchRequests(int id, RowType type);
-    std::vector<Data> fetchFriends(int user_id);
+    QHash<Data , int>& fetchFriends(int user_id, QHash<Data , int>& friends);
     void acceptRequest(int user_id);
     void declineRequest(int user_id);
     void cancelRequest(int user_id);

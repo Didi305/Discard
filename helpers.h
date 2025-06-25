@@ -4,7 +4,8 @@
 #include <QPainter>
 #include <QPainterPath>
 
-QPixmap makeRoundedAvatar(const QPixmap &src, int size = 40);
+QPixmap makeRoundedAvatar(const QPixmap &src, int size);
+QWidget* makeAvatarWidget(const QPixmap &raw, int size, const QPixmap &statusIcon);
 QPixmap renderSvg(const QString &resourcePath, int sidePx);
 void updateAvatar(const QString &fileName);
 void updateNickname(const QString &nick);

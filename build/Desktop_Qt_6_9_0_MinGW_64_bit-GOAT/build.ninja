@@ -153,6 +153,14 @@ build CMakeFiles/chat.dir/outgoingpage.cpp.obj: CXX_COMPILER__chat_unscanned_Rel
   OBJECT_DIR = CMakeFiles\chat.dir
   OBJECT_FILE_DIR = CMakeFiles\chat.dir
 
+build CMakeFiles/chat.dir/friends.cpp.obj: CXX_COMPILER__chat_unscanned_Release C$:/Users/giler/OneDrive/Desktop/C++/Chat/friends.cpp || cmake_object_order_depends_target_chat
+  DEFINES = -DMINGW_HAS_SECURE_API=1 -DQT_CORE_LIB -DQT_GUI_LIB -DQT_NEEDS_QMAIN -DQT_NETWORK_LIB -DQT_NO_DEBUG -DQT_SQL_LIB -DQT_SVG_LIB -DQT_WIDGETS_LIB -DUNICODE -DWIN32 -DWIN64 -D_ENABLE_EXTENDED_ALIGNED_STORAGE -D_UNICODE -D_WIN64
+  DEP_FILE = CMakeFiles\chat.dir\friends.cpp.obj.d
+  FLAGS = -O3 -DNDEBUG -std=gnu++17 -fdiagnostics-color=always
+  INCLUDES = -IC:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/chat_autogen/include -isystem C:/Qt/6.9.0/mingw_64/include/QtCore -isystem C:/Qt/6.9.0/mingw_64/include -isystem C:/Qt/6.9.0/mingw_64/mkspecs/win32-g++ -isystem C:/Qt/6.9.0/mingw_64/include/QtWidgets -isystem C:/Qt/6.9.0/mingw_64/include/QtGui -isystem C:/Qt/6.9.0/mingw_64/include/QtNetwork -isystem C:/Qt/6.9.0/mingw_64/include/QtSql -isystem C:/Qt/6.9.0/mingw_64/include/QtSvg
+  OBJECT_DIR = CMakeFiles\chat.dir
+  OBJECT_FILE_DIR = CMakeFiles\chat.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target chat
@@ -161,7 +169,7 @@ build CMakeFiles/chat.dir/outgoingpage.cpp.obj: CXX_COMPILER__chat_unscanned_Rel
 #############################################
 # Link the executable chat.exe
 
-build chat.exe: CXX_EXECUTABLE_LINKER__chat_Release CMakeFiles/chat.dir/chat_autogen/mocs_compilation.cpp.obj CMakeFiles/chat.dir/main.cpp.obj CMakeFiles/chat.dir/mainwindow.cpp.obj CMakeFiles/chat.dir/chatserver.cpp.obj CMakeFiles/chat.dir/client.cpp.obj CMakeFiles/chat.dir/manager.cpp.obj CMakeFiles/chat.dir/login.cpp.obj CMakeFiles/chat.dir/register.cpp.obj CMakeFiles/chat.dir/row.cpp.obj CMakeFiles/chat.dir/pendingrequestswidget.cpp.obj CMakeFiles/chat.dir/helpers.cpp.obj CMakeFiles/chat.dir/addfriendpage.cpp.obj CMakeFiles/chat.dir/outgoingpage.cpp.obj | C$:/Qt/6.9.0/mingw_64/lib/libQt6Widgets.a C$:/Qt/6.9.0/mingw_64/lib/libQt6Network.a C$:/Qt/6.9.0/mingw_64/lib/libQt6Sql.a C$:/Qt/6.9.0/mingw_64/lib/libQt6Svg.a C$:/Qt/6.9.0/mingw_64/lib/libQt6Gui.a C$:/Qt/6.9.0/mingw_64/lib/libQt6Core.a C$:/Qt/6.9.0/mingw_64/lib/libQt6EntryPoint.a || chat_autogen chat_autogen_timestamp_deps
+build chat.exe: CXX_EXECUTABLE_LINKER__chat_Release CMakeFiles/chat.dir/chat_autogen/mocs_compilation.cpp.obj CMakeFiles/chat.dir/main.cpp.obj CMakeFiles/chat.dir/mainwindow.cpp.obj CMakeFiles/chat.dir/chatserver.cpp.obj CMakeFiles/chat.dir/client.cpp.obj CMakeFiles/chat.dir/manager.cpp.obj CMakeFiles/chat.dir/login.cpp.obj CMakeFiles/chat.dir/register.cpp.obj CMakeFiles/chat.dir/row.cpp.obj CMakeFiles/chat.dir/pendingrequestswidget.cpp.obj CMakeFiles/chat.dir/helpers.cpp.obj CMakeFiles/chat.dir/addfriendpage.cpp.obj CMakeFiles/chat.dir/outgoingpage.cpp.obj CMakeFiles/chat.dir/friends.cpp.obj | C$:/Qt/6.9.0/mingw_64/lib/libQt6Widgets.a C$:/Qt/6.9.0/mingw_64/lib/libQt6Network.a C$:/Qt/6.9.0/mingw_64/lib/libQt6Sql.a C$:/Qt/6.9.0/mingw_64/lib/libQt6Svg.a C$:/Qt/6.9.0/mingw_64/lib/libQt6Gui.a C$:/Qt/6.9.0/mingw_64/lib/libQt6Core.a C$:/Qt/6.9.0/mingw_64/lib/libQt6EntryPoint.a || chat_autogen chat_autogen_timestamp_deps
   FLAGS = -O3 -DNDEBUG
   LINK_FLAGS = -mwindows
   LINK_LIBRARIES = C:/Qt/6.9.0/mingw_64/lib/libQt6Widgets.a  C:/Qt/6.9.0/mingw_64/lib/libQt6Network.a  C:/Qt/6.9.0/mingw_64/lib/libQt6Sql.a  C:/Qt/6.9.0/mingw_64/lib/libQt6Svg.a  -lws2_32  C:/Qt/6.9.0/mingw_64/lib/libQt6Gui.a  C:/Qt/6.9.0/mingw_64/lib/libQt6Core.a  -lmpr  -luserenv  -lmingw32  C:/Qt/6.9.0/mingw_64/lib/libQt6EntryPoint.a  -lshell32  -ld3d11  -ldxgi  -ldxguid  -ld3d12  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
@@ -248,7 +256,7 @@ build chat_autogen_timestamp_deps: phony
 #############################################
 # Utility command for chat_autogen
 
-build chat_autogen: phony CMakeFiles/chat_autogen chat_autogen/include/ui_login.h chat_autogen/include/ui_register.h chat_autogen/include/ui_MainWindow.h chat_autogen/include/ui_addfriendpage.h chat_autogen/include/ui_outgoingpage.h chat_autogen/timestamp chat_autogen/mocs_compilation.cpp chat_autogen_timestamp_deps
+build chat_autogen: phony CMakeFiles/chat_autogen chat_autogen/include/ui_login.h chat_autogen/include/ui_register.h chat_autogen/include/ui_MainWindow.h chat_autogen/include/ui_addfriendpage.h chat_autogen/include/ui_outgoingpage.h chat_autogen/include/ui_friends.h chat_autogen/timestamp chat_autogen/mocs_compilation.cpp chat_autogen_timestamp_deps
 
 
 #############################################
@@ -265,7 +273,7 @@ build chat_autogen/timestamp chat_autogen/mocs_compilation.cpp | ${cmake_ninja_w
 #############################################
 # Phony custom command for CMakeFiles\chat_autogen
 
-build CMakeFiles/chat_autogen chat_autogen/include/ui_login.h chat_autogen/include/ui_register.h chat_autogen/include/ui_MainWindow.h chat_autogen/include/ui_addfriendpage.h chat_autogen/include/ui_outgoingpage.h | ${cmake_ninja_workdir}CMakeFiles/chat_autogen ${cmake_ninja_workdir}chat_autogen/include/ui_login.h ${cmake_ninja_workdir}chat_autogen/include/ui_register.h ${cmake_ninja_workdir}chat_autogen/include/ui_MainWindow.h ${cmake_ninja_workdir}chat_autogen/include/ui_addfriendpage.h ${cmake_ninja_workdir}chat_autogen/include/ui_outgoingpage.h: phony chat_autogen/timestamp || chat_autogen_timestamp_deps
+build CMakeFiles/chat_autogen chat_autogen/include/ui_login.h chat_autogen/include/ui_register.h chat_autogen/include/ui_MainWindow.h chat_autogen/include/ui_addfriendpage.h chat_autogen/include/ui_outgoingpage.h chat_autogen/include/ui_friends.h | ${cmake_ninja_workdir}CMakeFiles/chat_autogen ${cmake_ninja_workdir}chat_autogen/include/ui_login.h ${cmake_ninja_workdir}chat_autogen/include/ui_register.h ${cmake_ninja_workdir}chat_autogen/include/ui_MainWindow.h ${cmake_ninja_workdir}chat_autogen/include/ui_addfriendpage.h ${cmake_ninja_workdir}chat_autogen/include/ui_outgoingpage.h ${cmake_ninja_workdir}chat_autogen/include/ui_friends.h: phony chat_autogen/timestamp || chat_autogen_timestamp_deps
 
 # =============================================================================
 # Target aliases.

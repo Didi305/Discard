@@ -2,6 +2,7 @@
 #include "helpers.h"
 #include "qtcpsocket.h"
 
+#include <qjsonarray.h>
 #include <qjsondocument.h>
 #include <qjsonobject.h>
 ChatServer::ChatServer(QObject *parent)
@@ -35,11 +36,11 @@ ChatServer::~ChatServer() {
         QTcpSocket* clientSocket = qobject_cast<QTcpSocket*>(sender());
         QByteArray data = clientSocket->readAll();
         QJsonObject obj = parseJson(data);
-
         QString dataType = obj["type"].toString();
         if(dataType.isEmpty()){
             clients[clientSocket] = data.toInt();
-            qDebug() << "client ID received by the server" << clients[clientSocket];
+            clientsR.insert(data.toInt(), clientSocket);
+            clientSocket->write("mre7ba");
             return;
         }
         for(auto it = handlers.constBegin(); it != handlers.constEnd(); ++it){
@@ -51,7 +52,6 @@ ChatServer::~ChatServer() {
 
     void ChatServer::updateRequest(QJsonObject &obj, QTcpSocket* socket){
         int receiver_id = obj["id"].toString().toInt();
-        qDebug() << "the guy that needs to update his shit from server POV: " << receiver_id;
         QTcpSocket* foundKey = nullptr;
         for (auto it = clients.constBegin(); it != clients.constEnd(); ++it) {
             if (it.value() == receiver_id) {
@@ -61,15 +61,28 @@ ChatServer::~ChatServer() {
         }
         if (foundKey != nullptr) {
             obj["id"] = clients[socket];
-            qDebug() << "and he has to update the request of the client ID1: " << clients[socket];;
-            qDebug() << "and he has to update the request of the client ID2: " << obj["id"].toInt();
             QJsonDocument doc(obj);
             QString jsonString = doc.toJson(QJsonDocument::Compact);
             foundKey->write(jsonString.toUtf8());
         }
     }
     void ChatServer::updateFriends(QJsonObject &obj, QTcpSocket* socket){
-
+        auto friends = obj["friends"].toArray();
+        for(auto f : friends){
+            int friend_ID = f.toInt();
+            if(clientsR.contains(friend_ID)){
+                f = 1;
+            }
+            else {
+                f = 0;
+            }
+        }
+        //Probably needs optimization
+        obj["status"] = "friends_status";
+        obj["friends"] = friends;
+        QJsonDocument doc(obj);
+        QString qjsonString = doc.toJson(QJsonDocument::Compact);
+        socket->write(qjsonString.toUtf8());
     }
 
     void ChatServer::clientDisconnected(){

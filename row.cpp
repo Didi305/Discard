@@ -9,27 +9,35 @@
 #include <qstyleoption.h>
 #include "helpers.h"
 #include "row.h"
+#include "manager.h"
 const int S = 32;
 QString path = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + "/C++/Chat";
 Row::Row(const Data &d, RowType type, QWidget *parent)
-    : QFrame(parent), m_data(d), type()
+    : QFrame(parent), m_data(d), type(), m_manager(Manager::get())
 {
     auto *h = new QHBoxLayout(this);
+    setCursor(Qt::PointingHandCursor);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     setFixedHeight(64);
     setAttribute(Qt::WA_StyledBackground, true);
     setAttribute(Qt::WA_Hover);
+    static const QHash<Status, QPixmap> statusIcons = []{
+        QHash<Status, QPixmap> m;
+        m[Status::ONLINE] = QPixmap(path + "/resources/icons/active.svg");
+        m[Status::HIDDEN] = QPixmap(path + "/resources/icons/hidden.svg");
+        m[Status::DO_NOT_DISTURB] = QPixmap(path + "/resources/icons/disturb.svg");
+        return m;
+    }();
+    /* ---------- avatar (left) ----------------------------------- */          // the avatar slot
 
-    /* ---------- avatar (left) ----------------------------------- */
-    auto *ava = new QLabel;
-    ava->setFixedSize(52, 52);          // the avatar slot
+    auto amigos = m_manager->getClient()->getFriends();
+    QWidget* ava;
+    bool online = amigos[d];
+    QPixmap raw = d.avatar;
+    if (online) ava = makeAvatarWidget(raw, 52, statusIcons[d.status]);
+    else ava = makeAvatarWidget(raw, 52, statusIcons[Status::HIDDEN]);
 
-    /* 1 ─ Try to load the real picture -------------------------------- */
-    QPixmap raw = d.avatar;       // your existing load logic  // fallback
-
-    ava->setPixmap(makeRoundedAvatar(raw, 52));
     ava->setObjectName("avatar");
-    ava->setAlignment(Qt::AlignCenter);
 
     /* ---------- two-line name block ----------------------------- */
     auto *name  = new QLabel(d.displayName);
@@ -70,6 +78,11 @@ Row::Row(const Data &d, RowType type, QWidget *parent)
         connect(cancel, &QPushButton::clicked,
                 this, [this]{ emit canceled(m_data); });
     }
+    else if(type == RowType::Friend){
+        connect(this, &Row::clicked, this, [&](const Data& d){
+            qDebug() << "ID of the Friend in the row is: " << d.user_id << " " << d.displayName;
+        });
+        }
 
     /* ---------- row layout -------------------------------------- */
     // stretch = 1 (takes remaining width)

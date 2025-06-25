@@ -43,6 +43,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         styles/dark.qss
         addfriendpage.h addfriendpage.cpp addfriendpage.ui
         outgoingpage.h outgoingpage.cpp outgoingpage.ui
+        friends.h friends.cpp friends.ui
 
 
 

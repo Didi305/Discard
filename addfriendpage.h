@@ -16,12 +16,8 @@ class AddFriendPage : public QWidget
 
 public:
     explicit AddFriendPage(QWidget *parent = nullptr);
-    ~AddFriendPage();
-    QVBoxLayout* pendingListLayout() const;
+    ~AddFriendPage();;
     void load(int userId);
-    QPushButton* addButton() const {
-        return ui->addFriendButton;    // use the exact objectName from your .ui
-    }
 signals:
     void addFriendRequested(const QString &nick);
 private slots:

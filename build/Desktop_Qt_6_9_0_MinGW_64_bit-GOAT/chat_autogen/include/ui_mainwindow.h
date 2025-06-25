@@ -18,7 +18,6 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
-#include <QtWidgets/QScrollArea>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStackedWidget>
 #include <QtWidgets/QVBoxLayout>
@@ -47,13 +46,6 @@ public:
     QVBoxLayout *verticalLayoutCenter;
     QStackedWidget *ADD_OUTGOING;
     QVBoxLayout *verticalLayoutRight;
-    QWidget *friendsList;
-    QVBoxLayout *verticalLayout_3;
-    QScrollArea *scrollArea;
-    QWidget *scrollAreaWidgetContents;
-    QVBoxLayout *verticalLayout_5;
-    QVBoxLayout *onlineFriends;
-    QVBoxLayout *offlineFriends;
     QWidget *directMessages;
     QMenuBar *menubar;
 
@@ -299,59 +291,13 @@ public:
         horizontalLayout->addLayout(verticalLayoutCenter);
 
         verticalLayoutRight = new QVBoxLayout();
+        verticalLayoutRight->setSpacing(0);
         verticalLayoutRight->setObjectName("verticalLayoutRight");
-        friendsList = new QWidget(columnsContainer);
-        friendsList->setObjectName("friendsList");
-        friendsList->setMinimumSize(QSize(355, 0));
-        QPalette palette2;
-        palette2.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Button, brush12);
-        palette2.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Base, brush12);
-        palette2.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Window, brush12);
-        palette2.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Button, brush12);
-        palette2.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Base, brush12);
-        palette2.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Window, brush12);
-        palette2.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Button, brush12);
-        palette2.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Base, brush12);
-        palette2.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Window, brush12);
-        friendsList->setPalette(palette2);
-        friendsList->setStyleSheet(QString::fromUtf8("background-color: #32353a;\n"
-"\n"
-"border: 1px solid #3a3c43;"));
-        verticalLayout_3 = new QVBoxLayout(friendsList);
-        verticalLayout_3->setSpacing(0);
-        verticalLayout_3->setObjectName("verticalLayout_3");
-        verticalLayout_3->setContentsMargins(0, 0, 0, 0);
-        scrollArea = new QScrollArea(friendsList);
-        scrollArea->setObjectName("scrollArea");
-        scrollArea->setWidgetResizable(true);
-        scrollAreaWidgetContents = new QWidget();
-        scrollAreaWidgetContents->setObjectName("scrollAreaWidgetContents");
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 364, 676));
-        verticalLayout_5 = new QVBoxLayout(scrollAreaWidgetContents);
-        verticalLayout_5->setSpacing(0);
-        verticalLayout_5->setObjectName("verticalLayout_5");
-        verticalLayout_5->setContentsMargins(0, 0, 0, 0);
-        onlineFriends = new QVBoxLayout();
-        onlineFriends->setObjectName("onlineFriends");
-
-        verticalLayout_5->addLayout(onlineFriends);
-
-        offlineFriends = new QVBoxLayout();
-        offlineFriends->setSpacing(0);
-        offlineFriends->setObjectName("offlineFriends");
-
-        verticalLayout_5->addLayout(offlineFriends);
-
-        scrollArea->setWidget(scrollAreaWidgetContents);
-
-        verticalLayout_3->addWidget(scrollArea);
-
-
-        verticalLayoutRight->addWidget(friendsList);
-
 
         horizontalLayout->addLayout(verticalLayoutRight);
 
+        horizontalLayout->setStretch(0, 1);
+        horizontalLayout->setStretch(1, 1);
 
         verticalLayout_4->addWidget(columnsContainer);
 
