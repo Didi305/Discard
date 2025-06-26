@@ -42,6 +42,7 @@ public:
         if (OutgoingPage->objectName().isEmpty())
             OutgoingPage->setObjectName("OutgoingPage");
         OutgoingPage->resize(400, 714);
+        OutgoingPage->setStyleSheet(QString::fromUtf8(""));
         verticalLayout = new QVBoxLayout(OutgoingPage);
         verticalLayout->setSpacing(0);
         verticalLayout->setObjectName("verticalLayout");

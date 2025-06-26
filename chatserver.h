@@ -4,6 +4,8 @@
 #include <QMap>
 #include <QTcpServer>
 #include <functional>
+#include "manager.h"
+#include "utils.h"
 class ChatServer : public QObject {
     Q_OBJECT
 public:
@@ -22,6 +24,7 @@ public slots:
     void clientDisconnected();
 private:
     QTcpServer *tcpServer;
+    Manager* m_manager;
     QHash<QTcpSocket*, int> clients;
     QHash<int, QTcpSocket*> clientsR;
     QHash<QString, std::function<void(QJsonObject &, QTcpSocket*)>> handlers;

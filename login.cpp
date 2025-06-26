@@ -28,6 +28,7 @@ void Login::onLoginButtonClicked(){
         client->setClientName(parts.value(0));
         client->setClientAvatar(parts.value(1));
         client->setClientID(parts.value(2).toInt());
+        client->setFriends(manager->fetchFriends(client->getClientID(), client->getFriends()));
         QString host = "127.0.0.1";
         int port = 1234;
         client->connectToServer(host, port);

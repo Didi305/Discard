@@ -4,6 +4,7 @@
 #include "row.h"
 #include <vector>
 #include <utility>
+#include "utils.h"
 #include <qsqldatabase.h>
 #include "client.h"
 struct DBConfig{

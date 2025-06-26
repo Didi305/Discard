@@ -10,7 +10,6 @@
 #define UI_MAINWINDOW_H
 
 #include <QtCore/QVariant>
-#include <QtGui/QIcon>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QHBoxLayout>
@@ -54,10 +53,11 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
         MainWindow->resize(1093, 751);
-        QIcon icon(QIcon::fromTheme(QIcon::ThemeIcon::AddressBookNew));
-        MainWindow->setWindowIcon(icon);
+        MainWindow->setStyleSheet(QString::fromUtf8(""));
+        MainWindow->setIconSize(QSize(64, 64));
         mainContainer = new QWidget(MainWindow);
         mainContainer->setObjectName("mainContainer");
+        mainContainer->setStyleSheet(QString::fromUtf8(""));
         horizontalLayout_3 = new QHBoxLayout(mainContainer);
         horizontalLayout_3->setSpacing(0);
         horizontalLayout_3->setObjectName("horizontalLayout_3");
@@ -159,7 +159,9 @@ public:
         widget_2->setPalette(palette);
         widget_2->setStyleSheet(QString::fromUtf8("background-color: #2b2d31;\n"
 "\n"
-"border: 1px solid #3a3c43;"));
+"border: 1px solid #3a3c43;\n"
+"\n"
+"border-right: none;"));
 
         verticalLayoutLeft->addWidget(widget_2);
 
@@ -168,10 +170,11 @@ public:
 
         topBarColumnsContainer = new QStackedWidget(mainContainer);
         topBarColumnsContainer->setObjectName("topBarColumnsContainer");
-        topBarColumnsContainer->setStyleSheet(QString::fromUtf8(""));
+        topBarColumnsContainer->setStyleSheet(QString::fromUtf8("background-color: #32353a;"));
         friends = new QWidget();
         friends->setObjectName("friends");
-        friends->setAutoFillBackground(true);
+        friends->setAutoFillBackground(false);
+        friends->setStyleSheet(QString::fromUtf8(""));
         verticalLayout_4 = new QVBoxLayout(friends);
         verticalLayout_4->setSpacing(0);
         verticalLayout_4->setObjectName("verticalLayout_4");
@@ -180,10 +183,8 @@ public:
         topBarFrame->setObjectName("topBarFrame");
         topBarFrame->setMinimumSize(QSize(50, 50));
         topBarFrame->setLayoutDirection(Qt::LayoutDirection::LeftToRight);
-        topBarFrame->setStyleSheet(QString::fromUtf8("#topBarFrame {\n"
-"    border-bottom:1px solid #3a3c43;\n"
-"	background: #32353a;\n"
-"}"));
+        topBarFrame->setAutoFillBackground(false);
+        topBarFrame->setStyleSheet(QString::fromUtf8(""));
         topBarFrame->setFrameShape(QFrame::Shape::NoFrame);
         topBarFrame->setFrameShadow(QFrame::Shadow::Raised);
         topBarFrame->setLineWidth(0);
@@ -258,7 +259,7 @@ public:
 
         columnsContainer = new QWidget(friends);
         columnsContainer->setObjectName("columnsContainer");
-        columnsContainer->setAutoFillBackground(true);
+        columnsContainer->setAutoFillBackground(false);
         columnsContainer->setStyleSheet(QString::fromUtf8(""));
         horizontalLayout = new QHBoxLayout(columnsContainer);
         horizontalLayout->setSpacing(0);
@@ -282,8 +283,10 @@ public:
         palette1.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Base, brush12);
         palette1.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Window, brush12);
         ADD_OUTGOING->setPalette(palette1);
-        ADD_OUTGOING->setAutoFillBackground(true);
+        ADD_OUTGOING->setAutoFillBackground(false);
         ADD_OUTGOING->setStyleSheet(QString::fromUtf8(""));
+        ADD_OUTGOING->setLineWidth(0);
+        ADD_OUTGOING->setMidLineWidth(0);
 
         verticalLayoutCenter->addWidget(ADD_OUTGOING);
 
@@ -293,6 +296,7 @@ public:
         verticalLayoutRight = new QVBoxLayout();
         verticalLayoutRight->setSpacing(0);
         verticalLayoutRight->setObjectName("verticalLayoutRight");
+        verticalLayoutRight->setContentsMargins(0, -1, -1, -1);
 
         horizontalLayout->addLayout(verticalLayoutRight);
 

@@ -2,10 +2,17 @@
 #scrollAreaPending{
     border-top: 1px solid #3a3c43;
 }
+#Friends {
+    border: 1px solid rgb(226, 52, 9);
+}
 
-#scrollAreaWidgetContents,
-#scrollAreaPending{
-    background:#32353a;
+#ADD_OUTGOING{
+    border: 1px solid #3a3c43;
+}
+
+#scrollArea {
+    border: 1px solid #3a3c43;
+    border-left: none;
 }
 
 #ADD_OUTGOING QPushButton {
@@ -21,8 +28,8 @@
     background: green;
 }
 
-QFrame#Row {
-  background-color:red;
+Row {
+  background: transparent
 }
 
 #avatar {
@@ -30,10 +37,6 @@ QFrame#Row {
     background: transparent;
 }
 
-#name {
-    color:#fff;
-    font: 16px Arial, sans-serif;
-}
 
 QFrame#userPanel {
             background-color:#32353a;

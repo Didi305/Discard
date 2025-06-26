@@ -22,9 +22,12 @@ QString loadStyle(const QString &path)
 
 int main(int argc, char *argv[])
 {
+    qSetMessagePattern("%{time hh:mm:ss.zzz} %{message}");
     QApplication a(argc, argv);
     a.setStyleSheet(loadStyle(path + "/styles/dark.qss"));
+    a.setApplicationDisplayName("Discard");
     Manager *mgr = Manager::get();
+    ChatServer server;
     QSqlDatabase db = QSqlDatabase::addDatabase("QPSQL", "probe");
     QJsonObject DBConfig;
     mgr->init(DBConfig, db);
@@ -36,6 +39,5 @@ int main(int argc, char *argv[])
     }
     MainWindow w;
     w.show();
-    ChatServer server;
     return a.exec();
 }

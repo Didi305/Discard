@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -13,14 +14,13 @@ MainWindow::MainWindow(QWidget *parent)
     , m_FriendsPage(new Friends(this))
 {
     ui->setupUi(this);
+
     ui->ADD_OUTGOING->setAttribute(Qt::WA_StyledBackground, true);
     ui->ADD_OUTGOING->addWidget(m_addFriendPage);
     ui->ADD_OUTGOING->addWidget(m_outgoingPage); // index 1
     ui->verticalLayoutRight->addWidget(m_FriendsPage);
-
     m_addFriendPage->load(client->getClientID());
     m_outgoingPage->setRequests(client->getClientID());
-
     userPanel->setParent(ui->mainContainer);
     userPanel->setObjectName("userPanel");
     userPanel->setFixedHeight(60);          // 50 px tall
@@ -129,7 +129,7 @@ void MainWindow::updateAvatar(const QString &fileName)
         return;
     }
 
-    avatarButton->setIcon(QIcon(makeRoundedAvatar(pix, 48)));
+    avatarButton->setIcon(QIcon(Utils::makeRoundedAvatar(pix, 48)));
 }
 
 
@@ -182,10 +182,8 @@ void MainWindow::onDisconnectClicked(){
 }
 void MainWindow::onConnectionSuccess()
 {
-
     qDebug() << "User: " << client->getClientName();
     qDebug() << "ID: " << client->getClientID();
-    m_FriendsPage->load(client->getClientID());
 }
 
 

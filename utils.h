@@ -1,0 +1,141 @@
+#pragma once
+#include <QtSvg/QSvgRenderer>
+#include <QObject>
+#include <QPainter>
+#include <QHash>
+#include <qjsonobject.h>
+#include <qpainterpath.h>
+enum class Status {
+    ONLINE, HIDDEN, DO_NOT_DISTURB
+};
+
+struct Data
+{
+    int user_id;
+    QString avatar;
+    QString displayName;
+    QHash<Data, int> friends;
+    Status status;
+    bool operator==(Data const &other) const {
+        return user_id == other.user_id;
+    }
+};
+inline uint qHash(Data const &d, uint seed = 0) {
+    // combine the hash of user_id (you can mix in other fields if needed)
+    return ::qHash(d.user_id, seed);
+}
+
+namespace Utils {
+
+
+
+inline QPixmap makeAvatarWithHole(const QPixmap &src, int diameter, QSvgRenderer *statusRenderer) {
+    // size of the little status slot
+    const int slot = diameter / 4;
+    const int total = diameter + slot;
+
+    // 1) start with a transparent canvas
+    QPixmap out(diameter, diameter);
+    out.fill(Qt::transparent);
+
+    QPainter p(&out);
+    p.setRenderHint(QPainter::Antialiasing);
+
+    // 2) define the avatar circle minus the status hole
+    QPainterPath avatarClip;
+    avatarClip.addEllipse(0, 0, diameter, diameter);
+
+    // hole path: circle of radius slot/2 in the bottom-right corner
+    const int r = slot/2;
+    const int cx = diameter / 2 + diameter / 3;
+    const int cy = diameter - diameter/5 ;
+    QPainterPath hole;
+    hole.addEllipse(cx - r, cy - r, 2*r, 2*r);
+    // subtract the hole from the avatar clip
+    avatarClip = avatarClip.subtracted(hole);
+    p.setClipPath(avatarClip);
+
+    // 3) draw the avatar scaled to fill that clipped region
+    QPixmap scaled = src.scaled(diameter, diameter,
+                                Qt::KeepAspectRatioByExpanding,
+                                Qt::SmoothTransformation);
+    int dx = (scaled.width()  - diameter) / 2;
+    int dy = (scaled.height() - diameter) / 2;
+    p.drawPixmap(-dx, -dy, scaled);
+    // 4) turn clipping off and draw the status icon in the hole
+    p.setClipping(false);
+    if (statusRenderer) {
+        statusRenderer->render(&p, QRectF(cx + 1 - r, cy + 1 - r, 10, 10));
+    } else {
+        p.setBrush(Qt::green);
+        p.setPen(Qt::NoPen);
+        p.drawEllipse(QPoint(cx, cy), r, r);
+    }
+
+    return out;
+}
+
+inline QPixmap makeRoundedAvatar(const QPixmap &src, int s)
+{
+    /* 1. scale so the shorter edge still reaches ‘s’ */
+    QPixmap scaled = src.scaled(s, s,
+                                Qt::KeepAspectRatioByExpanding,
+                                Qt::SmoothTransformation);
+
+    /* 2. paint the centre square through a circular clip */
+    QPixmap out(s, s);
+    out.fill(Qt::transparent);
+
+    QPainter p(&out);
+    p.setRenderHint(QPainter::Antialiasing);
+
+    QPainterPath clip;
+    clip.addEllipse(0, 0, s, s);
+    p.setClipPath(clip);
+
+    /* centre the bigger pixmap */
+    const int dx = (scaled.width()  - s) / 2;
+    const int dy = (scaled.height() - s) / 2;
+    p.drawPixmap(-dx, -dy, scaled);      // negative offset → crop evenly
+    return out;
+}
+inline QPixmap renderSvg(const QString &resourcePath, int sidePx)
+{
+    QPixmap canvas(sidePx, sidePx);
+    canvas.fill(Qt::transparent);
+
+    QSvgRenderer svg(resourcePath);          // needs Qt::Svg module
+    QPainter p(&canvas);
+    svg.render(&p);                          // draw entire SVG into pixmap
+    return canvas;
+}
+
+inline QJsonObject parseJson(const QByteArray &data){
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    QJsonObject obj = doc.object();
+    return obj;
+}
+
+inline QByteArray buildJson(const QMap<QString, QString> &fields){
+    QJsonObject obj;
+    for(auto it = fields.constBegin(); it != fields.constEnd(); ++it){
+        obj[it.key()] = it.value();
+    }
+    QJsonDocument doc(obj);
+    return doc.toJson(QJsonDocument::Compact);
+}
+
+inline static const QHash<QString,Status>& statusMap() {
+    static QHash<QString,Status> m = {
+        { "ONLINE",         Status::ONLINE        },
+        { "HIDDEN",         Status::HIDDEN        },
+        { "DO_NOT_DISTURB", Status::DO_NOT_DISTURB }
+    };
+    return m;
+}
+
+inline Status statusFromString(const QString &str) {
+    return statusMap().value(str.toUpper(), Status::HIDDEN);
+}
+
+}

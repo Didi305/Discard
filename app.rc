@@ -1,0 +1,4 @@
+// app.rc
+#include "resource.h"
+
+IDI_ICON1 ICON "/resources/icons/favicon.ico"

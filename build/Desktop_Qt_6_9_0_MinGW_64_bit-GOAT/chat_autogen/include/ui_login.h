@@ -78,7 +78,7 @@ public:
 
     void retranslateUi(QDialog *Login)
     {
-        Login->setWindowTitle(QCoreApplication::translate("Login", "Dialog", nullptr));
+        Login->setWindowTitle(QString());
         loginButton->setText(QCoreApplication::translate("Login", "Login", nullptr));
         createAccountButton->setText(QCoreApplication::translate("Login", "Create Account", nullptr));
         label->setText(QCoreApplication::translate("Login", "Login", nullptr));

@@ -2,7 +2,7 @@
 #include "manager.h"
 #include <QJsonObject>
 #include <QJsonArray>
-#include "helpers.h"
+
 Client::Client(QObject *parent)
     : QObject(parent)
     , m_manager(Manager::get())
@@ -56,10 +56,19 @@ void Client::disconnectFromServer(){
 }
 
 void Client::onConnected(){
-    int clientID = getClientID();
-    QString id = QString::number(clientID);
-    socket->write(id.toUtf8());
+    QJsonObject root;
+    QJsonArray arr;
+    root["type"] = "";
+    root["user_id"] = getClientID();
+    auto amigos = friends.keys();
+    for(auto &f : amigos){
+        arr.append(f.user_id);
+    }
+    root["friends"] = arr;
+    QJsonDocument doc(root);
+    QString jsonString = doc.toJson(QJsonDocument::Compact);
     qDebug() << "Connected to server";
+    socket->write(jsonString.toUtf8());
 }
 
 void Client::onDisconnected(){
@@ -72,47 +81,21 @@ void Client::sendMessage(Data &d, QString typ, QString status) {
         {"status", status},
         {"id" , QString::number(d.user_id)},
         {"avatar" , d.avatar},
-        {"nickname" , d.displayName}
     };
     qDebug() << "ID of the user that needs to update his shit is: " << dataInfo["id"].toStdString();
-    QString jsonString = buildJson(dataInfo);
+    QString jsonString = Utils::buildJson(dataInfo);
     socket->write(jsonString.toUtf8());
 
 }
 
 void Client::checkFriendsStatus(QHash<Data, int> friends){
-    QJsonObject root;
-    QJsonArray arr;
-    root["type"] = "friends_status";
-    for(auto it = friends.constBegin(); it != friends.constEnd(); ++it){
-        arr.append(it.key().user_id);
-    }
-    root["friends"] = arr;
-    QJsonDocument doc(root);
-    QString jsonString = doc.toJson(QJsonDocument::Compact);
-    socket->write(jsonString.toUtf8());
+
 }
 void Client::onReadyRead(){
     QByteArray data = socket->readAll();
-    if(data == "mre7ba"){
-        setFriends(m_manager->fetchFriends(getClientID(), getFriends()));
-        return;
-    }
-    QJsonObject obj = parseJson(data);
+    QJsonObject obj = Utils::parseJson(data);
     QString dataType = obj["status"].toString();
-    //initiate the data with a method maybe?
-    Data d;
-    d.avatar = obj["avatar"].toString();
-    d.displayName = obj["nickname"].toString();
-    d.user_id = obj["id"].toInt();
-    //maybe in the future QHash to handle multipe types of signals
-    if(dataType == "update_accept" || dataType == "add_request"){
-        emit updateAcceptRequests(d, dataType);
-    }
-    else if(dataType == "update_pending"){
-        emit updatePendingRequests(d.user_id);
-    }
-    else if(dataType == "friends_status"){
+    if(dataType == "friends_status"){
         auto& friends = getFriends();
         auto friendsStatus = obj["friends"].toArray();
         qDebug() << "aysewer meni ha zeb" <<friendsStatus;
@@ -123,7 +106,20 @@ void Client::onReadyRead(){
             i++;
         }
         setFriends(friends);
-        emit connected();
+        qDebug() << "friends yalah jaw";
+        emit friendsReady(friends);
+    }
+    //initiate the data with a method maybe?
+    Data d;
+    d.avatar = obj["avatar"].toString();
+    d.displayName = obj["nickname"].toString();
+    d.user_id = obj["id"].toInt();
+    //maybe in the future QHash to handle multipe types of signals
+    if(dataType == "update_pending"){
+        emit updatePendingRequests(d.user_id);
+    }
+    else if(dataType == "update_accept" || dataType == "add_request"){
+        emit updateAcceptRequests(d, dataType);
     }
 }
 

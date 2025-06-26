@@ -7,7 +7,7 @@
 #include <QSvgRenderer>
 #include <qpainterpath.h>
 #include <qstyleoption.h>
-#include "helpers.h"
+#include "utils.h"
 #include "row.h"
 #include "manager.h"
 const int S = 32;
@@ -19,33 +19,48 @@ Row::Row(const Data &d, RowType type, QWidget *parent)
     setCursor(Qt::PointingHandCursor);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     setFixedHeight(64);
-    setAttribute(Qt::WA_StyledBackground, true);
     setAttribute(Qt::WA_Hover);
-    static const QHash<Status, QPixmap> statusIcons = []{
-        QHash<Status, QPixmap> m;
-        m[Status::ONLINE] = QPixmap(path + "/resources/icons/active.svg");
-        m[Status::HIDDEN] = QPixmap(path + "/resources/icons/hidden.svg");
-        m[Status::DO_NOT_DISTURB] = QPixmap(path + "/resources/icons/disturb.svg");
+    static std::unordered_map<Status, QString> statusPaths = {
+        {Status::ONLINE, "resources/icons/ONLINE.svg"},
+        {Status::HIDDEN, "resources/icons/HIDDEN.svg"},
+        {Status::DO_NOT_DISTURB, "resources/icons/DO_NOT_DISTURB.svg"}
+    };
+    static std::unordered_map<Status,std::unique_ptr<QSvgRenderer>> statusIcons = []{
+        std::unordered_map<Status,std::unique_ptr<QSvgRenderer>> m;
+        m[Status::ONLINE] = std::make_unique<QSvgRenderer>(path + "/resources/icons/active.svg");
+        m[Status::HIDDEN] = std::make_unique<QSvgRenderer>(path + "/resources/icons/hidden.svg");
+        m[Status::DO_NOT_DISTURB] = std::make_unique<QSvgRenderer>(path + "/resources/icons/disturb.svg");
         return m;
     }();
     /* ---------- avatar (left) ----------------------------------- */          // the avatar slot
 
     auto amigos = m_manager->getClient()->getFriends();
-    QWidget* ava;
+    QLabel* ava = new QLabel;
+    ava->setStyleSheet("background: transparent");
     bool online = amigos[d];
     QPixmap raw = d.avatar;
-    if (online) ava = makeAvatarWidget(raw, 52, statusIcons[d.status]);
-    else ava = makeAvatarWidget(raw, 52, statusIcons[Status::HIDDEN]);
+    QPixmap finalAvatar;
+    if(online){
+        qDebug() << "my guy is online buh";
+        qDebug() << "svg?: " << statusPaths[d.status];
+        finalAvatar = Utils::makeAvatarWithHole(raw, 48, statusIcons[d.status].get());
+    }
+    else finalAvatar = Utils::makeAvatarWithHole(raw, 48, statusIcons[Status::HIDDEN].get());
+    ava->setPixmap(finalAvatar);
 
     ava->setObjectName("avatar");
 
     /* ---------- two-line name block ----------------------------- */
     auto *name  = new QLabel(d.displayName);
-    name->setObjectName("name");
-    QPixmap checkSvg = renderSvg(path + "/resources/icons/check.svg", S);
-    QPixmap closeSvg = renderSvg(path + "/resources/icons/close.svg", S);
-    QPixmap checkContainer = makeRoundedAvatar(checkSvg, S);
-    QPixmap closeContainer = makeRoundedAvatar(closeSvg, S);
+    QFont f = name->font();
+    f.setPointSize(11);
+    f.setWeight(QFont::Bold);      // or QFont::Bold
+    name->setFont(f);
+    name->setStyleSheet("background: transparent");
+    QPixmap checkSvg = Utils::renderSvg(path + "/resources/icons/check.svg", S);
+    QPixmap closeSvg = Utils::renderSvg(path + "/resources/icons/close.svg", S);
+    QPixmap checkContainer = Utils::makeRoundedAvatar(checkSvg, S);
+    QPixmap closeContainer = Utils::makeRoundedAvatar(closeSvg, S);
     h->setContentsMargins(16,0,16,0);
     h->setSpacing(16);
     h->addWidget(ava);

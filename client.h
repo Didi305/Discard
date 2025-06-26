@@ -2,7 +2,7 @@
 #define CLIENT_H
 #include <QTcpSocket>
 #include "row.h"
-
+#include "utils.h"
 
 class Manager;
 
@@ -30,6 +30,7 @@ signals:
     void messageReceived(QString &data);
     void updatePendingRequests(int friend_id);
     void updateAcceptRequests(Data &d, QString dataType);
+    void friendsReady(QHash<Data, int> friends);
     void newFriendRequest(Data &d, QString dataType);
 private slots:
     void onConnected();

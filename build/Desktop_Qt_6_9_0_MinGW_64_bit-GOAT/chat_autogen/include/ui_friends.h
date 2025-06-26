@@ -17,7 +17,7 @@
 
 QT_BEGIN_NAMESPACE
 
-class Ui_Friends
+class Ui_amigos
 {
 public:
     QVBoxLayout *verticalLayout;
@@ -27,33 +27,40 @@ public:
     QVBoxLayout *onlineFriends;
     QVBoxLayout *offlineFriends;
 
-    void setupUi(QWidget *Friends)
+    void setupUi(QWidget *amigos)
     {
-        if (Friends->objectName().isEmpty())
-            Friends->setObjectName("Friends");
-        Friends->resize(397, 750);
+        if (amigos->objectName().isEmpty())
+            amigos->setObjectName("amigos");
+        amigos->resize(355, 487);
         QSizePolicy sizePolicy(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Preferred);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(Friends->sizePolicy().hasHeightForWidth());
-        Friends->setSizePolicy(sizePolicy);
-        Friends->setMinimumSize(QSize(355, 0));
-        verticalLayout = new QVBoxLayout(Friends);
+        sizePolicy.setHeightForWidth(amigos->sizePolicy().hasHeightForWidth());
+        amigos->setSizePolicy(sizePolicy);
+        amigos->setMinimumSize(QSize(355, 0));
+        amigos->setAutoFillBackground(false);
+        amigos->setStyleSheet(QString::fromUtf8(""));
+        verticalLayout = new QVBoxLayout(amigos);
         verticalLayout->setSpacing(0);
         verticalLayout->setObjectName("verticalLayout");
         verticalLayout->setContentsMargins(0, 0, 0, 0);
-        scrollArea = new QScrollArea(Friends);
+        scrollArea = new QScrollArea(amigos);
         scrollArea->setObjectName("scrollArea");
+        scrollArea->setAutoFillBackground(true);
+        scrollArea->setStyleSheet(QString::fromUtf8(""));
+        scrollArea->setLineWidth(0);
         scrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName("scrollAreaWidgetContents");
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 395, 748));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 353, 485));
+        scrollAreaWidgetContents->setAutoFillBackground(true);
+        scrollAreaWidgetContents->setStyleSheet(QString::fromUtf8(""));
         verticalLayout_6 = new QVBoxLayout(scrollAreaWidgetContents);
         verticalLayout_6->setSpacing(10);
         verticalLayout_6->setObjectName("verticalLayout_6");
         verticalLayout_6->setContentsMargins(0, 0, 0, 0);
         onlineFriends = new QVBoxLayout();
-        onlineFriends->setSpacing(15);
+        onlineFriends->setSpacing(0);
         onlineFriends->setObjectName("onlineFriends");
 
         verticalLayout_6->addLayout(onlineFriends);
@@ -71,20 +78,20 @@ public:
         verticalLayout->addWidget(scrollArea);
 
 
-        retranslateUi(Friends);
+        retranslateUi(amigos);
 
-        QMetaObject::connectSlotsByName(Friends);
+        QMetaObject::connectSlotsByName(amigos);
     } // setupUi
 
-    void retranslateUi(QWidget *Friends)
+    void retranslateUi(QWidget *amigos)
     {
-        Friends->setWindowTitle(QCoreApplication::translate("Friends", "Form", nullptr));
+        amigos->setWindowTitle(QCoreApplication::translate("amigos", "Form", nullptr));
     } // retranslateUi
 
 };
 
 namespace Ui {
-    class Friends: public Ui_Friends {};
+    class amigos: public Ui_amigos {};
 } // namespace Ui
 
 QT_END_NAMESPACE

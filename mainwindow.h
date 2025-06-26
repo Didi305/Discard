@@ -7,7 +7,6 @@
 #include "client.h"
 #include "friends.h"
 #include "manager.h"
-#include "helpers.h"
 #include "ui_MainWindow.h"
 #include "login.h"
 #include "outgoingpage.h"
@@ -26,6 +25,7 @@
 #include <QDebug>
 #include <QPainter>
 #include <QPushButton>
+#include "utils.h"
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;

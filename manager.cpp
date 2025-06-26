@@ -281,7 +281,7 @@ std::vector<std::unique_ptr<Row>> Manager::fetchRequests(int id, RowType type){
 QHash<Data , int>& Manager::fetchFriends(int user_id, QHash<Data , int> &friends){
     QSqlQuery query(db());
     QString sql = QStringLiteral(
-        "SELECT users.id, users.nickname, users.avatar "
+        "SELECT users.id, users.nickname, users.avatar, users.status "
         "FROM users "
         "WHERE users.id IN ( "
         "SELECT friend_id "
@@ -304,9 +304,9 @@ QHash<Data , int>& Manager::fetchFriends(int user_id, QHash<Data , int> &friends
         d.avatar = query.value("users.avatar").toString();
         d.displayName = query.value("users.nickname").toString();
         d.user_id = query.value("users.id").toString().toInt();
+        d.status = Utils::statusFromString(query.value("users.status").toString());
         friends.insert(d, 0);
     }
-    client->checkFriendsStatus(friends);
 
     return friends;
 }

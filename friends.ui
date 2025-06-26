@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Friends</class>
- <widget class="QWidget" name="Friends">
+ <class>amigos</class>
+ <widget class="QWidget" name="amigos">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>397</width>
-    <height>750</height>
+    <width>355</width>
+    <height>487</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -24,6 +24,12 @@
   </property>
   <property name="windowTitle">
    <string>Form</string>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <property name="spacing">
@@ -43,6 +49,15 @@
    </property>
    <item>
     <widget class="QScrollArea" name="scrollArea">
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="lineWidth">
+      <number>0</number>
+     </property>
      <property name="widgetResizable">
       <bool>true</bool>
      </property>
@@ -51,9 +66,15 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>395</width>
-        <height>748</height>
+        <width>353</width>
+        <height>485</height>
        </rect>
+      </property>
+      <property name="autoFillBackground">
+       <bool>true</bool>
+      </property>
+      <property name="styleSheet">
+       <string notr="true"/>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_6" stretch="0,1">
        <property name="spacing">
@@ -74,7 +95,7 @@
        <item>
         <layout class="QVBoxLayout" name="onlineFriends">
          <property name="spacing">
-          <number>15</number>
+          <number>0</number>
          </property>
         </layout>
        </item>

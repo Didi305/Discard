@@ -1,12 +1,10 @@
 #include "chatserver.h"
-#include "helpers.h"
 #include "qtcpsocket.h"
-
 #include <qjsonarray.h>
 #include <qjsondocument.h>
 #include <qjsonobject.h>
 ChatServer::ChatServer(QObject *parent)
-    : QObject(parent)
+    : QObject(parent), m_manager(Manager::get())
 {
     tcpServer = new QTcpServer(this);
     handlers["friend_request"] = [this](QJsonObject &obj, QTcpSocket* socket){ updateRequest(obj, socket);};
@@ -35,12 +33,27 @@ ChatServer::~ChatServer() {
     void ChatServer::readClient(){
         QTcpSocket* clientSocket = qobject_cast<QTcpSocket*>(sender());
         QByteArray data = clientSocket->readAll();
-        QJsonObject obj = parseJson(data);
+        QJsonObject obj = Utils::parseJson(data);
         QString dataType = obj["type"].toString();
         if(dataType.isEmpty()){
-            clients[clientSocket] = data.toInt();
-            clientsR.insert(data.toInt(), clientSocket);
-            clientSocket->write("mre7ba");
+            clients[clientSocket] = obj["user_id"].toInt();
+            clientsR.insert(obj["user_id"].toInt(), clientSocket);
+            QJsonArray status;
+            for(auto fID : obj["friends"].toArray()){
+                if(clientsR.contains(fID.toInt())){
+                    status.append(1);
+                }
+                else {
+                    status.append(0);
+                }
+            }
+            QJsonObject reply;
+            reply["status"]  = "friends_status";
+            reply["friends"] = status;
+
+            QJsonDocument doc(reply);
+            QByteArray qjsonString = doc.toJson(QJsonDocument::Compact);
+            clientSocket->write(qjsonString);
             return;
         }
         for(auto it = handlers.constBegin(); it != handlers.constEnd(); ++it){

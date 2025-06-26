@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>resources/icons/active.svg</file>
+        <file>resources/icons/check.svg</file>
+        <file>resources/icons/close.svg</file>
+        <file>resources/icons/disturb.svg</file>
+        <file>resources/icons/hidden.svg</file>
+        <file>resources/icons/WAPP.ico</file>
+    </qresource>
+</RCC>

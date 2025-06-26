@@ -1,5 +1,6 @@
 C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/chat_autogen/EWIEGA46WW/moc_friends.cpp: C:/Users/giler/OneDrive/Desktop/C++/Chat/friends.h \
   C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/chat_autogen/moc_predefs.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/QHash \
   C:/Qt/6.9.0/mingw_64/include/QtCore/QList \
   C:/Qt/6.9.0/mingw_64/include/QtCore/QObject \
   C:/Qt/6.9.0/mingw_64/include/QtCore/QRect \
@@ -28,6 +29,9 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOA
   C:/Qt/6.9.0/mingw_64/include/QtCore/qbytearrayalgorithms.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qbytearraylist.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qbytearrayview.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/qcalendar.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/qcborcommon.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/qcborvalue.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qchar.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qcompare.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qcompare_impl.h \
@@ -44,6 +48,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOA
   C:/Qt/6.9.0/mingw_64/include/QtCore/qcoreevent.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qdarwinhelpers.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qdatastream.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/qdatetime.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qdeadlinetimer.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qdebug.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qelapsedtimer.h \
@@ -64,6 +69,10 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOA
   C:/Qt/6.9.0/mingw_64/include/QtCore/qiodevicebase.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qiterable.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qiterator.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/qjsondocument.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/qjsonobject.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/qjsonparseerror.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/qjsonvalue.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qlatin1stringview.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qline.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qlist.h \
@@ -90,6 +99,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOA
   C:/Qt/6.9.0/mingw_64/include/QtCore/qprocessordetection.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qrect.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qrefcount.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/qregularexpression.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qscopedpointer.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qscopeguard.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qset.h \
@@ -138,12 +148,15 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOA
   C:/Qt/6.9.0/mingw_64/include/QtCore/qtypes.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qurl.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qutf8stringview.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/quuid.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qvariant.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qvarlengtharray.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qversiontagging.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/qxmlstream.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qxptype_traits.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qyieldcpu.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/QMouseEvent \
+  C:/Qt/6.9.0/mingw_64/include/QtGui/QPainter \
   C:/Qt/6.9.0/mingw_64/include/QtGui/QPixmap \
   C:/Qt/6.9.0/mingw_64/include/QtGui/QTransform \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qaction.h \
@@ -165,7 +178,10 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOA
   C:/Qt/6.9.0/mingw_64/include/QtGui/qinputmethod.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qkeysequence.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qpaintdevice.h \
+  C:/Qt/6.9.0/mingw_64/include/QtGui/qpainter.h \
+  C:/Qt/6.9.0/mingw_64/include/QtGui/qpainterpath.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qpalette.h \
+  C:/Qt/6.9.0/mingw_64/include/QtGui/qpen.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qpixelformat.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qpixmap.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qpointingdevice.h \
@@ -175,6 +191,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOA
   C:/Qt/6.9.0/mingw_64/include/QtGui/qrgba64.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qscreen.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qscreen_platform.h \
+  C:/Qt/6.9.0/mingw_64/include/QtGui/qtextoption.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qtgui-config.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qtguiexports.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qtguiglobal.h \
@@ -194,6 +211,11 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOA
   C:/Qt/6.9.0/mingw_64/include/QtSql/qtsql-config.h \
   C:/Qt/6.9.0/mingw_64/include/QtSql/qtsqlexports.h \
   C:/Qt/6.9.0/mingw_64/include/QtSql/qtsqlglobal.h \
+  C:/Qt/6.9.0/mingw_64/include/QtSvg/QSvgRenderer \
+  C:/Qt/6.9.0/mingw_64/include/QtSvg/qsvgrenderer.h \
+  C:/Qt/6.9.0/mingw_64/include/QtSvg/qtsvgexports.h \
+  C:/Qt/6.9.0/mingw_64/include/QtSvg/qtsvgglobal.h \
+  C:/Qt/6.9.0/mingw_64/include/QtWidgets/QFrame \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/QWidget \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/qframe.h \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/qsizepolicy.h \
@@ -414,4 +436,5 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOA
   C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wchar.h \
   C:/Users/giler/OneDrive/Desktop/C++/Chat/client.h \
   C:/Users/giler/OneDrive/Desktop/C++/Chat/manager.h \
-  C:/Users/giler/OneDrive/Desktop/C++/Chat/row.h
+  C:/Users/giler/OneDrive/Desktop/C++/Chat/row.h \
+  C:/Users/giler/OneDrive/Desktop/C++/Chat/utils.h

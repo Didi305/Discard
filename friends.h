@@ -5,7 +5,7 @@
 #include <QWidget>
 
 namespace Ui {
-class Friends;
+class amigos;
 }
 
 class Friends : public QWidget
@@ -15,9 +15,9 @@ class Friends : public QWidget
 public:
     explicit Friends(QWidget *parent = nullptr);
     ~Friends();
-    void load(int user_id);
+    void load(QHash<Data, int> friends);
 private:
-    Ui::Friends *ui;
+    Ui::amigos *ui;
     Manager* m_manager;
     std::vector<std::unique_ptr<Row>> friendRows;
 };

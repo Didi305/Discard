@@ -42,6 +42,8 @@ public:
         if (AddFriendPage->objectName().isEmpty())
             AddFriendPage->setObjectName("AddFriendPage");
         AddFriendPage->resize(400, 738);
+        AddFriendPage->setAutoFillBackground(true);
+        AddFriendPage->setStyleSheet(QString::fromUtf8(""));
         verticalLayout = new QVBoxLayout(AddFriendPage);
         verticalLayout->setSpacing(0);
         verticalLayout->setObjectName("verticalLayout");

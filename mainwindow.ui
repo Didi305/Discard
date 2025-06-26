@@ -13,10 +13,19 @@
   <property name="windowTitle">
    <string>Discard</string>
   </property>
-  <property name="windowIcon">
-   <iconset theme="QIcon::ThemeIcon::AddressBookNew"/>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>64</width>
+    <height>64</height>
+   </size>
   </property>
   <widget class="QWidget" name="mainContainer">
+   <property name="styleSheet">
+    <string notr="true"/>
+   </property>
    <layout class="QHBoxLayout" name="horizontalLayout_3">
     <property name="spacing">
      <number>0</number>
@@ -518,7 +527,9 @@
         <property name="styleSheet">
          <string notr="true">background-color: #2b2d31;
 
-border: 1px solid #3a3c43;</string>
+border: 1px solid #3a3c43;
+
+border-right: none;</string>
         </property>
        </widget>
       </item>
@@ -527,11 +538,14 @@ border: 1px solid #3a3c43;</string>
     <item>
      <widget class="QStackedWidget" name="topBarColumnsContainer">
       <property name="styleSheet">
-       <string notr="true"/>
+       <string notr="true">background-color: #32353a;</string>
       </property>
       <widget class="QWidget" name="friends">
        <property name="autoFillBackground">
-        <bool>true</bool>
+        <bool>false</bool>
+       </property>
+       <property name="styleSheet">
+        <string notr="true"/>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <property name="spacing">
@@ -560,11 +574,11 @@ border: 1px solid #3a3c43;</string>
           <property name="layoutDirection">
            <enum>Qt::LayoutDirection::LeftToRight</enum>
           </property>
+          <property name="autoFillBackground">
+           <bool>false</bool>
+          </property>
           <property name="styleSheet">
-           <string notr="true">#topBarFrame {
-    border-bottom:1px solid #3a3c43;
-	background: #32353a;
-}</string>
+           <string notr="true"/>
           </property>
           <property name="frameShape">
            <enum>QFrame::Shape::NoFrame</enum>
@@ -720,7 +734,7 @@ border: 1px solid #3a3c43;</string>
         <item>
          <widget class="QWidget" name="columnsContainer" native="true">
           <property name="autoFillBackground">
-           <bool>true</bool>
+           <bool>false</bool>
           </property>
           <property name="styleSheet">
            <string notr="true"/>
@@ -840,10 +854,16 @@ border: 1px solid #3a3c43;</string>
                 </palette>
                </property>
                <property name="autoFillBackground">
-                <bool>true</bool>
+                <bool>false</bool>
                </property>
                <property name="styleSheet">
                 <string notr="true"/>
+               </property>
+               <property name="lineWidth">
+                <number>0</number>
+               </property>
+               <property name="midLineWidth">
+                <number>0</number>
                </property>
                <property name="currentIndex">
                 <number>-1</number>
@@ -855,6 +875,9 @@ border: 1px solid #3a3c43;</string>
            <item>
             <layout class="QVBoxLayout" name="verticalLayoutRight">
              <property name="spacing">
+              <number>0</number>
+             </property>
+             <property name="leftMargin">
               <number>0</number>
              </property>
             </layout>

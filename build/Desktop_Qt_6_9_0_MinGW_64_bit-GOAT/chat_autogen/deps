@@ -32,6 +32,8 @@ chat_autogen/timestamp: \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qbytearraylist.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qbytearrayview.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qcalendar.h \
+	C:/Qt/6.9.0/mingw_64/include/QtCore/qcborcommon.h \
+	C:/Qt/6.9.0/mingw_64/include/QtCore/qcborvalue.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qchar.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qcompare.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qcompare_impl.h \
@@ -74,6 +76,10 @@ chat_autogen/timestamp: \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qiodevicebase.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qiterable.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qiterator.h \
+	C:/Qt/6.9.0/mingw_64/include/QtCore/qjsondocument.h \
+	C:/Qt/6.9.0/mingw_64/include/QtCore/qjsonobject.h \
+	C:/Qt/6.9.0/mingw_64/include/QtCore/qjsonparseerror.h \
+	C:/Qt/6.9.0/mingw_64/include/QtCore/qjsonvalue.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qlatin1stringview.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qline.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qlist.h \
@@ -100,6 +106,7 @@ chat_autogen/timestamp: \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qprocessordetection.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qrect.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qrefcount.h \
+	C:/Qt/6.9.0/mingw_64/include/QtCore/qregularexpression.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qscopedpointer.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qscopeguard.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qset.h \
@@ -150,9 +157,11 @@ chat_autogen/timestamp: \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qtypes.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qurl.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qutf8stringview.h \
+	C:/Qt/6.9.0/mingw_64/include/QtCore/quuid.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qvariant.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qvarlengtharray.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qversiontagging.h \
+	C:/Qt/6.9.0/mingw_64/include/QtCore/qxmlstream.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qxptype_traits.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qyieldcpu.h \
 	C:/Qt/6.9.0/mingw_64/include/QtGui/QMouseEvent \
@@ -216,6 +225,10 @@ chat_autogen/timestamp: \
 	C:/Qt/6.9.0/mingw_64/include/QtSql/qtsql-config.h \
 	C:/Qt/6.9.0/mingw_64/include/QtSql/qtsqlexports.h \
 	C:/Qt/6.9.0/mingw_64/include/QtSql/qtsqlglobal.h \
+	C:/Qt/6.9.0/mingw_64/include/QtSvg/QSvgRenderer \
+	C:/Qt/6.9.0/mingw_64/include/QtSvg/qsvgrenderer.h \
+	C:/Qt/6.9.0/mingw_64/include/QtSvg/qtsvgexports.h \
+	C:/Qt/6.9.0/mingw_64/include/QtSvg/qtsvgglobal.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/QDialog \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/QFileDialog \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/QFrame \
@@ -796,8 +809,6 @@ chat_autogen/timestamp: \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/client.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/friends.cpp \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/friends.h \
-	C:/Users/giler/OneDrive/Desktop/C++/Chat/helpers.cpp \
-	C:/Users/giler/OneDrive/Desktop/C++/Chat/helpers.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/login.cpp \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/login.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/main.cpp \
@@ -811,8 +822,10 @@ chat_autogen/timestamp: \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/pendingrequestswidget.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/register.cpp \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/register.h \
+	C:/Users/giler/OneDrive/Desktop/C++/Chat/resource.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/row.cpp \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/row.h \
+	C:/Users/giler/OneDrive/Desktop/C++/Chat/utils.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/addfriendpage.ui \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/friends.ui \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/login.ui \
