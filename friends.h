@@ -3,7 +3,7 @@
 
 #include "manager.h"
 #include <QWidget>
-
+#include "chatserver.h"
 namespace Ui {
 class amigos;
 }
@@ -16,6 +16,8 @@ public:
     explicit Friends(QWidget *parent = nullptr);
     ~Friends();
     void load(QHash<Data, int> friends);
+public slots:
+    void update(int id, bool online);
 private:
     Ui::amigos *ui;
     Manager* m_manager;

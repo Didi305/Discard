@@ -10,7 +10,7 @@ AddFriendPage::AddFriendPage(QWidget *parent)
 
     connect(ui->addFriendButton, &QPushButton::clicked,
             this, &AddFriendPage::onAddFriendButtonClicked);
-    connect(m_manager->getClient(), &Client::updateAcceptRequests, this, &::AddFriendPage::update);
+    connect(m_manager->getClient(), &Client::updateAcceptRequest, this, &::AddFriendPage::update);
 }
 
 AddFriendPage::~AddFriendPage()
@@ -41,12 +41,23 @@ void AddFriendPage::load(int userId) {
 
 }
 
-void AddFriendPage::update(Data& d, QString type) {
+void AddFriendPage::update(QJsonObject& obj, QString type) {
+    Data d = {obj["id"].toInt(), obj["name"].toString(), obj["avatar"].toString()};
     QLayoutItem *child;
     qDebug() << "ID of the user to be updated: " << d.user_id;
+    qDebug() << "his name is: " << d.displayName;
+    qDebug() << "request type: " << type;
     if(type == "add_request"){
         Row* friendRequestRow = new Row(d, RowType::Pending);
         ui->listLayout->addWidget(friendRequestRow);
+        connect(friendRequestRow, &Row::accepted, this, [this, friendRequestRow](Data d){
+            m_manager->acceptRequest(d.user_id);
+            friendRequestRow->deleteLater();
+        });
+        connect(friendRequestRow, &Row::declined, this, [this, friendRequestRow](Data d){
+            m_manager->declineRequest(d.user_id);
+            friendRequestRow->deleteLater();
+        });
     }
     else{
         for (int i = 0; i < ui->listLayout->count(); ++i) {

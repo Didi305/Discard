@@ -44,8 +44,8 @@ template <> constexpr inline auto AddFriendPage::qt_create_metaobjectdata<qt_met
         "nick",
         "onAddFriendButtonClicked",
         "update",
-        "Data&",
-        "d",
+        "QJsonObject&",
+        "obj",
         "type"
     };
 
@@ -57,7 +57,7 @@ template <> constexpr inline auto AddFriendPage::qt_create_metaobjectdata<qt_met
         // Slot 'onAddFriendButtonClicked'
         QtMocHelpers::SlotData<void()>(4, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'update'
-        QtMocHelpers::SlotData<void(Data &, QString)>(5, 2, QMC::AccessPrivate, QMetaType::Void, {{
+        QtMocHelpers::SlotData<void(QJsonObject &, QString)>(5, 2, QMC::AccessPrivate, QMetaType::Void, {{
             { 0x80000000 | 6, 7 }, { QMetaType::QString, 8 },
         }}),
     };
@@ -85,7 +85,7 @@ void AddFriendPage::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
         switch (_id) {
         case 0: _t->addFriendRequested((*reinterpret_cast< std::add_pointer_t<QString>>(_a[1]))); break;
         case 1: _t->onAddFriendButtonClicked(); break;
-        case 2: _t->update((*reinterpret_cast< std::add_pointer_t<Data&>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
+        case 2: _t->update((*reinterpret_cast< std::add_pointer_t<QJsonObject&>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
         default: ;
         }
     }

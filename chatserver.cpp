@@ -4,11 +4,11 @@
 #include <qjsondocument.h>
 #include <qjsonobject.h>
 ChatServer::ChatServer(QObject *parent)
-    : QObject(parent), m_manager(Manager::get())
+    : QObject(parent)
 {
     tcpServer = new QTcpServer(this);
     handlers["friend_request"] = [this](QJsonObject &obj, QTcpSocket* socket){ updateRequest(obj, socket);};
-    handlers["friends_status"] = [this](QJsonObject &obj, QTcpSocket* socket){ updateFriends(obj, socket);};
+    handlers["init"] = [this](QJsonObject &obj, QTcpSocket* socket){ init(obj, socket);};
     connect(tcpServer, &QTcpServer::newConnection, this, &ChatServer::onNewConnection);
     tcpServer->listen(QHostAddress::Any, 1234);
 }
@@ -35,27 +35,7 @@ ChatServer::~ChatServer() {
         QByteArray data = clientSocket->readAll();
         QJsonObject obj = Utils::parseJson(data);
         QString dataType = obj["type"].toString();
-        if(dataType.isEmpty()){
-            clients[clientSocket] = obj["user_id"].toInt();
-            clientsR.insert(obj["user_id"].toInt(), clientSocket);
-            QJsonArray status;
-            for(auto fID : obj["friends"].toArray()){
-                if(clientsR.contains(fID.toInt())){
-                    status.append(1);
-                }
-                else {
-                    status.append(0);
-                }
-            }
-            QJsonObject reply;
-            reply["status"]  = "friends_status";
-            reply["friends"] = status;
-
-            QJsonDocument doc(reply);
-            QByteArray qjsonString = doc.toJson(QJsonDocument::Compact);
-            clientSocket->write(qjsonString);
-            return;
-        }
+        if(dataType == "update_pending" || dataType == "update_accept" || dataType == "add_request") dataType = "friend_request";
         for(auto it = handlers.constBegin(); it != handlers.constEnd(); ++it){
             if(it.key() == dataType){
                 it.value()(obj, clientSocket);
@@ -76,30 +56,44 @@ ChatServer::~ChatServer() {
             obj["id"] = clients[socket];
             QJsonDocument doc(obj);
             QString jsonString = doc.toJson(QJsonDocument::Compact);
+            jsonString.append('\n');
             foundKey->write(jsonString.toUtf8());
         }
     }
-    void ChatServer::updateFriends(QJsonObject &obj, QTcpSocket* socket){
-        auto friends = obj["friends"].toArray();
-        for(auto f : friends){
-            int friend_ID = f.toInt();
-            if(clientsR.contains(friend_ID)){
-                f = 1;
+    void ChatServer::init(QJsonObject &obj, QTcpSocket* socket){
+        qDebug() << "kayn chi ola hir nemchi?";
+        for(auto it = clients.constBegin(); it != clients.constEnd(); ++it){
+            qDebug() << "kadir zwin?";
+            auto payload = Utils::updateStatus(obj["user_id"].toInt(), true);
+            qDebug() << "dafak are u sending? " << payload;
+            it.key()->write(payload);
+        }
+        clients[socket] = obj["user_id"].toInt();
+        clientsR.insert(obj["user_id"].toInt(), socket);
+        QJsonArray status;
+        for(auto fID : obj["friends"].toArray()){
+            if(clientsR.contains(fID.toInt())){
+                status.append(1);
             }
             else {
-                f = 0;
+                status.append(0);
             }
         }
-        //Probably needs optimization
-        obj["status"] = "friends_status";
-        obj["friends"] = friends;
-        QJsonDocument doc(obj);
-        QString qjsonString = doc.toJson(QJsonDocument::Compact);
-        socket->write(qjsonString.toUtf8());
+        QJsonObject reply;
+        reply["type"]  = "friends_status";
+        reply["friends"] = status;
+
+        QJsonDocument doc(reply);
+        QByteArray jsonString = doc.toJson(QJsonDocument::Compact);
+        jsonString.append('\n');
+        socket->write(jsonString);
     }
 
     void ChatServer::clientDisconnected(){
         QTcpSocket* clientSocket = qobject_cast<QTcpSocket*>(sender());
+        for(auto it = clients.constBegin(); it != clients.constEnd(); ++it){
+            it.key()->write(Utils::updateStatus(clients[clientSocket], false));
+        }
         clients.remove(clientSocket);
         clientSocket->deleteLater();
     };

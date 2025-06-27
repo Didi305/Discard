@@ -216,7 +216,7 @@ QString Manager::checkFriendship(QString nickname){
             query.bindValue(":stat" , "PENDING");
             query.bindValue(":date", QDateTime::currentDateTime());
             query.exec();
-            client->sendMessage(d, "friend_request", "add_request");
+            client->sendMessage(d, "add_request");
             return "Request Sent";
         }
         else{
@@ -329,7 +329,7 @@ void Manager::acceptRequest(int user_id){
     }
     Data d;
     d.user_id = user_id;
-    client->sendMessage(d, "friend_request", "update_pending");
+    client->sendMessage(d, "update_pending");
 }
 
 void Manager::declineRequest(int user_id){
@@ -347,7 +347,7 @@ void Manager::declineRequest(int user_id){
     }
     Data d;
     d.user_id = user_id;
-    client->sendMessage(d, "friend_request", "update_pending");
+    client->sendMessage(d, "update_pending");
 }
 void Manager::cancelRequest(int friend_id){
     QSqlQuery query(db());
@@ -364,5 +364,5 @@ void Manager::cancelRequest(int friend_id){
     }
     Data d;
     d.user_id = friend_id;
-    client->sendMessage(d, "friend_request", "update_accept");
+    client->sendMessage(d, "update_accept");
 }

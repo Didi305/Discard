@@ -1,5 +1,4 @@
 #include <QStandardPaths>
-#include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
@@ -12,10 +11,19 @@
 #include "manager.h"
 const int S = 32;
 QString path = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + "/C++/Chat";
+
+Row::Row(Row* row, QWidget *parent) : QFrame(parent){
+    if(row){
+        m_data = row->m_data;
+    }
+    else{
+        m_data = Data();
+    }
+}
+
 Row::Row(const Data &d, RowType type, QWidget *parent)
-    : QFrame(parent), m_data(d), type(), m_manager(Manager::get())
+    : QFrame(parent), m_data(d), type(), m_manager(Manager::get()), h(new QHBoxLayout(this))
 {
-    auto *h = new QHBoxLayout(this);
     setCursor(Qt::PointingHandCursor);
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Fixed);
     setFixedHeight(64);

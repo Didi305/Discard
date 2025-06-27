@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QPixmap>
 #include <QFrame>
+#include <qboxlayout.h>
 #include "utils.h"
 
 enum class RowType { Pending, Outgoing, Friend};
@@ -12,7 +13,8 @@ class Row : public QFrame
 {
     Q_OBJECT
 public:
-    explicit Row(const Data &d, RowType type, QWidget *parent = nullptr);
+    Row(const Data &d, RowType type, QWidget *parent = nullptr);
+    Row(Row* row = nullptr, QWidget *parent = nullptr);
     const Data& data() const { return m_data; }
 signals:
     void accepted(const Data &);
@@ -30,5 +32,6 @@ private:
     RowType type;
     Data m_data;
     Manager* m_manager;
+    QHBoxLayout* h;
 };
 #endif

@@ -22,7 +22,7 @@ signals:
     void addFriendRequested(const QString &nick);
 private slots:
     void onAddFriendButtonClicked();
-    void update(Data &d, QString type);
+    void update(QJsonObject& obj, QString type);
 private:
     Ui::AddFriendPage *ui;
     Manager *m_manager;

@@ -199,13 +199,23 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOA
   C:/Qt/6.9.0/mingw_64/include/QtGui/qvectornd.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qwindowdefs.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qwindowdefs_win.h \
+  C:/Qt/6.9.0/mingw_64/include/QtNetwork/qabstractsocket.h \
+  C:/Qt/6.9.0/mingw_64/include/QtNetwork/qhostaddress.h \
+  C:/Qt/6.9.0/mingw_64/include/QtNetwork/qtcpsocket.h \
+  C:/Qt/6.9.0/mingw_64/include/QtNetwork/qtnetwork-config.h \
+  C:/Qt/6.9.0/mingw_64/include/QtNetwork/qtnetworkexports.h \
+  C:/Qt/6.9.0/mingw_64/include/QtNetwork/qtnetworkglobal.h \
   C:/Qt/6.9.0/mingw_64/include/QtSvg/QSvgRenderer \
   C:/Qt/6.9.0/mingw_64/include/QtSvg/qsvgrenderer.h \
   C:/Qt/6.9.0/mingw_64/include/QtSvg/qtsvgexports.h \
   C:/Qt/6.9.0/mingw_64/include/QtSvg/qtsvgglobal.h \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/QFrame \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/QWidget \
+  C:/Qt/6.9.0/mingw_64/include/QtWidgets/qboxlayout.h \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/qframe.h \
+  C:/Qt/6.9.0/mingw_64/include/QtWidgets/qgridlayout.h \
+  C:/Qt/6.9.0/mingw_64/include/QtWidgets/qlayout.h \
+  C:/Qt/6.9.0/mingw_64/include/QtWidgets/qlayoutitem.h \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/qsizepolicy.h \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/qtwidgets-config.h \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/qtwidgetsexports.h \

@@ -5,6 +5,7 @@
 #include <QHash>
 #include <qjsonobject.h>
 #include <qpainterpath.h>
+#include <qtcpsocket.h>
 enum class Status {
     ONLINE, HIDDEN, DO_NOT_DISTURB
 };
@@ -12,12 +13,18 @@ enum class Status {
 struct Data
 {
     int user_id;
-    QString avatar;
     QString displayName;
+    QString avatar;
     QHash<Data, int> friends;
     Status status;
     bool operator==(Data const &other) const {
         return user_id == other.user_id;
+    }
+    void operator=(Data const &other) {
+        user_id = other.user_id;
+        displayName = other.displayName;
+        avatar = other.avatar;
+        status = other.status;
     }
 };
 inline uint qHash(Data const &d, uint seed = 0) {
@@ -136,6 +143,17 @@ inline static const QHash<QString,Status>& statusMap() {
 
 inline Status statusFromString(const QString &str) {
     return statusMap().value(str.toUpper(), Status::HIDDEN);
+}
+
+inline QByteArray updateStatus(int user_id, bool online){
+    QJsonObject stat;
+    stat["type"] = "friend_update";
+    stat["id"] = user_id;
+    stat["bool"] = online;
+    QJsonDocument doc(stat);
+    QString payload = doc.toJson(QJsonDocument::Compact);
+    payload.append('\n');
+    return payload.toUtf8();
 }
 
 }

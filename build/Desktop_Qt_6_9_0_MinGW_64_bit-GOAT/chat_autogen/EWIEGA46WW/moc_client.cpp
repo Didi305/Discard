@@ -47,14 +47,16 @@ template <> constexpr inline auto Client::qt_create_metaobjectdata<qt_meta_tag_Z
         "data",
         "updatePendingRequests",
         "friend_id",
-        "updateAcceptRequests",
-        "Data&",
-        "d",
-        "dataType",
+        "updateAcceptRequest",
+        "QJsonObject&",
+        "obj",
+        "type",
+        "updateFriends",
+        "id",
+        "online",
         "friendsReady",
         "QHash<Data,int>",
         "friends",
-        "newFriendRequest",
         "onConnected",
         "onDisconnected",
         "onReadyRead"
@@ -73,24 +75,24 @@ template <> constexpr inline auto Client::qt_create_metaobjectdata<qt_meta_tag_Z
         QtMocHelpers::SignalData<void(int)>(7, 2, QMC::AccessPublic, QMetaType::Void, {{
             { QMetaType::Int, 8 },
         }}),
-        // Signal 'updateAcceptRequests'
-        QtMocHelpers::SignalData<void(Data &, QString)>(9, 2, QMC::AccessPublic, QMetaType::Void, {{
+        // Signal 'updateAcceptRequest'
+        QtMocHelpers::SignalData<void(QJsonObject &, QString)>(9, 2, QMC::AccessPublic, QMetaType::Void, {{
             { 0x80000000 | 10, 11 }, { QMetaType::QString, 12 },
+        }}),
+        // Signal 'updateFriends'
+        QtMocHelpers::SignalData<void(int, bool)>(13, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::Int, 14 }, { QMetaType::Bool, 15 },
         }}),
         // Signal 'friendsReady'
-        QtMocHelpers::SignalData<void(QHash<Data,int>)>(13, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { 0x80000000 | 14, 15 },
-        }}),
-        // Signal 'newFriendRequest'
-        QtMocHelpers::SignalData<void(Data &, QString)>(16, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { 0x80000000 | 10, 11 }, { QMetaType::QString, 12 },
+        QtMocHelpers::SignalData<void(QHash<Data,int>)>(16, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { 0x80000000 | 17, 18 },
         }}),
         // Slot 'onConnected'
-        QtMocHelpers::SlotData<void()>(17, 2, QMC::AccessPrivate, QMetaType::Void),
-        // Slot 'onDisconnected'
-        QtMocHelpers::SlotData<void()>(18, 2, QMC::AccessPrivate, QMetaType::Void),
-        // Slot 'onReadyRead'
         QtMocHelpers::SlotData<void()>(19, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onDisconnected'
+        QtMocHelpers::SlotData<void()>(20, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onReadyRead'
+        QtMocHelpers::SlotData<void()>(21, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -118,9 +120,9 @@ void Client::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         case 1: _t->disconnected(); break;
         case 2: _t->messageReceived((*reinterpret_cast< std::add_pointer_t<QString&>>(_a[1]))); break;
         case 3: _t->updatePendingRequests((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
-        case 4: _t->updateAcceptRequests((*reinterpret_cast< std::add_pointer_t<Data&>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
-        case 5: _t->friendsReady((*reinterpret_cast< std::add_pointer_t<QHash<Data,int>>>(_a[1]))); break;
-        case 6: _t->newFriendRequest((*reinterpret_cast< std::add_pointer_t<Data&>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
+        case 4: _t->updateAcceptRequest((*reinterpret_cast< std::add_pointer_t<QJsonObject&>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
+        case 5: _t->updateFriends((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2]))); break;
+        case 6: _t->friendsReady((*reinterpret_cast< std::add_pointer_t<QHash<Data,int>>>(_a[1]))); break;
         case 7: _t->onConnected(); break;
         case 8: _t->onDisconnected(); break;
         case 9: _t->onReadyRead(); break;
@@ -136,11 +138,11 @@ void Client::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
             return;
         if (QtMocHelpers::indexOfMethod<void (Client::*)(int )>(_a, &Client::updatePendingRequests, 3))
             return;
-        if (QtMocHelpers::indexOfMethod<void (Client::*)(Data & , QString )>(_a, &Client::updateAcceptRequests, 4))
+        if (QtMocHelpers::indexOfMethod<void (Client::*)(QJsonObject & , QString )>(_a, &Client::updateAcceptRequest, 4))
             return;
-        if (QtMocHelpers::indexOfMethod<void (Client::*)(QHash<Data,int> )>(_a, &Client::friendsReady, 5))
+        if (QtMocHelpers::indexOfMethod<void (Client::*)(int , bool )>(_a, &Client::updateFriends, 5))
             return;
-        if (QtMocHelpers::indexOfMethod<void (Client::*)(Data & , QString )>(_a, &Client::newFriendRequest, 6))
+        if (QtMocHelpers::indexOfMethod<void (Client::*)(QHash<Data,int> )>(_a, &Client::friendsReady, 6))
             return;
     }
 }
@@ -201,20 +203,20 @@ void Client::updatePendingRequests(int _t1)
 }
 
 // SIGNAL 4
-void Client::updateAcceptRequests(Data & _t1, QString _t2)
+void Client::updateAcceptRequest(QJsonObject & _t1, QString _t2)
 {
     QMetaObject::activate<void>(this, &staticMetaObject, 4, nullptr, _t1, _t2);
 }
 
 // SIGNAL 5
-void Client::friendsReady(QHash<Data,int> _t1)
+void Client::updateFriends(int _t1, bool _t2)
 {
-    QMetaObject::activate<void>(this, &staticMetaObject, 5, nullptr, _t1);
+    QMetaObject::activate<void>(this, &staticMetaObject, 5, nullptr, _t1, _t2);
 }
 
 // SIGNAL 6
-void Client::newFriendRequest(Data & _t1, QString _t2)
+void Client::friendsReady(QHash<Data,int> _t1)
 {
-    QMetaObject::activate<void>(this, &staticMetaObject, 6, nullptr, _t1, _t2);
+    QMetaObject::activate<void>(this, &staticMetaObject, 6, nullptr, _t1);
 }
 QT_WARNING_POP

@@ -41,6 +41,9 @@ template <> constexpr inline auto ChatServer::qt_create_metaobjectdata<qt_meta_t
         "ChatServer",
         "messageReceived",
         "",
+        "userStatus",
+        "id",
+        "online",
         "onNewConnection",
         "readClient",
         "clientDisconnected"
@@ -49,12 +52,16 @@ template <> constexpr inline auto ChatServer::qt_create_metaobjectdata<qt_meta_t
     QtMocHelpers::UintData qt_methods {
         // Signal 'messageReceived'
         QtMocHelpers::SignalData<void()>(1, 2, QMC::AccessPublic, QMetaType::Void),
+        // Signal 'userStatus'
+        QtMocHelpers::SignalData<void(int, bool)>(3, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::Int, 4 }, { QMetaType::Bool, 5 },
+        }}),
         // Slot 'onNewConnection'
-        QtMocHelpers::SlotData<void()>(3, 2, QMC::AccessPublic, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(6, 2, QMC::AccessPublic, QMetaType::Void),
         // Slot 'readClient'
-        QtMocHelpers::SlotData<void()>(4, 2, QMC::AccessPublic, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(7, 2, QMC::AccessPublic, QMetaType::Void),
         // Slot 'clientDisconnected'
-        QtMocHelpers::SlotData<void()>(5, 2, QMC::AccessPublic, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(8, 2, QMC::AccessPublic, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -79,14 +86,17 @@ void ChatServer::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
         case 0: _t->messageReceived(); break;
-        case 1: _t->onNewConnection(); break;
-        case 2: _t->readClient(); break;
-        case 3: _t->clientDisconnected(); break;
+        case 1: _t->userStatus((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2]))); break;
+        case 2: _t->onNewConnection(); break;
+        case 3: _t->readClient(); break;
+        case 4: _t->clientDisconnected(); break;
         default: ;
         }
     }
     if (_c == QMetaObject::IndexOfMethod) {
         if (QtMocHelpers::indexOfMethod<void (ChatServer::*)()>(_a, &ChatServer::messageReceived, 0))
+            return;
+        if (QtMocHelpers::indexOfMethod<void (ChatServer::*)(int , bool )>(_a, &ChatServer::userStatus, 1))
             return;
     }
 }
@@ -110,14 +120,14 @@ int ChatServer::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 4)
+        if (_id < 5)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 4;
+        _id -= 5;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 4)
+        if (_id < 5)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 4;
+        _id -= 5;
     }
     return _id;
 }
@@ -126,5 +136,11 @@ int ChatServer::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 void ChatServer::messageReceived()
 {
     QMetaObject::activate(this, &staticMetaObject, 0, nullptr);
+}
+
+// SIGNAL 1
+void ChatServer::userStatus(int _t1, bool _t2)
+{
+    QMetaObject::activate<void>(this, &staticMetaObject, 1, nullptr, _t1, _t2);
 }
 QT_WARNING_POP

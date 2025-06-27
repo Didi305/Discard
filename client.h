@@ -3,7 +3,7 @@
 #include <QTcpSocket>
 #include "row.h"
 #include "utils.h"
-
+#include "chatserver.h"
 class Manager;
 
 class Client : public QObject {
@@ -13,25 +13,28 @@ public:
     QString getClientName();
     QString getClientAvatar();
     int getClientID();
+    Data getClientData();
     QHash<Data, int>& getFriends();
     void setFriends(QHash<Data, int> &friends);
     void setClientName(QString name);
     void setClientAvatar(QString avatar);
     void setClientID(int id);
+    void setClientData(int id, QString name, QString avatar, QHash<Data, int> friends);
     ~Client();
 
     void connectToServer(const QString &host, int port);
     void disconnectFromServer();
-    void sendMessage(Data &d, QString typ, QString status);
-    void checkFriendsStatus(QHash<Data, int> friends);
+    void sendMessage(Data &d, QString typ);
+    void checkFriendsStatus(QJsonObject& obj);
+    void updateAcceptRequests(QJsonObject& obj);
 signals:
     void connected();
     void disconnected();
     void messageReceived(QString &data);
     void updatePendingRequests(int friend_id);
-    void updateAcceptRequests(Data &d, QString dataType);
+    void updateAcceptRequest(QJsonObject& obj, QString type);
+    void updateFriends(int id, bool online);
     void friendsReady(QHash<Data, int> friends);
-    void newFriendRequest(Data &d, QString dataType);
 private slots:
     void onConnected();
     void onDisconnected();
@@ -39,12 +42,15 @@ private slots:
 
 private:
     QTcpSocket *socket;
+    ChatServer* server;
     int id;
     QString name;
     QString avatar;
     Manager* m_manager;
     QHash<Data, int> friends;
+    Data d;
     Status status;
+    QHash<QString, std::function<void(QJsonObject&)>> handlers;
 };
 
 #endif // CLIENT_H
