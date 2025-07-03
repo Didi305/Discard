@@ -12,6 +12,10 @@ Friends::Friends(QWidget *parent)
     connect(m_manager->getClient(), &Client::friendsReady,
             this,   &Friends::load);
     connect(m_manager->getClient(), &Client::updateFriends, this, &Friends::update);
+    connect(m_manager->getClient(), &Client::addNewFriendRow, this, [this](Data d){
+        Row* newRow = new Row(d, RowType::Friend);
+        ui->onlineFriends->addWidget(newRow);
+    });
 }
 
 Friends::~Friends()

@@ -12,11 +12,13 @@ public:
     Client(QObject *parent = nullptr);
     QString getClientName();
     QString getClientAvatar();
+    Status getClientStatus();
     int getClientID();
     Data getClientData();
     QHash<Data, int>& getFriends();
     void setFriends(QHash<Data, int> &friends);
     void setClientName(QString name);
+    void setClientStatus(Status stat);
     void setClientAvatar(QString avatar);
     void setClientID(int id);
     void setClientData(int id, QString name, QString avatar, QHash<Data, int> friends);
@@ -35,6 +37,7 @@ signals:
     void updateAcceptRequest(QJsonObject& obj, QString type);
     void updateFriends(int id, bool online);
     void friendsReady(QHash<Data, int> friends);
+    void addNewFriendRow(Data d);
 private slots:
     void onConnected();
     void onDisconnected();

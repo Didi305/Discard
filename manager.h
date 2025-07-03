@@ -37,7 +37,7 @@ public:
     void postMessage(QString message);
     std::vector<std::unique_ptr<Row>> fetchRequests(int id, RowType type);
     QHash<Data , int>& fetchFriends(int user_id, QHash<Data , int>& friends);
-    void acceptRequest(int user_id);
+    void acceptRequest(Data d);
     void declineRequest(int user_id);
     void cancelRequest(int user_id);
 private:

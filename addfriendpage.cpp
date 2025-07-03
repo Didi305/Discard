@@ -28,9 +28,10 @@ void AddFriendPage::load(int userId) {
     // 2) Add each widget to your layout
     for (auto& uptr : m_pendingRows) {
         Row* raw = uptr.release();
+        qDebug() << Utils::stringFromStatus(raw->data().status);
         ui->listLayout->addWidget(raw);
         connect(raw, &Row::accepted, this, [this, raw](Data d){
-            m_manager->acceptRequest(d.user_id);
+            m_manager->acceptRequest(d);
             raw->deleteLater();
         });
         connect(raw, &Row::declined, this, [this, raw](Data d){
@@ -42,7 +43,7 @@ void AddFriendPage::load(int userId) {
 }
 
 void AddFriendPage::update(QJsonObject& obj, QString type) {
-    Data d = {obj["id"].toInt(), obj["name"].toString(), obj["avatar"].toString()};
+    Data d = {obj["id"].toInt(), obj["name"].toString(), obj["avatar"].toString(), Utils::statusFromString(obj["status"].toString())};
     QLayoutItem *child;
     qDebug() << "ID of the user to be updated: " << d.user_id;
     qDebug() << "his name is: " << d.displayName;
@@ -51,7 +52,7 @@ void AddFriendPage::update(QJsonObject& obj, QString type) {
         Row* friendRequestRow = new Row(d, RowType::Pending);
         ui->listLayout->addWidget(friendRequestRow);
         connect(friendRequestRow, &Row::accepted, this, [this, friendRequestRow](Data d){
-            m_manager->acceptRequest(d.user_id);
+            m_manager->acceptRequest(d);
             friendRequestRow->deleteLater();
         });
         connect(friendRequestRow, &Row::declined, this, [this, friendRequestRow](Data d){

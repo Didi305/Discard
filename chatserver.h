@@ -12,6 +12,7 @@ public:
     ~ChatServer();
     void updateRequest(QJsonObject &obj, QTcpSocket* socket);
     void init(QJsonObject &obj, QTcpSocket* socket);
+    void checkUserStatus(QJsonObject &obj, QTcpSocket* socket);
 signals:
     void messageReceived();
     void userStatus(int id, bool online);
@@ -26,6 +27,12 @@ private:
     QHash<QTcpSocket*, int> clients;
     QHash<int, QTcpSocket*> clientsR;
     QHash<QString, std::function<void(QJsonObject &, QTcpSocket*)>> handlers;
+    QSet<QString> updateFriendshipTypes = {
+        "update_pending",
+        "update_accept",
+        "add_request",
+        "add_row"
+    };
 };
 
 

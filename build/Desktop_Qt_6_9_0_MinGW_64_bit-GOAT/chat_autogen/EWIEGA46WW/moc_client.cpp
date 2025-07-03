@@ -57,6 +57,9 @@ template <> constexpr inline auto Client::qt_create_metaobjectdata<qt_meta_tag_Z
         "friendsReady",
         "QHash<Data,int>",
         "friends",
+        "addNewFriendRow",
+        "Data",
+        "d",
         "onConnected",
         "onDisconnected",
         "onReadyRead"
@@ -87,12 +90,16 @@ template <> constexpr inline auto Client::qt_create_metaobjectdata<qt_meta_tag_Z
         QtMocHelpers::SignalData<void(QHash<Data,int>)>(16, 2, QMC::AccessPublic, QMetaType::Void, {{
             { 0x80000000 | 17, 18 },
         }}),
+        // Signal 'addNewFriendRow'
+        QtMocHelpers::SignalData<void(Data)>(19, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { 0x80000000 | 20, 21 },
+        }}),
         // Slot 'onConnected'
-        QtMocHelpers::SlotData<void()>(19, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(22, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onDisconnected'
-        QtMocHelpers::SlotData<void()>(20, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(23, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onReadyRead'
-        QtMocHelpers::SlotData<void()>(21, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(24, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -123,9 +130,10 @@ void Client::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         case 4: _t->updateAcceptRequest((*reinterpret_cast< std::add_pointer_t<QJsonObject&>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<QString>>(_a[2]))); break;
         case 5: _t->updateFriends((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2]))); break;
         case 6: _t->friendsReady((*reinterpret_cast< std::add_pointer_t<QHash<Data,int>>>(_a[1]))); break;
-        case 7: _t->onConnected(); break;
-        case 8: _t->onDisconnected(); break;
-        case 9: _t->onReadyRead(); break;
+        case 7: _t->addNewFriendRow((*reinterpret_cast< std::add_pointer_t<Data>>(_a[1]))); break;
+        case 8: _t->onConnected(); break;
+        case 9: _t->onDisconnected(); break;
+        case 10: _t->onReadyRead(); break;
         default: ;
         }
     }
@@ -143,6 +151,8 @@ void Client::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         if (QtMocHelpers::indexOfMethod<void (Client::*)(int , bool )>(_a, &Client::updateFriends, 5))
             return;
         if (QtMocHelpers::indexOfMethod<void (Client::*)(QHash<Data,int> )>(_a, &Client::friendsReady, 6))
+            return;
+        if (QtMocHelpers::indexOfMethod<void (Client::*)(Data )>(_a, &Client::addNewFriendRow, 7))
             return;
     }
 }
@@ -166,14 +176,14 @@ int Client::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 10)
+        if (_id < 11)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 10;
+        _id -= 11;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 10)
+        if (_id < 11)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 10;
+        _id -= 11;
     }
     return _id;
 }
@@ -218,5 +228,11 @@ void Client::updateFriends(int _t1, bool _t2)
 void Client::friendsReady(QHash<Data,int> _t1)
 {
     QMetaObject::activate<void>(this, &staticMetaObject, 6, nullptr, _t1);
+}
+
+// SIGNAL 7
+void Client::addNewFriendRow(Data _t1)
+{
+    QMetaObject::activate<void>(this, &staticMetaObject, 7, nullptr, _t1);
 }
 QT_WARNING_POP

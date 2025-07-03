@@ -110,7 +110,7 @@ QString Manager::checkUser(const QString& username, const QString& password){
     if(!password.isEmpty()){
         QByteArray password_hash = (QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Sha256)).toHex();
         QString sql = QStringLiteral(
-            "SELECT avatar, nickname, id "
+            "SELECT avatar, nickname, id, status "
             "FROM users "
             "WHERE username = :u AND password_hash = :p "
             );
@@ -122,7 +122,7 @@ QString Manager::checkUser(const QString& username, const QString& password){
             qCritical() << query.lastError().text();
         }
         if(query.first()){
-            return query.value("nickname").toString() + ";" + query.value("avatar").toString() + ";" + query.value("id").toString();
+            return query.value("nickname").toString() + ";" + query.value("avatar").toString() + ";" + query.value("id").toString() + ";" + query.value("status").toString();
         }else{
             qDebug() << "Username or password wrong";
             return "";
@@ -183,7 +183,7 @@ QString Manager::checkFriendship(QString nickname){
     int friendID = checkUser(nickname).toInt();
     QSqlQuery query(db());
     QString sql = QStringLiteral(
-        "SELECT users.id, users.avatar, users.nickname, friendship.status "
+        "SELECT users.id, users.avatar, users.nickname, users.status, friendship.status "
         "FROM users "
         "LEFT JOIN friendship ON (friendship.friend_id = users.id AND friendship.user_id = :u ) OR (friendship.user_id = users.id AND friendship.friend_id = :u ) "
         "WHERE users.id = :f "
@@ -204,6 +204,7 @@ QString Manager::checkFriendship(QString nickname){
             d.avatar = client->getClientAvatar();
             d.displayName = client->getClientName();
             d.user_id = query.value("users.id").toString().toInt();
+            d.status = Utils::statusFromString(query.value("users.status").toString());
             qDebug() << "receiver's ID: " << d.user_id;
             qDebug() << "Not Amigos";
             QString sql2 = QStringLiteral(
@@ -254,7 +255,7 @@ std::vector<std::unique_ptr<Row>> Manager::fetchRequests(int id, RowType type){
     std::vector<std::unique_ptr<Row>> requests;
     QSqlQuery query(db());
     QString sql = QStringLiteral(
-        "SELECT users.id, users.nickname, users.avatar "
+        "SELECT users.id, users.nickname, users.avatar, users.status "
         "FROM users "
         "INNER JOIN friendship ON users.id = friendship.%1_id "
         "WHERE friendship.%2_id = :id AND friendship.status = :s"
@@ -273,6 +274,7 @@ std::vector<std::unique_ptr<Row>> Manager::fetchRequests(int id, RowType type){
         d.avatar = query.value("avatar").toString();
         d.displayName = query.value("nickname").toString();
         d.user_id = query.value("id").toInt();
+        d.status = Utils::statusFromString(query.value("status").toString());
         requests.emplace_back(std::make_unique<Row>(d, type));
     }
     return requests;
@@ -312,24 +314,30 @@ QHash<Data , int>& Manager::fetchFriends(int user_id, QHash<Data , int> &friends
 }
 
 
-void Manager::acceptRequest(int user_id){
+void Manager::acceptRequest(Data d){
+    client->getFriends().insert(d, 0);
+    qDebug() << "our new friend name is: " << d.displayName << " and hes preferred status mode is: " << Utils::stringFromStatus(d.status);
+    client->sendMessage(d, "user_status");
+    client->sendMessage(d, "update_pending");
     QSqlQuery query(db());
-
     static const QString sql = QStringLiteral(
         "UPDATE friendship "
         "SET status = :s "
         "WHERE user_id = :id AND friend_id = :f "
         );
     query.prepare(sql);
-    query.bindValue(":id", user_id);
+    query.bindValue(":id", d.user_id);
     query.bindValue(":f", client->getClientID());
     query.bindValue(":s", "ACTIVE");
     if(!query.exec()){
         qCritical() << query.lastError().text();
     }
-    Data d;
-    d.user_id = user_id;
-    client->sendMessage(d, "update_pending");
+
+    d.avatar = client->getClientAvatar();
+    d.displayName = client->getClientName();
+    d.status = client->getClientStatus();
+    auto friends = client->getFriends();
+    client->sendMessage(d, "add_row");
 }
 
 void Manager::declineRequest(int user_id){

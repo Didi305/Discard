@@ -15,8 +15,8 @@ struct Data
     int user_id;
     QString displayName;
     QString avatar;
-    QHash<Data, int> friends;
     Status status;
+    QHash<Data, int> friends;
     bool operator==(Data const &other) const {
         return user_id == other.user_id;
     }
@@ -117,21 +117,6 @@ inline QPixmap renderSvg(const QString &resourcePath, int sidePx)
     return canvas;
 }
 
-inline QJsonObject parseJson(const QByteArray &data){
-    QJsonDocument doc = QJsonDocument::fromJson(data);
-    QJsonObject obj = doc.object();
-    return obj;
-}
-
-inline QByteArray buildJson(const QMap<QString, QString> &fields){
-    QJsonObject obj;
-    for(auto it = fields.constBegin(); it != fields.constEnd(); ++it){
-        obj[it.key()] = it.value();
-    }
-    QJsonDocument doc(obj);
-    return doc.toJson(QJsonDocument::Compact);
-}
-
 inline static const QHash<QString,Status>& statusMap() {
     static QHash<QString,Status> m = {
         { "ONLINE",         Status::ONLINE        },
@@ -144,6 +129,34 @@ inline static const QHash<QString,Status>& statusMap() {
 inline Status statusFromString(const QString &str) {
     return statusMap().value(str.toUpper(), Status::HIDDEN);
 }
+
+inline QString stringFromStatus(const Status stat) {
+    QString status;
+    for (auto it = statusMap().constBegin(); it != statusMap().constEnd(); ++it) {
+        if (it.value() == stat) {
+            status = it.key().toUpper();
+            break; // Stops at the first match
+        }
+    }
+    return status;
+}
+
+inline QJsonObject parseJson(const QByteArray &data){
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    QJsonObject obj = doc.object();
+    return obj;
+}
+
+inline QJsonObject buildJson(const Data &d){
+    QJsonObject obj;
+    obj["id"] = d.user_id;
+    obj["name"] = d.displayName;
+    obj["avatar"] = d.avatar;
+    obj["status"] = stringFromStatus(d.status);
+    return obj;
+}
+
+
 
 inline QByteArray updateStatus(int user_id, bool online){
     QJsonObject stat;
