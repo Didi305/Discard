@@ -38,27 +38,54 @@ Row {
 }
 
 
-QFrame#userPanel {
-            background-color:#32353a;
-            border-radius: 4px;
-        }
+#userPanel {
+    border: none;
+    border-radius: 14px;
+    background: #3a3c43;
+}
 
 #disconnectButton{
-    qproperty-flat: true;
-    background: red;
+    background: #3a3c43;
+    qproperty-hover: true;
 }        
-#disconnectButton:hover{color: #fff; background: white;}
 
 
+#userAvatarButton{
+  min-width: 48px; max-width: 48px;
+  min-height: 48px; max-height: 48px;
+  border-radius: 24px;
+  background-color: gray;
+  border: none;
+}
 
 
+#userNameLabel{
+    font-weight: bold;
+    font-size: 14px;
+    font-family: "Segoe UI";
+}
 
-
-
-
-
-
-
+#something {
+    background-color: #2b2d31;
+    border: 1px solid #3a3c43;
+    border-right: none;
+}
+#options {
+    border-bottom: 1px solid #3a3c43;
+}
+#options QPushButton{
+    background: transparent;
+    text-align: left;
+    padding-left: 8px;
+    color: silver;
+    font-weight: 625;
+    font-size: 16px;
+}
+#options QPushButton:hover{
+    background-color: rgba(255, 255, 255, 0.08);
+    color: white;
+    border-radius: 8px;
+}
 
 
 

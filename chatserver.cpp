@@ -26,6 +26,7 @@ ChatServer::~ChatServer() {
             connect(clientSocket, &QTcpSocket::disconnected, this, &ChatServer::clientDisconnected);
             clients.insert(clientSocket, 0);
             qDebug() << "New User just connected: " << clientSocket;
+            qDebug() << "Users already connected: " << clients;
         }
     };
     void ChatServer::clientDisconnected(){
@@ -33,7 +34,10 @@ ChatServer::~ChatServer() {
         for(auto it = clients.constBegin(); it != clients.constEnd(); ++it){
             it.key()->write(Utils::updateStatus(clients[clientSocket], false));
         }
+        qDebug() << "Client disconnected: " << clientSocket;
+        int client_ID = clients[clientSocket];
         clients.remove(clientSocket);
+        clientsR.remove(client_ID);
         clientSocket->deleteLater();
     };
 

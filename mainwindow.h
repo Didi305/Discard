@@ -39,10 +39,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override = default;
-    void updateUserPanelPosition();
-    void resizeEvent(QResizeEvent *event);
     void updateAvatar(const QString &fileName);
     void refreshForUser();
+    void resizeEvent(QResizeEvent *event);
 private slots:
     void onConnectionSuccess();
     void onAvatarButtonClicked();
@@ -54,7 +53,6 @@ private:
     Friends          *m_FriendsPage;
     Manager          *manager;
     Client           *client;
-    QFrame           *userPanel;
     QPushButton      *avatarButton;
     QLabel           *nameLabel;
 };

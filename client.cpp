@@ -86,6 +86,7 @@ void Client::connectToServer(const QString &host, int port){
 }
 
 void Client::disconnectFromServer(){
+    friends.clear();
     socket->disconnectFromHost();
 }
 
@@ -96,6 +97,7 @@ void Client::onConnected(){
     root["user_id"] = getClientID();
     auto amigos = friends.keys();
     for(auto &f : amigos){
+        qDebug() << "friend name sent by client: " <<f.displayName;
         arr.append(f.user_id);
     }
     root["friends"] = arr;
@@ -147,6 +149,7 @@ void Client::checkFriendsStatus(QJsonObject& obj){
     qDebug() << "aysewer meni ha zeb" <<friendsStatus;
     int i = 0;
     for(auto it = friends.begin(); it != friends.end(); ++it){
+        qDebug() << "Friend name: " << it.key().displayName;
         int friendStatus = friendsStatus.at(i).toInt();
         it.value() = friendStatus;
         i++;

@@ -1,12 +1,8 @@
 #include "mainwindow.h"
 
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , userPanel(new QFrame)
-    , avatarButton(new QPushButton(userPanel))
-    , nameLabel(new QLabel(userPanel))
     , manager(Manager::get())
     , client(manager->getClient())
     , m_addFriendPage(new AddFriendPage(this))
@@ -14,65 +10,21 @@ MainWindow::MainWindow(QWidget *parent)
     , m_FriendsPage(new Friends(this))
 {
     ui->setupUi(this);
-
+    ui->userPanel->setAttribute(Qt::WA_StyledBackground, true);
     ui->ADD_OUTGOING->setAttribute(Qt::WA_StyledBackground, true);
     ui->ADD_OUTGOING->addWidget(m_addFriendPage);
     ui->ADD_OUTGOING->addWidget(m_outgoingPage); // index 1
     ui->verticalLayoutRight->addWidget(m_FriendsPage);
     m_addFriendPage->load(client->getClientID());
     m_outgoingPage->setRequests(client->getClientID());
-    userPanel->setParent(ui->mainContainer);
-    userPanel->setObjectName("userPanel");
-    userPanel->setFixedHeight(60);          // 50 px tall
-    userPanel->setFixedWidth(335);
-
-    // Give it a horizontal layout to host avatarButton + username
-    auto *lay = new QHBoxLayout(userPanel);
-    lay->setContentsMargins(8, 4, 8, 4);
-    lay->setSpacing(6);
-
-    // avatarButton
-    auto* disconnectButton = new QPushButton(userPanel);
-    disconnectButton->setFixedSize(35, 35);
-    disconnectButton->setObjectName("disconnectButton");
-    disconnectButton->setIcon(
-        this->style()->standardIcon(QStyle::SP_TitleBarCloseButton)
-        );
-    disconnectButton->setCursor(Qt::PointingHandCursor);
-    avatarButton->setFixedSize(48, 48);
-    avatarButton->setIconSize({48, 48});
-    avatarButton->setFlat(true);
-    avatarButton->setCursor(Qt::PointingHandCursor);
-    avatarButton->setStyleSheet("background-color: transparent");        // no border
+    ui->userNameLabel->setText(client->getClientName());
+    ui->userAvatarButton->setIcon(QIcon(Utils::makeRoundedAvatar(client->getClientAvatar(), 48)));
+    QIcon icon(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + "/C++/Chat/resources/icons/exit.svg");
+    ui->disconnectButton->setIcon(icon);
 
 
-    QPixmap placeholder(48, 48);
-    placeholder.fill(Qt::transparent);
-    {
-        QPainter p(&placeholder);
-        p.setRenderHint(QPainter::Antialiasing);
-        p.setBrush(Qt::gray);
-        p.setPen(Qt::NoPen);
-        p.drawEllipse(0, 0, 48, 48);
-    }
-    avatarButton->setIcon(QIcon(placeholder));
-
-    // Username QLabel
-    QFont f = nameLabel->font();
-    f.setPointSize(11);
-    f.setBold(true);
-    nameLabel->setFont(f);
-    nameLabel->setStyleSheet("color:white;");
-
-    lay->addWidget(avatarButton);
-    lay->addWidget(nameLabel);
-    lay->addWidget(disconnectButton);
-    nameLabel->setText(client->getClientName());
-    updateAvatar(client->getClientAvatar());
-
-    userPanel->show();
-    connect(avatarButton, &QPushButton::clicked, this, &MainWindow::onAvatarButtonClicked);
-    connect(disconnectButton, &QPushButton::clicked, this, &MainWindow::onDisconnectClicked);
+    connect(ui->userAvatarButton, &QPushButton::clicked, this, &MainWindow::onAvatarButtonClicked);
+    connect(ui->disconnectButton, &QPushButton::clicked, this, &MainWindow::onDisconnectClicked);
     connect(client, &Client::connected, this, &::MainWindow::onConnectionSuccess);
     connect(ui->addFriend, &QPushButton::clicked, this, [=]() { ui->ADD_OUTGOING->setCurrentIndex(0); m_addFriendPage->load(client->getClientID());});
     connect(ui->outgoing, &QPushButton::clicked, this, [=]() { ui->ADD_OUTGOING->setCurrentIndex(1);});
@@ -91,34 +43,24 @@ MainWindow::MainWindow(QWidget *parent)
                 QMessageBox::warning(this, "User not found", " or request is Pending");
                 }
             });
-    updateUserPanelPosition();
 
 }
-
-
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     QMainWindow::resizeEvent(event);
-    // Each time the window resizes, move the userPanel
-    updateUserPanelPosition();
-}
-
-
-
-void MainWindow::updateUserPanelPosition()
-{
-    // We want it 8 px from left edge, 8 px above the statusBar (if you have one)
+    // Each time the window resizes, move the useruserPanel
     const int margin = 8;
     int sbHeight = 0;
     int x = margin;
     int y = this->height()
-            - userPanel->height()
+            - ui->userPanel->height()
             - sbHeight
             - margin;
 
-    userPanel->move(x, y);
+    ui->userPanel->move(x, y);
 }
+
 
 
 void MainWindow::updateAvatar(const QString &fileName)
@@ -129,7 +71,7 @@ void MainWindow::updateAvatar(const QString &fileName)
         return;
     }
 
-    avatarButton->setIcon(QIcon(Utils::makeRoundedAvatar(pix, 48)));
+    ui->userAvatarButton->setIcon(QIcon(Utils::makeRoundedAvatar(pix, 48)));
 }
 
 
@@ -163,10 +105,10 @@ void MainWindow::onAvatarButtonClicked()
 
 void MainWindow::refreshForUser(){
     updateAvatar(client->getClientAvatar());
-    nameLabel->setText(client->getClientName());
+    ui->userNameLabel->setText(client->getClientName());
     ui->ADD_OUTGOING->setCurrentWidget(m_addFriendPage);
     m_addFriendPage->load(client->getClientID());
-
+    m_FriendsPage->load(client->getFriends());
 }
 
 void MainWindow::onDisconnectClicked(){

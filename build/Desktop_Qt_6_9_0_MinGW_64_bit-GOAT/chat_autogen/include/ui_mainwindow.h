@@ -10,6 +10,7 @@
 #define UI_MAINWINDOW_H
 
 #include <QtCore/QVariant>
+#include <QtGui/QIcon>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QHBoxLayout>
@@ -30,7 +31,20 @@ public:
     QWidget *mainContainer;
     QHBoxLayout *horizontalLayout_3;
     QVBoxLayout *verticalLayoutLeft;
+    QWidget *something;
+    QVBoxLayout *verticalLayout;
+    QWidget *options;
+    QVBoxLayout *verticalLayout_2;
+    QPushButton *pushButton;
+    QPushButton *pushButton_2;
+    QPushButton *pushButton_3;
+    QPushButton *pushButton_4;
     QWidget *widget_2;
+    QFrame *userPanel;
+    QHBoxLayout *horizontalLayout_4;
+    QPushButton *userAvatarButton;
+    QLabel *userNameLabel;
+    QPushButton *disconnectButton;
     QStackedWidget *topBarColumnsContainer;
     QWidget *friends;
     QVBoxLayout *verticalLayout_4;
@@ -52,7 +66,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(1093, 751);
+        MainWindow->resize(1093, 762);
         MainWindow->setStyleSheet(QString::fromUtf8(""));
         MainWindow->setIconSize(QSize(64, 64));
         mainContainer = new QWidget(MainWindow);
@@ -65,9 +79,9 @@ public:
         verticalLayoutLeft = new QVBoxLayout();
         verticalLayoutLeft->setSpacing(0);
         verticalLayoutLeft->setObjectName("verticalLayoutLeft");
-        widget_2 = new QWidget(mainContainer);
-        widget_2->setObjectName("widget_2");
-        widget_2->setMinimumSize(QSize(355, 0));
+        something = new QWidget(mainContainer);
+        something->setObjectName("something");
+        something->setMinimumSize(QSize(355, 0));
         QPalette palette;
         QBrush brush(QColor(255, 255, 255, 255));
         brush.setStyle(Qt::BrushStyle::SolidPattern);
@@ -156,14 +170,133 @@ public:
 #if QT_VERSION >= QT_VERSION_CHECK(6, 6, 0)
         palette.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Accent, brush11);
 #endif
-        widget_2->setPalette(palette);
-        widget_2->setStyleSheet(QString::fromUtf8("background-color: #2b2d31;\n"
-"\n"
-"border: 1px solid #3a3c43;\n"
-"\n"
-"border-right: none;"));
+        something->setPalette(palette);
+        something->setAutoFillBackground(true);
+        something->setStyleSheet(QString::fromUtf8(""));
+        verticalLayout = new QVBoxLayout(something);
+        verticalLayout->setObjectName("verticalLayout");
+        options = new QWidget(something);
+        options->setObjectName("options");
+        QSizePolicy sizePolicy(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(options->sizePolicy().hasHeightForWidth());
+        options->setSizePolicy(sizePolicy);
+        options->setMinimumSize(QSize(200, 200));
+        options->setMaximumSize(QSize(355, 200));
+        options->setStyleSheet(QString::fromUtf8(""));
+        verticalLayout_2 = new QVBoxLayout(options);
+        verticalLayout_2->setObjectName("verticalLayout_2");
+        verticalLayout_2->setContentsMargins(5, 0, 5, -1);
+        pushButton = new QPushButton(options);
+        pushButton->setObjectName("pushButton");
+        pushButton->setMinimumSize(QSize(330, 45));
+        pushButton->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        pushButton->setAutoFillBackground(false);
+        pushButton->setStyleSheet(QString::fromUtf8(""));
+        QIcon icon(QIcon::fromTheme(QIcon::ThemeIcon::UserAvailable));
+        pushButton->setIcon(icon);
+        pushButton->setFlat(true);
 
-        verticalLayoutLeft->addWidget(widget_2);
+        verticalLayout_2->addWidget(pushButton);
+
+        pushButton_2 = new QPushButton(options);
+        pushButton_2->setObjectName("pushButton_2");
+        pushButton_2->setMinimumSize(QSize(330, 45));
+        pushButton_2->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        pushButton_2->setAutoFillBackground(false);
+        pushButton_2->setStyleSheet(QString::fromUtf8(""));
+        QIcon icon1(QIcon::fromTheme(QIcon::ThemeIcon::DocumentSend));
+        pushButton_2->setIcon(icon1);
+        pushButton_2->setFlat(true);
+
+        verticalLayout_2->addWidget(pushButton_2);
+
+        pushButton_3 = new QPushButton(options);
+        pushButton_3->setObjectName("pushButton_3");
+        pushButton_3->setMinimumSize(QSize(330, 45));
+        pushButton_3->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        pushButton_3->setAutoFillBackground(false);
+        pushButton_3->setStyleSheet(QString::fromUtf8(""));
+        QIcon icon2(QIcon::fromTheme(QIcon::ThemeIcon::AudioCard));
+        pushButton_3->setIcon(icon2);
+        pushButton_3->setFlat(true);
+
+        verticalLayout_2->addWidget(pushButton_3);
+
+        pushButton_4 = new QPushButton(options);
+        pushButton_4->setObjectName("pushButton_4");
+        pushButton_4->setMinimumSize(QSize(330, 45));
+        pushButton_4->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        pushButton_4->setAutoFillBackground(false);
+        pushButton_4->setStyleSheet(QString::fromUtf8(""));
+        pushButton_4->setIcon(icon);
+        pushButton_4->setFlat(true);
+
+        verticalLayout_2->addWidget(pushButton_4);
+
+
+        verticalLayout->addWidget(options);
+
+        widget_2 = new QWidget(something);
+        widget_2->setObjectName("widget_2");
+        widget_2->setStyleSheet(QString::fromUtf8("background: red;"));
+
+        verticalLayout->addWidget(widget_2);
+
+        userPanel = new QFrame(something);
+        userPanel->setObjectName("userPanel");
+        sizePolicy.setHeightForWidth(userPanel->sizePolicy().hasHeightForWidth());
+        userPanel->setSizePolicy(sizePolicy);
+        userPanel->setMinimumSize(QSize(335, 60));
+        userPanel->setMaximumSize(QSize(335, 60));
+        userPanel->setAutoFillBackground(false);
+        userPanel->setStyleSheet(QString::fromUtf8(""));
+        userPanel->setFrameShape(QFrame::Shape::StyledPanel);
+        userPanel->setFrameShadow(QFrame::Shadow::Raised);
+        horizontalLayout_4 = new QHBoxLayout(userPanel);
+        horizontalLayout_4->setSpacing(12);
+        horizontalLayout_4->setObjectName("horizontalLayout_4");
+        horizontalLayout_4->setSizeConstraint(QLayout::SizeConstraint::SetDefaultConstraint);
+        horizontalLayout_4->setContentsMargins(5, 0, 12, 0);
+        userAvatarButton = new QPushButton(userPanel);
+        userAvatarButton->setObjectName("userAvatarButton");
+        userAvatarButton->setEnabled(true);
+        sizePolicy.setHeightForWidth(userAvatarButton->sizePolicy().hasHeightForWidth());
+        userAvatarButton->setSizePolicy(sizePolicy);
+        userAvatarButton->setMinimumSize(QSize(48, 48));
+        userAvatarButton->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        userAvatarButton->setIconSize(QSize(48, 48));
+        userAvatarButton->setFlat(true);
+
+        horizontalLayout_4->addWidget(userAvatarButton);
+
+        userNameLabel = new QLabel(userPanel);
+        userNameLabel->setObjectName("userNameLabel");
+        userNameLabel->setStyleSheet(QString::fromUtf8("setBold: true;"));
+
+        horizontalLayout_4->addWidget(userNameLabel);
+
+        disconnectButton = new QPushButton(userPanel);
+        disconnectButton->setObjectName("disconnectButton");
+        disconnectButton->setMinimumSize(QSize(44, 44));
+        disconnectButton->setMaximumSize(QSize(44, 44));
+        disconnectButton->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        disconnectButton->setAutoFillBackground(false);
+        disconnectButton->setStyleSheet(QString::fromUtf8(""));
+        disconnectButton->setIconSize(QSize(26, 26));
+        disconnectButton->setFlat(true);
+
+        horizontalLayout_4->addWidget(disconnectButton);
+
+        horizontalLayout_4->setStretch(0, 1);
+        horizontalLayout_4->setStretch(1, 2);
+        horizontalLayout_4->setStretch(2, 1);
+
+        verticalLayout->addWidget(userPanel);
+
+
+        verticalLayoutLeft->addWidget(something);
 
 
         horizontalLayout_3->addLayout(verticalLayoutLeft);
@@ -194,11 +327,11 @@ public:
         horizontalLayout_2->setContentsMargins(15, 5, 10, 10);
         label = new QLabel(topBarFrame);
         label->setObjectName("label");
-        QSizePolicy sizePolicy(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Preferred);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
-        label->setSizePolicy(sizePolicy);
+        QSizePolicy sizePolicy1(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Preferred);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
+        label->setSizePolicy(sizePolicy1);
         label->setMaximumSize(QSize(100, 20));
         QFont font;
         font.setPointSize(14);
@@ -209,11 +342,8 @@ public:
 
         outgoing = new QPushButton(topBarFrame);
         outgoing->setObjectName("outgoing");
-        QSizePolicy sizePolicy1(QSizePolicy::Policy::Fixed, QSizePolicy::Policy::Fixed);
-        sizePolicy1.setHorizontalStretch(0);
-        sizePolicy1.setVerticalStretch(0);
-        sizePolicy1.setHeightForWidth(outgoing->sizePolicy().hasHeightForWidth());
-        outgoing->setSizePolicy(sizePolicy1);
+        sizePolicy.setHeightForWidth(outgoing->sizePolicy().hasHeightForWidth());
+        outgoing->setSizePolicy(sizePolicy);
         outgoing->setMaximumSize(QSize(75, 16777215));
         QFont font1;
         font1.setPointSize(11);
@@ -234,8 +364,8 @@ public:
 
         addFriend = new QPushButton(topBarFrame);
         addFriend->setObjectName("addFriend");
-        sizePolicy1.setHeightForWidth(addFriend->sizePolicy().hasHeightForWidth());
-        addFriend->setSizePolicy(sizePolicy1);
+        sizePolicy.setHeightForWidth(addFriend->sizePolicy().hasHeightForWidth());
+        addFriend->setSizePolicy(sizePolicy);
         addFriend->setMinimumSize(QSize(100, 0));
         addFriend->setMaximumSize(QSize(75, 16777215));
         QFont font2;
@@ -329,6 +459,16 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "Discard", nullptr));
+        pushButton->setText(QCoreApplication::translate("MainWindow", "   Friends", nullptr));
+        pushButton_2->setText(QCoreApplication::translate("MainWindow", "   Message Requests", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("MainWindow", "   Helala Music", nullptr));
+        pushButton_4->setText(QCoreApplication::translate("MainWindow", "   Idk", nullptr));
+        userAvatarButton->setText(QString());
+        userNameLabel->setText(QString());
+        disconnectButton->setText(QString());
+#if QT_CONFIG(shortcut)
+        disconnectButton->setShortcut(QString());
+#endif // QT_CONFIG(shortcut)
         label->setText(QCoreApplication::translate("MainWindow", "Friends", nullptr));
         outgoing->setText(QCoreApplication::translate("MainWindow", "Pending", nullptr));
         addFriend->setText(QCoreApplication::translate("MainWindow", "Add Friend", nullptr));

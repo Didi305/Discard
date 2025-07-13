@@ -61,7 +61,7 @@ Row::Row(const Data &d, RowType type, QWidget *parent)
     /* ---------- two-line name block ----------------------------- */
     auto *name  = new QLabel(d.displayName);
     QFont f = name->font();
-    f.setPointSize(11);
+    f.setPointSize(10);
     f.setWeight(QFont::Bold);      // or QFont::Bold
     name->setFont(f);
     name->setStyleSheet("background: transparent");
