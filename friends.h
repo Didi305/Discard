@@ -18,10 +18,12 @@ public:
     void load(QHash<Data, int> friends);
 public slots:
     void update(int id, bool online);
+signals:
+    void friendClicked(Data d);
 private:
     Ui::amigos *ui;
     Manager* m_manager;
-    std::vector<std::unique_ptr<Row>> friendRows;
+
 };
 
 #endif // FRIENDS_H

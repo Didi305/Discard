@@ -6,6 +6,7 @@ AddFriendPage::AddFriendPage(QWidget *parent)
     , m_manager(Manager::get())
 {
     ui->setupUi(this);
+    qDebug() << "add Friend Page object name: " << objectName();
     ui->listLayout->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 
     connect(ui->addFriendButton, &QPushButton::clicked,

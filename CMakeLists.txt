@@ -10,6 +10,7 @@ set(app_icon "${CMAKE_CURRENT_SOURCE_DIR}/app.rc")
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Network Svg Sql)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network Svg Sql)
 
+
 # Your normal sources and UI files:
 set(PROJECT_SOURCES
     main.cpp
@@ -44,6 +45,9 @@ set(PROJECT_SOURCES
     friends.ui
     styles/dark.qss
     resource.h
+    directmessage.h
+    directmessage.cpp
+    directmessage.ui
 )
 
 

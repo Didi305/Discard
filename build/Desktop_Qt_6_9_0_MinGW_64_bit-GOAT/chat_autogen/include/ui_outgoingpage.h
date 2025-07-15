@@ -86,7 +86,7 @@ public:
         font1.setBold(true);
         searchButton->setFont(font1);
         searchButton->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        searchButton->setStyleSheet(QString::fromUtf8("background-color: green"));
+        searchButton->setStyleSheet(QString::fromUtf8("background-color: lime;"));
         searchButton->setFlat(false);
 
         addFriendLayout_2->addWidget(searchButton);
@@ -99,9 +99,7 @@ public:
 
         scrollAreaOutgoing = new QScrollArea(OutgoingPage);
         scrollAreaOutgoing->setObjectName("scrollAreaOutgoing");
-        scrollAreaOutgoing->setStyleSheet(QString::fromUtf8("#scrollAreaPending {\n"
-"	border-top: 1px solid #3a3c43;\n"
-"}"));
+        scrollAreaOutgoing->setStyleSheet(QString::fromUtf8(""));
         scrollAreaOutgoing->setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOn);
         scrollAreaOutgoing->setSizeAdjustPolicy(QAbstractScrollArea::SizeAdjustPolicy::AdjustIgnored);
         scrollAreaOutgoing->setWidgetResizable(true);
@@ -114,13 +112,11 @@ public:
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(scrollAreaWidgetContents->sizePolicy().hasHeightForWidth());
         scrollAreaWidgetContents->setSizePolicy(sizePolicy);
-        scrollAreaWidgetContents->setStyleSheet(QString::fromUtf8("#scrollAreaWidgetContents {\n"
-"	border-top: 1px solid #3a3c43;\n"
-"}"));
+        scrollAreaWidgetContents->setStyleSheet(QString::fromUtf8(""));
         verticalLayout_5 = new QVBoxLayout(scrollAreaWidgetContents);
         verticalLayout_5->setSpacing(0);
         verticalLayout_5->setObjectName("verticalLayout_5");
-        verticalLayout_5->setContentsMargins(15, 0, 0, 0);
+        verticalLayout_5->setContentsMargins(0, 0, 0, 0);
         listLayout = new QVBoxLayout();
         listLayout->setSpacing(0);
         listLayout->setObjectName("listLayout");

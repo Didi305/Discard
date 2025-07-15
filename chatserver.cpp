@@ -88,7 +88,6 @@ ChatServer::~ChatServer() {
     void ChatServer::updateRequest(QJsonObject &obj, QTcpSocket* socket){
         int receiver_id = obj["id"].toInt();
         QString type = obj["type"].toString();
-        qDebug() << "what is the status here? also in updateRequest von Server?: " << obj["status"].toString();
         QTcpSocket* foundKey = nullptr;
         if(clientsR.contains(receiver_id)){
             foundKey = clientsR[receiver_id];
@@ -105,7 +104,6 @@ ChatServer::~ChatServer() {
     void ChatServer::checkUserStatus(QJsonObject &obj, QTcpSocket* socket){
         int requestID = obj["id"].toInt();
         if(clientsR.contains(requestID)) obj["bool"] = 1;
-        qDebug() << "status of the new friend is: " << obj["status"].toString();
         QJsonDocument doc(obj);
         QString jsonString = doc.toJson(QJsonDocument::Compact);
         jsonString.append('\n');

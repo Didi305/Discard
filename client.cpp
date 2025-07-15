@@ -10,18 +10,15 @@ Client::Client(QObject *parent)
 {
 
     socket = new QTcpSocket(this);
-    handlers["friends_status"]  = [this](QJsonObject& obj){ qDebug() << "check Friends Status is being called" ; checkFriendsStatus(obj);};
+    handlers["friends_status"]  = [this](QJsonObject& obj){checkFriendsStatus(obj);};
     handlers["user_status"] = [this](QJsonObject& obj){
-                                                        qDebug() << "user status update was tried";
                                                         Data d = {obj["id"].toInt(), obj["name"].toString(), obj["avatar"].toString(), Utils::statusFromString(obj["status"].toString())};
-                                                        qDebug() << "the status of the friend to be added: " << obj["status"].toString();
                                                         friends[d] = obj["bool"].toInt();
                                                         emit addNewFriendRow(d);};
     handlers["friend_update"]  = [this](QJsonObject& obj){emit updateFriends(obj["id"].toInt(), obj["bool"].toBool());};
     handlers["update_pending"] = [this](QJsonObject& obj){emit updatePendingRequests(obj["id"].toInt());};
     handlers["update_accept"]  = [this](QJsonObject& obj){updateAcceptRequests(obj);};
     handlers["add_row"] = [this](QJsonObject& obj){
-        qDebug() << "handler add_row called";
         Data d = {obj["id"].toInt(), obj["name"].toString(), obj["avatar"].toString(), Utils::statusFromString(obj["status"].toString())};
         qCritical() << "status of the friend to be added is: " << Utils::stringFromStatus(d.status);
         friends.emplace(d, 1);
@@ -97,7 +94,6 @@ void Client::onConnected(){
     root["user_id"] = getClientID();
     auto amigos = friends.keys();
     for(auto &f : amigos){
-        qDebug() << "friend name sent by client: " <<f.displayName;
         arr.append(f.user_id);
     }
     root["friends"] = arr;
@@ -115,11 +111,9 @@ void Client::onDisconnected(){
 void Client::sendMessage(Data &d, QString typ) {
     QJsonObject obj = Utils::buildJson(d);
     obj["type"] = typ;
-    qDebug() << "status sent is: " << obj["status"].toString();
     QJsonDocument doc(obj);
     QString jsonString = doc.toJson(QJsonDocument::Compact);
     jsonString.append('\n');
-    qDebug() << "data sent by client: " << jsonString;
     socket->write(jsonString.toUtf8());
 
 }
@@ -131,7 +125,6 @@ void Client::onReadyRead(){
         int index = buffer.indexOf('\n');
         if(index < 0) break;
         QByteArray msg = buffer.left(index);
-        qDebug() << "data received by client: " << msg;
         buffer.remove(0, index+1);
         QJsonObject obj = Utils::parseJson(msg);
         QString whatwedoing = obj["type"].toString();
@@ -146,16 +139,13 @@ void Client::onReadyRead(){
 void Client::checkFriendsStatus(QJsonObject& obj){
     auto& friends = getFriends();
     auto friendsStatus = obj["friends"].toArray();
-    qDebug() << "aysewer meni ha zeb" <<friendsStatus;
     int i = 0;
     for(auto it = friends.begin(); it != friends.end(); ++it){
-        qDebug() << "Friend name: " << it.key().displayName;
         int friendStatus = friendsStatus.at(i).toInt();
         it.value() = friendStatus;
         i++;
     }
     setFriends(friends);
-    qDebug() << "friends yalah jaw";
     emit friendsReady(friends);
 }
 

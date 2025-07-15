@@ -505,6 +505,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOA
   C:/Users/giler/OneDrive/Desktop/C++/Chat/addfriendpage.h \
   C:/Users/giler/OneDrive/Desktop/C++/Chat/chatserver.h \
   C:/Users/giler/OneDrive/Desktop/C++/Chat/client.h \
+  C:/Users/giler/OneDrive/Desktop/C++/Chat/directmessage.h \
   C:/Users/giler/OneDrive/Desktop/C++/Chat/friends.h \
   C:/Users/giler/OneDrive/Desktop/C++/Chat/login.h \
   C:/Users/giler/OneDrive/Desktop/C++/Chat/manager.h \

@@ -42,7 +42,7 @@ public:
         if (AddFriendPage->objectName().isEmpty())
             AddFriendPage->setObjectName("AddFriendPage");
         AddFriendPage->resize(400, 738);
-        AddFriendPage->setAutoFillBackground(true);
+        AddFriendPage->setAutoFillBackground(false);
         AddFriendPage->setStyleSheet(QString::fromUtf8(""));
         verticalLayout = new QVBoxLayout(AddFriendPage);
         verticalLayout->setSpacing(0);
@@ -100,7 +100,7 @@ public:
 
         scrollAreaPending = new QScrollArea(AddFriendPage);
         scrollAreaPending->setObjectName("scrollAreaPending");
-        scrollAreaPending->setAutoFillBackground(true);
+        scrollAreaPending->setAutoFillBackground(false);
         scrollAreaPending->setStyleSheet(QString::fromUtf8(""));
         scrollAreaPending->setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOn);
         scrollAreaPending->setSizeAdjustPolicy(QAbstractScrollArea::SizeAdjustPolicy::AdjustIgnored);

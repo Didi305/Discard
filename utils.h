@@ -16,6 +16,7 @@ struct Data
     QString displayName;
     QString avatar;
     Status status;
+    QString message;
     QHash<Data, int> friends;
     bool operator==(Data const &other) const {
         return user_id == other.user_id;

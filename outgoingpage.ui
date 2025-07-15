@@ -126,7 +126,7 @@
            <cursorShape>PointingHandCursor</cursorShape>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: green</string>
+           <string notr="true">background-color: lime;</string>
           </property>
           <property name="text">
            <string>Search</string>
@@ -144,9 +144,7 @@
    <item>
     <widget class="QScrollArea" name="scrollAreaOutgoing">
      <property name="styleSheet">
-      <string notr="true">#scrollAreaPending {
-	border-top: 1px solid #3a3c43;
-}</string>
+      <string notr="true"/>
      </property>
      <property name="verticalScrollBarPolicy">
       <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
@@ -176,16 +174,14 @@
        </sizepolicy>
       </property>
       <property name="styleSheet">
-       <string notr="true">#scrollAreaWidgetContents {
-	border-top: 1px solid #3a3c43;
-}</string>
+       <string notr="true"/>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_5">
        <property name="spacing">
         <number>0</number>
        </property>
        <property name="leftMargin">
-        <number>15</number>
+        <number>0</number>
        </property>
        <property name="topMargin">
         <number>0</number>

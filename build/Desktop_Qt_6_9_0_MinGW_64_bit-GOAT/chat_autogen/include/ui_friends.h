@@ -21,8 +21,8 @@ class Ui_amigos
 {
 public:
     QVBoxLayout *verticalLayout;
-    QScrollArea *scrollArea;
-    QWidget *scrollAreaWidgetContents;
+    QScrollArea *friendsScrollArea;
+    QWidget *friendsScrollAreaContent;
     QVBoxLayout *verticalLayout_6;
     QVBoxLayout *onlineFriends;
     QVBoxLayout *offlineFriends;
@@ -44,18 +44,18 @@ public:
         verticalLayout->setSpacing(0);
         verticalLayout->setObjectName("verticalLayout");
         verticalLayout->setContentsMargins(0, 0, 0, 0);
-        scrollArea = new QScrollArea(amigos);
-        scrollArea->setObjectName("scrollArea");
-        scrollArea->setAutoFillBackground(true);
-        scrollArea->setStyleSheet(QString::fromUtf8(""));
-        scrollArea->setLineWidth(0);
-        scrollArea->setWidgetResizable(true);
-        scrollAreaWidgetContents = new QWidget();
-        scrollAreaWidgetContents->setObjectName("scrollAreaWidgetContents");
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 353, 485));
-        scrollAreaWidgetContents->setAutoFillBackground(true);
-        scrollAreaWidgetContents->setStyleSheet(QString::fromUtf8(""));
-        verticalLayout_6 = new QVBoxLayout(scrollAreaWidgetContents);
+        friendsScrollArea = new QScrollArea(amigos);
+        friendsScrollArea->setObjectName("friendsScrollArea");
+        friendsScrollArea->setAutoFillBackground(false);
+        friendsScrollArea->setStyleSheet(QString::fromUtf8(""));
+        friendsScrollArea->setLineWidth(0);
+        friendsScrollArea->setWidgetResizable(true);
+        friendsScrollAreaContent = new QWidget();
+        friendsScrollAreaContent->setObjectName("friendsScrollAreaContent");
+        friendsScrollAreaContent->setGeometry(QRect(0, 0, 353, 485));
+        friendsScrollAreaContent->setAutoFillBackground(false);
+        friendsScrollAreaContent->setStyleSheet(QString::fromUtf8(""));
+        verticalLayout_6 = new QVBoxLayout(friendsScrollAreaContent);
         verticalLayout_6->setSpacing(10);
         verticalLayout_6->setObjectName("verticalLayout_6");
         verticalLayout_6->setContentsMargins(0, 0, 0, 0);
@@ -73,9 +73,9 @@ public:
         verticalLayout_6->addLayout(offlineFriends);
 
         verticalLayout_6->setStretch(1, 1);
-        scrollArea->setWidget(scrollAreaWidgetContents);
+        friendsScrollArea->setWidget(friendsScrollAreaContent);
 
-        verticalLayout->addWidget(scrollArea);
+        verticalLayout->addWidget(friendsScrollArea);
 
 
         retranslateUi(amigos);

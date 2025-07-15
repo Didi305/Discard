@@ -1,18 +1,7 @@
 
-#scrollAreaPending{
-    border-top: 1px solid #3a3c43;
-}
-#Friends {
-    border: 1px solid rgb(226, 52, 9);
-}
-
-#ADD_OUTGOING{
-    border: 1px solid #3a3c43;
-}
-
-#scrollArea {
-    border: 1px solid #3a3c43;
-    border-left: none;
+QScrollArea, QFrame, #AddFriendPage, #DirectMessage, #scrollAreaWidgetContents {
+    background-color: transparent;
+    border: none;
 }
 
 #ADD_OUTGOING QPushButton {
@@ -32,20 +21,15 @@ Row {
   background: transparent
 }
 
-#avatar {
-    color:yellow;
-    background: transparent;
-}
-
 
 #userPanel {
     border: none;
     border-radius: 14px;
-    background: #3a3c43;
+    background-color: #2b2d31;
 }
 
 #disconnectButton{
-    background: #3a3c43;
+    background: transparent;
     qproperty-hover: true;
 }        
 
@@ -66,13 +50,13 @@ Row {
 }
 
 #something {
-    background-color: #2b2d31;
-    border: 1px solid #3a3c43;
+    background-color: #030303ff;
     border-right: none;
 }
 #options {
     border-bottom: 1px solid #3a3c43;
 }
+
 #options QPushButton{
     background: transparent;
     text-align: left;
@@ -81,20 +65,96 @@ Row {
     font-weight: 625;
     font-size: 16px;
 }
+
 #options QPushButton:hover{
     background-color: rgba(255, 255, 255, 0.08);
     color: white;
     border-radius: 8px;
 }
 
+#topBar {
+    background: transparent;
+    border: 0.5px solid #3a3c43;
+}
+
+#LEFT_TOPBAR {
+    border: none;
+    background-color: #030303ff;
+}
+
+#MID_RIGHT_TOPBAR {
+    background: #2b2d31;
+    border: none;
+}
+
+#MID_RIGHT_TOPBAR QPushButton {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.86);
+    font-weight: 625;
+    font-size: 16px;
+}
+
+#MID_RIGHT_TOPBAR QPushButton:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+    color: white;
+    border-radius: 8px;
+}
+
+#friendsLabel {
+    color: rgba(255, 255, 255, 0.86);
+    font-weight: 640;
+    font-size: 18px;
+}
+
+#messageInputFrame {
+    color: red;
+}
+
+#receiverInformationFrame {
+    border: none;
+}
+
+#receiverUsername {
+    color: rgba(255, 255, 255, 0.86);
+    font-weight: 625;
+    font-size: 25px;
+}
+
+#startConversationLabel {
+    color: rgba(255, 255, 255, 0.86);
+    font-weight: 640;
+    font-size: 16px;
+}
+
+#messagesContainer {
+    border-top: 1px solid #3a3c43;
+}
 
 
+#friendsScrollAreaContent {
+    background:  #32353a;
+}
 
 
+#verticalLayoutMid {
+    background: #2b2d31;
+}
 
+#messageInputFrame {
+    background: #32353a;
+    margin: 8px;
+    border-radius: 2px;
+}
 
+#messageInputFrame QPushButton, QToolButton, QLineEdit {
+    background: transparent;
+}
 
-
+#messageInputLine {
+    color: rgba(255, 255, 255, 0.86);
+    font-weight: 625;
+    font-size: 15px;
+}
 
 
 

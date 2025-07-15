@@ -39,16 +39,23 @@ template <> constexpr inline auto Friends::qt_create_metaobjectdata<qt_meta_tag_
     namespace QMC = QtMocConstants;
     QtMocHelpers::StringRefStorage qt_stringData {
         "Friends",
-        "update",
+        "friendClicked",
         "",
+        "Data",
+        "d",
+        "update",
         "id",
         "online"
     };
 
     QtMocHelpers::UintData qt_methods {
+        // Signal 'friendClicked'
+        QtMocHelpers::SignalData<void(Data)>(1, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { 0x80000000 | 3, 4 },
+        }}),
         // Slot 'update'
-        QtMocHelpers::SlotData<void(int, bool)>(1, 2, QMC::AccessPublic, QMetaType::Void, {{
-            { QMetaType::Int, 3 }, { QMetaType::Bool, 4 },
+        QtMocHelpers::SlotData<void(int, bool)>(5, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::Int, 6 }, { QMetaType::Bool, 7 },
         }}),
     };
     QtMocHelpers::UintData qt_properties {
@@ -73,9 +80,14 @@ void Friends::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, voi
     auto *_t = static_cast<Friends *>(_o);
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: _t->update((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2]))); break;
+        case 0: _t->friendClicked((*reinterpret_cast< std::add_pointer_t<Data>>(_a[1]))); break;
+        case 1: _t->update((*reinterpret_cast< std::add_pointer_t<int>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<bool>>(_a[2]))); break;
         default: ;
         }
+    }
+    if (_c == QMetaObject::IndexOfMethod) {
+        if (QtMocHelpers::indexOfMethod<void (Friends::*)(Data )>(_a, &Friends::friendClicked, 0))
+            return;
     }
 }
 
@@ -98,15 +110,21 @@ int Friends::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 1)
+        if (_id < 2)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 1;
+        _id -= 2;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 1)
+        if (_id < 2)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 1;
+        _id -= 2;
     }
     return _id;
+}
+
+// SIGNAL 0
+void Friends::friendClicked(Data _t1)
+{
+    QMetaObject::activate<void>(this, &staticMetaObject, 0, nullptr, _t1);
 }
 QT_WARNING_POP

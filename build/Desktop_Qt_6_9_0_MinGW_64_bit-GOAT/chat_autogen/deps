@@ -799,6 +799,7 @@ chat_autogen/timestamp: \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/addfriendpage.cpp \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/addfriendpage.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/.qtc/package-manager/auto-setup.cmake \
+	C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/.qtc/package-manager/maintenance_tool_provider.cmake \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/CMakeFiles/3.30.5/CMakeCXXCompiler.cmake \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/CMakeFiles/3.30.5/CMakeRCCompiler.cmake \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/CMakeFiles/3.30.5/CMakeSystem.cmake \
@@ -807,6 +808,8 @@ chat_autogen/timestamp: \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/chatserver.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/client.cpp \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/client.h \
+	C:/Users/giler/OneDrive/Desktop/C++/Chat/directmessage.cpp \
+	C:/Users/giler/OneDrive/Desktop/C++/Chat/directmessage.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/friends.cpp \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/friends.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/login.cpp \
@@ -827,6 +830,7 @@ chat_autogen/timestamp: \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/row.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/utils.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/addfriendpage.ui \
+	C:/Users/giler/OneDrive/Desktop/C++/Chat/directmessage.ui \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/friends.ui \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/login.ui \
 	C:/Users/giler/OneDrive/Desktop/C++/Chat/mainwindow.ui \

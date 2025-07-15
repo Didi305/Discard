@@ -5,10 +5,11 @@
 #include <qpushbutton.h>
 #include <QLabel>
 #include "client.h"
+#include "directmessage.h"
 #include "friends.h"
+#include "login.h"
 #include "manager.h"
 #include "ui_MainWindow.h"
-#include "login.h"
 #include "outgoingpage.h"
 #include "addfriendpage.h"
 #include <QFileDialog>
@@ -25,7 +26,7 @@
 #include <QDebug>
 #include <QPainter>
 #include <QPushButton>
-#include "utils.h"
+
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -51,6 +52,7 @@ private:
     AddFriendPage    *m_addFriendPage;
     OutgoingPage     *m_outgoingPage;
     Friends          *m_FriendsPage;
+    DirectMessage    *m_DirectMessagePage;
     Manager          *manager;
     Client           *client;
     QPushButton      *avatarButton;

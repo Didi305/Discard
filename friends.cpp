@@ -7,6 +7,7 @@ Friends::Friends(QWidget *parent)
     , m_manager(Manager::get())
 {
     ui->setupUi(this);
+    qDebug() << "friends page object name: " << objectName();
     ui->offlineFriends->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     ui->onlineFriends->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     connect(m_manager->getClient(), &Client::friendsReady,
@@ -24,14 +25,16 @@ Friends::~Friends()
 }
 
 void Friends::load(QHash<Data, int> friends) {
-    qDebug() << "tried loading friend rows";
-    auto children = ui->scrollAreaWidgetContents->findChildren<QWidget*>(QString(), Qt::FindDirectChildrenOnly);
+    auto children = ui->friendsScrollAreaContent->findChildren<QWidget*>(QString(), Qt::FindDirectChildrenOnly);
     for(auto* w : children){
         w->deleteLater();
     }
 
     for(auto it = friends.constBegin(); it != friends.constEnd(); ++it){
         Row* friendRow = new Row(it.key(), RowType::Friend);
+        connect(friendRow, &Row::clicked, this, [this](Data d){
+            qDebug() << "row signal was sent from the actual page: " << d.displayName;
+            emit friendClicked(d);});
         if(it.value() == 0){
             ui->offlineFriends->addWidget(friendRow);
         }
@@ -43,10 +46,8 @@ void Friends::load(QHash<Data, int> friends) {
 
 void Friends::update(int id, bool online){
     Row* row;
-    qDebug() << "ta finek a zebi";
     if(online)
     {
-        qDebug() << "tcoonecta khouna dir chi 9alwa";
         for(int i = 0; i < ui->offlineFriends->count(); i++)
         {
             row = static_cast<Row*>(ui->offlineFriends->itemAt(i)->widget());
@@ -62,7 +63,6 @@ void Friends::update(int id, bool online){
     }
     else
     {
-        qDebug() << "mcha khouna dir chi 9alwa";
         for(int i = 0; i < ui->onlineFriends->count(); i++)
         {
             row = static_cast<Row*>(ui->onlineFriends->itemAt(i)->widget());

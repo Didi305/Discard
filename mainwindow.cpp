@@ -8,13 +8,17 @@ MainWindow::MainWindow(QWidget *parent)
     , m_addFriendPage(new AddFriendPage(this))
     , m_outgoingPage(new OutgoingPage(this))
     , m_FriendsPage(new Friends(this))
+    , m_DirectMessagePage(new DirectMessage(this))
 {
     ui->setupUi(this);
     ui->userPanel->setAttribute(Qt::WA_StyledBackground, true);
     ui->ADD_OUTGOING->setAttribute(Qt::WA_StyledBackground, true);
+    m_DirectMessagePage->setAttribute(Qt::WA_StyledBackground, true);
+    ui->verticalLayoutMid->addWidget(m_DirectMessagePage);
     ui->ADD_OUTGOING->addWidget(m_addFriendPage);
     ui->ADD_OUTGOING->addWidget(m_outgoingPage); // index 1
     ui->verticalLayoutRight->addWidget(m_FriendsPage);
+
     m_addFriendPage->load(client->getClientID());
     m_outgoingPage->setRequests(client->getClientID());
     ui->userNameLabel->setText(client->getClientName());
@@ -26,8 +30,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->userAvatarButton, &QPushButton::clicked, this, &MainWindow::onAvatarButtonClicked);
     connect(ui->disconnectButton, &QPushButton::clicked, this, &MainWindow::onDisconnectClicked);
     connect(client, &Client::connected, this, &::MainWindow::onConnectionSuccess);
-    connect(ui->addFriend, &QPushButton::clicked, this, [=]() { ui->ADD_OUTGOING->setCurrentIndex(0); m_addFriendPage->load(client->getClientID());});
-    connect(ui->outgoing, &QPushButton::clicked, this, [=]() { ui->ADD_OUTGOING->setCurrentIndex(1);});
+    connect(m_FriendsPage, &Friends::friendClicked, this, [=](Data d) { ui->verticalLayoutMid->setCurrentIndex(1); m_DirectMessagePage->load(d);});
+    connect(ui->addFriend, &QPushButton::clicked, this, [=]() { ui->verticalLayoutMid->setCurrentIndex(0); ui->ADD_OUTGOING->setCurrentIndex(0); m_addFriendPage->load(client->getClientID());});
+    connect(ui->outgoing, &QPushButton::clicked, this, [=]() { ui->verticalLayoutMid->setCurrentIndex(0); ui->ADD_OUTGOING->setCurrentIndex(1);});
     connect(ui->ADD_OUTGOING,
             &QStackedWidget::currentChanged,
             this,
@@ -49,15 +54,11 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     QMainWindow::resizeEvent(event);
-    // Each time the window resizes, move the useruserPanel
-    const int margin = 8;
-    int sbHeight = 0;
-    int x = margin;
-    int y = this->height()
-            - ui->userPanel->height()
-            - sbHeight
-            - margin;
-
+    // Each time the window resizes, move the userPanel
+    const double margin = 19;
+    int upHeight = ui->userPanel->height();
+    int x = 9;
+    int y = this->height() - 1.5 * upHeight - margin;
     ui->userPanel->move(x, y);
 }
 
@@ -78,7 +79,7 @@ void MainWindow::updateAvatar(const QString &fileName)
 
 void MainWindow::onAvatarButtonClicked()
 {
-    // 1) Open file dialog to let the user pick an image
+    // Open file dialog to let the user pick an image
     QString srcFile = QFileDialog::getOpenFileName(
         this,
         tr("Choose avatar image"),
@@ -86,8 +87,8 @@ void MainWindow::onAvatarButtonClicked()
         tr("Images (*.png *.jpg *.jpeg *.bmp *.gif)")
         );
     if (srcFile.isEmpty())
-        return;  // user canceled
-    // 2) Update avatarButton’s icon to the chosen file
+        return;
+    //  Update avatarButton’s icon to the chosen file
     QString userUploadFolder = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + "/C++/Chat/uploads/" + client->getClientName() + "/avatar.png";
     if(QFile::exists(userUploadFolder)){
         QFile::remove(userUploadFolder);

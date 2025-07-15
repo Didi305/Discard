@@ -53,6 +53,7 @@ public:
         loginPassword = new QLineEdit(Login);
         loginPassword->setObjectName("loginPassword");
         loginPassword->setGeometry(QRect(250, 240, 171, 24));
+        loginPassword->setEchoMode(QLineEdit::EchoMode::Password);
         label_2 = new QLabel(Login);
         label_2->setObjectName("label_2");
         label_2->setGeometry(QRect(150, 190, 91, 31));
