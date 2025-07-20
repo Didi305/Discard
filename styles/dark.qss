@@ -156,6 +156,20 @@ Row {
     font-size: 15px;
 }
 
+#message {
+    background: transparent;
+    color: silver;
+    font-weight: 625;
+    font-size: 16px;
+}
+
+#timeLabel {
+    background: transparent;
+    color: silver;
+    font-weight: 650;
+    font-size: 11px;
+}
+
 
 
 

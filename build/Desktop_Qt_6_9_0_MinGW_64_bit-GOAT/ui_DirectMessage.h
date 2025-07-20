@@ -15,9 +15,9 @@
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QLabel>
-#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QScrollArea>
+#include <QtWidgets/QTextEdit>
 #include <QtWidgets/QToolButton>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -36,11 +36,11 @@ public:
     QLabel *receiverAvatar;
     QLabel *receiverUsername;
     QLabel *startConversationLabel;
-    QWidget *messagesContainer;
+    QVBoxLayout *messageContainer;
     QFrame *messageInputFrame;
     QHBoxLayout *horizontalLayout;
     QPushButton *pushButton;
-    QLineEdit *lineEdit;
+    QTextEdit *messageInputLine;
     QToolButton *toolButton;
     QToolButton *toolButton_2;
 
@@ -48,7 +48,7 @@ public:
     {
         if (DirectMessage->objectName().isEmpty())
             DirectMessage->setObjectName("DirectMessage");
-        DirectMessage->resize(441, 602);
+        DirectMessage->resize(345, 599);
         DirectMessage->setAutoFillBackground(true);
         DirectMessage->setStyleSheet(QString::fromUtf8(""));
         verticalLayout = new QVBoxLayout(DirectMessage);
@@ -57,18 +57,20 @@ public:
         verticalLayout->setContentsMargins(11, 0, 11, 0);
         messagesScrollArea = new QScrollArea(DirectMessage);
         messagesScrollArea->setObjectName("messagesScrollArea");
+        messagesScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
         messagesScrollArea->setWidgetResizable(true);
         scrollAreaWidgetContents = new QWidget();
         scrollAreaWidgetContents->setObjectName("scrollAreaWidgetContents");
-        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 417, 536));
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 321, 517));
         verticalLayout_2 = new QVBoxLayout(scrollAreaWidgetContents);
-        verticalLayout_2->setSpacing(6);
+        verticalLayout_2->setSpacing(20);
         verticalLayout_2->setObjectName("verticalLayout_2");
         verticalLayout_2->setContentsMargins(0, 0, 0, 0);
         receiverInformationFrame = new QFrame(scrollAreaWidgetContents);
         receiverInformationFrame->setObjectName("receiverInformationFrame");
+        receiverInformationFrame->setMinimumSize(QSize(0, 175));
         receiverInformationFrame->setMaximumSize(QSize(16777215, 200));
-        receiverInformationFrame->setStyleSheet(QString::fromUtf8("background: red;"));
+        receiverInformationFrame->setStyleSheet(QString::fromUtf8(""));
         receiverInformationFrame->setFrameShape(QFrame::Shape::StyledPanel);
         receiverInformationFrame->setFrameShadow(QFrame::Shadow::Plain);
         verticalLayout_3 = new QVBoxLayout(receiverInformationFrame);
@@ -83,7 +85,7 @@ public:
 
         receiverUsername = new QLabel(receiverInformationFrame);
         receiverUsername->setObjectName("receiverUsername");
-        receiverUsername->setMaximumSize(QSize(120, 25));
+        receiverUsername->setMaximumSize(QSize(120, 30));
 
         verticalLayout_3->addWidget(receiverUsername);
 
@@ -96,20 +98,27 @@ public:
 
         verticalLayout_2->addWidget(receiverInformationFrame);
 
-        messagesContainer = new QWidget(scrollAreaWidgetContents);
-        messagesContainer->setObjectName("messagesContainer");
-        messagesContainer->setStyleSheet(QString::fromUtf8("background: lime;"));
+        messageContainer = new QVBoxLayout();
+        messageContainer->setSpacing(0);
+        messageContainer->setObjectName("messageContainer");
 
-        verticalLayout_2->addWidget(messagesContainer);
+        verticalLayout_2->addLayout(messageContainer);
 
+        verticalLayout_2->setStretch(1, 1);
         messagesScrollArea->setWidget(scrollAreaWidgetContents);
 
         verticalLayout->addWidget(messagesScrollArea);
 
         messageInputFrame = new QFrame(DirectMessage);
         messageInputFrame->setObjectName("messageInputFrame");
-        messageInputFrame->setMinimumSize(QSize(330, 60));
-        messageInputFrame->setMaximumSize(QSize(16777215, 16777215));
+        QSizePolicy sizePolicy(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::MinimumExpanding);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(messageInputFrame->sizePolicy().hasHeightForWidth());
+        messageInputFrame->setSizePolicy(sizePolicy);
+        messageInputFrame->setMinimumSize(QSize(0, 0));
+        messageInputFrame->setMaximumSize(QSize(16777215, 80));
+        messageInputFrame->setBaseSize(QSize(40, 50));
         messageInputFrame->setAutoFillBackground(true);
         messageInputFrame->setStyleSheet(QString::fromUtf8(""));
         messageInputFrame->setFrameShape(QFrame::Shape::StyledPanel);
@@ -127,12 +136,16 @@ public:
 
         horizontalLayout->addWidget(pushButton);
 
-        lineEdit = new QLineEdit(messageInputFrame);
-        lineEdit->setObjectName("lineEdit");
-        lineEdit->setMinimumSize(QSize(0, 44));
-        lineEdit->setFrame(false);
+        messageInputLine = new QTextEdit(messageInputFrame);
+        messageInputLine->setObjectName("messageInputLine");
+        messageInputLine->setMaximumSize(QSize(16777215, 400));
+        messageInputLine->setInputMethodHints(Qt::InputMethodHint::ImhDate|Qt::InputMethodHint::ImhMultiLine|Qt::InputMethodHint::ImhTime);
+        messageInputLine->setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
+        messageInputLine->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
+        messageInputLine->setSizeAdjustPolicy(QAbstractScrollArea::SizeAdjustPolicy::AdjustToContents);
+        messageInputLine->setAutoFormatting(QTextEdit::AutoFormattingFlag::AutoAll);
 
-        horizontalLayout->addWidget(lineEdit);
+        horizontalLayout->addWidget(messageInputLine);
 
         toolButton = new QToolButton(messageInputFrame);
         toolButton->setObjectName("toolButton");
@@ -160,7 +173,7 @@ public:
         DirectMessage->setWindowTitle(QCoreApplication::translate("DirectMessage", "Form", nullptr));
         receiverAvatar->setText(QCoreApplication::translate("DirectMessage", "xdd", nullptr));
         receiverUsername->setText(QCoreApplication::translate("DirectMessage", "TextLabel", nullptr));
-        startConversationLabel->setText(QCoreApplication::translate("DirectMessage", "xxxxxxxxxxxxxxxxxxxxxxxxxxx", nullptr));
+        startConversationLabel->setText(QCoreApplication::translate("DirectMessage", "This is the start of the conversation", nullptr));
         pushButton->setText(QString());
         toolButton->setText(QCoreApplication::translate("DirectMessage", "...", nullptr));
         toolButton_2->setText(QCoreApplication::translate("DirectMessage", "GIF", nullptr));

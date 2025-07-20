@@ -1,0 +1,5 @@
+C:/Users/giler/OneDrive/Desktop/C++/Discard/build/CMakeFiles/chat.dir
+C:/Users/giler/OneDrive/Desktop/C++/Discard/build/CMakeFiles/edit_cache.dir
+C:/Users/giler/OneDrive/Desktop/C++/Discard/build/CMakeFiles/rebuild_cache.dir
+C:/Users/giler/OneDrive/Desktop/C++/Discard/build/CMakeFiles/chat_autogen_timestamp_deps.dir
+C:/Users/giler/OneDrive/Desktop/C++/Discard/build/CMakeFiles/chat_autogen.dir

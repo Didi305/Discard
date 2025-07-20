@@ -83,7 +83,7 @@ public:
 
         receiverUsername = new QLabel(receiverInformationFrame);
         receiverUsername->setObjectName("receiverUsername");
-        receiverUsername->setMaximumSize(QSize(120, 25));
+        receiverUsername->setMaximumSize(QSize(120, 30));
 
         verticalLayout_3->addWidget(receiverUsername);
 

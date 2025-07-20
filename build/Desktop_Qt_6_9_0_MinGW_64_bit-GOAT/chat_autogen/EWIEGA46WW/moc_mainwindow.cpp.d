@@ -169,6 +169,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOA
   C:/Qt/6.9.0/mingw_64/include/QtGui/QPainter \
   C:/Qt/6.9.0/mingw_64/include/QtGui/QPainterPath \
   C:/Qt/6.9.0/mingw_64/include/QtGui/QPixmap \
+  C:/Qt/6.9.0/mingw_64/include/QtGui/QShortcut \
   C:/Qt/6.9.0/mingw_64/include/QtGui/QTransform \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qaction.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qbitmap.h \
@@ -203,6 +204,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOA
   C:/Qt/6.9.0/mingw_64/include/QtGui/qrgba64.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qscreen.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qscreen_platform.h \
+  C:/Qt/6.9.0/mingw_64/include/QtGui/qshortcut.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qtextdocument.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qtextoption.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qtgui-config.h \

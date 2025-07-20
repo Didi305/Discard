@@ -86,7 +86,7 @@ public:
         font1.setBold(true);
         searchButton->setFont(font1);
         searchButton->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        searchButton->setStyleSheet(QString::fromUtf8("background-color: red;"));
+        searchButton->setStyleSheet(QString::fromUtf8("background-color: lime;"));
         searchButton->setFlat(false);
 
         addFriendLayout_2->addWidget(searchButton);

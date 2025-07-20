@@ -114,8 +114,8 @@ public:
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(scrollAreaWidgetContents->sizePolicy().hasHeightForWidth());
         scrollAreaWidgetContents->setSizePolicy(sizePolicy);
-        scrollAreaWidgetContents->setAutoFillBackground(false);
-        scrollAreaWidgetContents->setStyleSheet(QString::fromUtf8("background: red;"));
+        scrollAreaWidgetContents->setAutoFillBackground(true);
+        scrollAreaWidgetContents->setStyleSheet(QString::fromUtf8(""));
         verticalLayout_13 = new QVBoxLayout(scrollAreaWidgetContents);
         verticalLayout_13->setSpacing(0);
         verticalLayout_13->setObjectName("verticalLayout_13");

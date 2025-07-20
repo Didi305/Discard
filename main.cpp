@@ -3,6 +3,7 @@
 #include "client.h"
 #include "manager.h"
 #include "login.h"
+#include "utils.h"
 #include "register.h"
 #include <QJsonObject>
 #include <QApplication>
@@ -11,7 +12,6 @@
 #include <QStandardPaths>
 #include <QFile>
 
-const QString path = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + "/C++/Chat";
 QString loadStyle(const QString &path)
 {
     QFile f(path);

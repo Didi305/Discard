@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/giler/OneDrive/Desktop/C++/Chat
+# Install script for directory: C:/Users/giler/OneDrive/Desktop/C++/Discard
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/chat")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/Discard")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -52,6 +52,6 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-  file(WRITE "C:/Users/giler/OneDrive/Desktop/C++/Chat/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/${CMAKE_INSTALL_MANIFEST}"
+  file(WRITE "C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
 endif()

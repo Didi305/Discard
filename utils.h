@@ -2,13 +2,57 @@
 #include <QtSvg/QSvgRenderer>
 #include <QObject>
 #include <QPainter>
+#include <QStandardPaths>
+#include <QPushButton>
 #include <QHash>
 #include <qjsonobject.h>
 #include <qpainterpath.h>
 #include <qtcpsocket.h>
+#include <QLabel>
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/hashed_index.hpp>
+#include <boost/multi_index/sequenced_index.hpp>
+#include <boost/multi_index/identity.hpp>
+#include <boost/multi_index/member.hpp>
+#include <boost/functional/hash.hpp>
+using namespace boost::multi_index;
+
+// tag names for the two indices
+struct BySeq {};
+struct ByKey {};
+
+struct Message {
+    QString body;
+    int senderID;
+    QString sentAt;
+};
+struct QStringHasher {
+    std::size_t operator()(QString const &s) const noexcept {
+        // Qt’s qHash(QString) returns a uint
+        return static_cast<std::size_t>(qHash(s));
+    }
+};
+using StringContainer = multi_index_container<
+    Message,
+    indexed_by<
+        // 0) keep insertion order
+        sequenced<tag<BySeq>>,
+        // 1) hash‐lookup by Message::body, using your QStringHasher
+        hashed_unique<
+            tag<ByKey>,
+            member<Message,QString,&Message::body>,
+            QStringHasher,          // <- your functor here
+            std::equal_to<QString>  // <- still use standard equality
+            >
+        >
+    >;
+
+inline QString path = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + "/C++/Discard";
+
 enum class Status {
     ONLINE, HIDDEN, DO_NOT_DISTURB
 };
+
 
 struct Data
 {
@@ -16,7 +60,7 @@ struct Data
     QString displayName;
     QString avatar;
     Status status;
-    QString message;
+    Message message;
     QHash<Data, int> friends;
     bool operator==(Data const &other) const {
         return user_id == other.user_id;
@@ -142,6 +186,13 @@ inline QString stringFromStatus(const Status stat) {
     return status;
 }
 
+inline QByteArray jsonObjectToData(const QJsonObject &obj){
+    QJsonDocument doc(obj);
+    QString jsonString = doc.toJson(QJsonDocument::Compact);
+    jsonString.append('\n');
+    return jsonString.toUtf8();
+}
+
 inline QJsonObject parseJson(const QByteArray &data){
     QJsonDocument doc = QJsonDocument::fromJson(data);
     QJsonObject obj = doc.object();
@@ -154,7 +205,21 @@ inline QJsonObject buildJson(const Data &d){
     obj["name"] = d.displayName;
     obj["avatar"] = d.avatar;
     obj["status"] = stringFromStatus(d.status);
+    obj["messageBody"] = d.message.body;
+    obj["messageSender"] = d.message.senderID;
+    obj["messageTime"] = d.message.sentAt;
     return obj;
+}
+inline Data buildData(const QJsonObject &obj){
+    Data d;
+    d.user_id = obj["id"].toInt();
+    d.displayName = obj["name"].toString();
+    d.avatar = obj["avatar"].toString();
+    d.status = statusFromString(obj["status"].toString());
+    d.message.body = obj["messageBody"].toString();
+    d.message.senderID = obj["messageSender"].toInt();
+    d.message.sentAt = obj["messageTime"].toString();
+    return d;
 }
 
 
