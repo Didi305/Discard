@@ -37,7 +37,6 @@ void OutgoingPage::setRequests(int userID) {
 
 
 void OutgoingPage::update(int friend_id) {
-    qDebug() << "tried updating pending requests";
     QLayoutItem *child;
     for (int i = 0; i < ui->listLayout->count(); ++i) {
         child = ui->listLayout->itemAt(i);

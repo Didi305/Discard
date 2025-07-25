@@ -13,8 +13,11 @@
 
 
 Row::Row(const Data &d, QWidget *parent)
-    : QFrame(parent), m_data(d), m_manager(Manager::get()), ava(new QLabel), name(new QLabel), v(new QVBoxLayout(this)), h(new QHBoxLayout(this))
+    : QFrame(parent), m_data(d), m_manager(Manager::get()), ava(new QLabel), name(new QLabel)
 {
+    h = new QHBoxLayout(this);
+    v = new QVBoxLayout;
+
     setCursor(Qt::PointingHandCursor);
     setAttribute(Qt::WA_Hover);
     static std::unordered_map<Status, QString> statusPaths = {
@@ -36,8 +39,6 @@ Row::Row(const Data &d, QWidget *parent)
     QPixmap raw = d.avatar;
     QPixmap finalAvatar;
     if(online){
-        qDebug() << "my guy is online buh";
-        qDebug() << "svg?: " << statusPaths[d.status];
         finalAvatar = Utils::makeAvatarWithHole(raw, 48, statusIcons[d.status].get());
     }
     else finalAvatar = Utils::makeAvatarWithHole(raw, 48, statusIcons[Status::HIDDEN].get());
@@ -51,10 +52,9 @@ Row::Row(const Data &d, QWidget *parent)
     f.setWeight(QFont::Bold);    // or QFont::Bold
     name->setFont(f);
     name->setStyleSheet("background: transparent");
-    h->setSpacing(16);
-    h->addWidget(ava);
-    h->addWidget(name);
-    h->addLayout(v, /*stretch=*/1);
+    h->addWidget(ava, 0);
+    v->addWidget(name, 0);
+    h->addLayout(v, 1);
 }
 
 /* Paint gray hover backdrop + 1-px separator line */

@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->ADD_OUTGOING->setAttribute(Qt::WA_StyledBackground, true);
     m_DirectMessagePage->setAttribute(Qt::WA_StyledBackground, true);
     ui->verticalLayoutMid->addWidget(m_DirectMessagePage);
+    ui->verticalLayoutMid->setCurrentIndex(1);
     ui->ADD_OUTGOING->addWidget(m_addFriendPage);
     ui->ADD_OUTGOING->addWidget(m_outgoingPage); // index 1
     ui->verticalLayoutRight->addWidget(m_FriendsPage);

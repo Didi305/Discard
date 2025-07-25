@@ -60,7 +60,7 @@ public:
     QPushButton *disconnectButton;
     QStackedWidget *verticalLayoutMid;
     QWidget *friends;
-    QHBoxLayout *horizontalLayout;
+    QVBoxLayout *verticalLayout_4;
     QStackedWidget *ADD_OUTGOING;
     QVBoxLayout *verticalLayoutRight;
     QMenuBar *menubar;
@@ -417,35 +417,39 @@ public:
 
         verticalLayoutMid = new QStackedWidget(columnContainer);
         verticalLayoutMid->setObjectName("verticalLayoutMid");
+        sizePolicy.setHeightForWidth(verticalLayoutMid->sizePolicy().hasHeightForWidth());
+        verticalLayoutMid->setSizePolicy(sizePolicy);
         verticalLayoutMid->setAutoFillBackground(false);
         verticalLayoutMid->setStyleSheet(QString::fromUtf8(""));
         friends = new QWidget();
         friends->setObjectName("friends");
         friends->setAutoFillBackground(false);
         friends->setStyleSheet(QString::fromUtf8(""));
-        horizontalLayout = new QHBoxLayout(friends);
-        horizontalLayout->setSpacing(0);
-        horizontalLayout->setObjectName("horizontalLayout");
-        horizontalLayout->setContentsMargins(0, 0, 0, 0);
+        verticalLayout_4 = new QVBoxLayout(friends);
+        verticalLayout_4->setSpacing(0);
+        verticalLayout_4->setObjectName("verticalLayout_4");
+        verticalLayout_4->setContentsMargins(0, 0, 0, 0);
         ADD_OUTGOING = new QStackedWidget(friends);
         ADD_OUTGOING->setObjectName("ADD_OUTGOING");
         QPalette palette1;
-        palette1.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Button, brush1);
-        palette1.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Base, brush1);
-        palette1.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Window, brush1);
-        palette1.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Button, brush1);
-        palette1.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Base, brush1);
-        palette1.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Window, brush1);
-        palette1.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Button, brush1);
-        palette1.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Base, brush1);
-        palette1.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Window, brush1);
+        QBrush brush12(QColor(255, 192, 203, 255));
+        brush12.setStyle(Qt::BrushStyle::SolidPattern);
+        palette1.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Button, brush12);
+        palette1.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Base, brush12);
+        palette1.setBrush(QPalette::ColorGroup::Active, QPalette::ColorRole::Window, brush12);
+        palette1.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Button, brush12);
+        palette1.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Base, brush12);
+        palette1.setBrush(QPalette::ColorGroup::Inactive, QPalette::ColorRole::Window, brush12);
+        palette1.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Button, brush12);
+        palette1.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Base, brush12);
+        palette1.setBrush(QPalette::ColorGroup::Disabled, QPalette::ColorRole::Window, brush12);
         ADD_OUTGOING->setPalette(palette1);
         ADD_OUTGOING->setAutoFillBackground(false);
         ADD_OUTGOING->setStyleSheet(QString::fromUtf8(""));
         ADD_OUTGOING->setLineWidth(0);
         ADD_OUTGOING->setMidLineWidth(0);
 
-        horizontalLayout->addWidget(ADD_OUTGOING);
+        verticalLayout_4->addWidget(ADD_OUTGOING);
 
         verticalLayoutMid->addWidget(friends);
 
@@ -463,7 +467,7 @@ public:
         MainWindow->setCentralWidget(mainContainer);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 1093, 33));
+        menubar->setGeometry(QRect(0, 0, 1093, 21));
         MainWindow->setMenuBar(menubar);
 
         retranslateUi(MainWindow);

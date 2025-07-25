@@ -7,7 +7,6 @@ Friends::Friends(QWidget *parent)
     , m_manager(Manager::get())
 {
     ui->setupUi(this);
-    qDebug() << "friends page object name: " << objectName();
     ui->offlineFriends->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     ui->onlineFriends->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     connect(m_manager->getClient(), &Client::friendsReady,
@@ -33,7 +32,6 @@ void Friends::load(QHash<Data, int> friends) {
     for(auto it = friends.constBegin(); it != friends.constEnd(); ++it){
         FriendRow* friendRow = new FriendRow(it.key());
         connect(friendRow, &FriendRow::clicked, this, [this](Data d){
-            qDebug() << "row signal was sent from the actual page: " << d.displayName;
             emit friendClicked(d);});
         if(it.value() == 0){
             ui->offlineFriends->addWidget(friendRow);
@@ -58,7 +56,6 @@ void Friends::update(int id, bool online){
                 FriendRow* replacement = new FriendRow(d);
                 ui->onlineFriends->addWidget(replacement);
                 connect(replacement, &FriendRow::clicked, this, [this](Data d){
-                    qDebug() << "row signal was sent from the actual page: " << d.displayName;
                     emit friendClicked(d);});
                 row->deleteLater();
             }
@@ -75,7 +72,6 @@ void Friends::update(int id, bool online){
                 m_manager->getClient()->getFriends()[d] = 0;
                 FriendRow* replacement = new FriendRow(d);
                 connect(replacement, &FriendRow::clicked, this, [this](Data d){
-                    qDebug() << "row signal was sent from the actual page: " << d.displayName;
                     emit friendClicked(d);});
                 ui->offlineFriends->addWidget(replacement);
                 row->deleteLater();

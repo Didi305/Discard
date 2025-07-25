@@ -9,7 +9,7 @@ class MessageRow : public Row
     Q_OBJECT
 public:
     explicit MessageRow(QString body, Data d, bool withAvatar, QString time, QWidget *parent = nullptr);
-
+    QSize sizeHint() const override;
 private:
     void paintEvent(QPaintEvent *e) override{
 

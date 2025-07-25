@@ -15,12 +15,21 @@ class DirectMessage : public QWidget
 public:
     explicit DirectMessage(QWidget *parent = nullptr);
     void load(Data d);
+    void growToContent();
+    QString htmlEscaped(const QString &text) const;
+    void insertConversationHeader(const QString &recipientName, const QPixmap  &avatarOrig);
+    void appendMessage(QString name,
+                       QString text,
+                       QPixmap avatar,
+                       QString time,
+                       bool withAvatar);
     ~DirectMessage();
 
 private slots:
     void update(Data d);
 private:
     Ui::DirectMessage *ui;
+    int height;
     bool eventFilter(QObject *object, QEvent *event);
     Manager* m_manager;
     StringContainer messages;

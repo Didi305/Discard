@@ -13,13 +13,13 @@ Client::Client(QObject *parent)
     handlers["message"] = [this](QJsonObject &obj){
         Data d = Utils::buildData(obj);
         emit newMessage(d);
-        qDebug() << "receiver got the message: " << d.message.body;
     };
     handlers["friends_status"]  = [this](QJsonObject& obj){checkFriendsStatus(obj);};
     handlers["user_status"] = [this](QJsonObject& obj){
-                                                        Data d = {obj["id"].toInt(), obj["name"].toString(), obj["avatar"].toString(), Utils::statusFromString(obj["status"].toString())};
-                                                        friends[d] = obj["bool"].toInt();
-                                                        emit addNewFriendRow(d);};
+        Data d = {obj["id"].toInt(), obj["name"].toString(), obj["avatar"].toString(), Utils::statusFromString(obj["status"].toString())};
+        friends[d] = obj["bool"].toInt();
+        emit addNewFriendRow(d);
+    };
     handlers["friend_update"]  = [this](QJsonObject& obj){emit updateFriends(obj["id"].toInt(), obj["bool"].toBool());};
     handlers["update_pending"] = [this](QJsonObject& obj){emit updatePendingRequests(obj["id"].toInt());};
     handlers["update_accept"]  = [this](QJsonObject& obj){updateAcceptRequests(obj);};

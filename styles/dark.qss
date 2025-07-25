@@ -157,7 +157,7 @@ Row {
 }
 
 #message {
-    background: transparent;
+    background: yellow;
     color: silver;
     font-weight: 625;
     font-size: 16px;

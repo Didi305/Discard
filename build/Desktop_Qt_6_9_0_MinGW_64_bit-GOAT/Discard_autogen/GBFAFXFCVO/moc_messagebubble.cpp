@@ -32,14 +32,14 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 QT_WARNING_DISABLE_GCC("-Wuseless-cast")
 namespace {
-struct qt_meta_tag_ZN13MessageBubbleE_t {};
+struct qt_meta_tag_ZN9WrapLabelE_t {};
 } // unnamed namespace
 
-template <> constexpr inline auto MessageBubble::qt_create_metaobjectdata<qt_meta_tag_ZN13MessageBubbleE_t>()
+template <> constexpr inline auto WrapLabel::qt_create_metaobjectdata<qt_meta_tag_ZN9WrapLabelE_t>()
 {
     namespace QMC = QtMocConstants;
     QtMocHelpers::StringRefStorage qt_stringData {
-        "MessageBubble"
+        "WrapLabel"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -48,44 +48,44 @@ template <> constexpr inline auto MessageBubble::qt_create_metaobjectdata<qt_met
     };
     QtMocHelpers::UintData qt_enums {
     };
-    return QtMocHelpers::metaObjectData<MessageBubble, qt_meta_tag_ZN13MessageBubbleE_t>(QMC::MetaObjectFlag{}, qt_stringData,
+    return QtMocHelpers::metaObjectData<WrapLabel, qt_meta_tag_ZN9WrapLabelE_t>(QMC::MetaObjectFlag{}, qt_stringData,
             qt_methods, qt_properties, qt_enums);
 }
-Q_CONSTINIT const QMetaObject MessageBubble::staticMetaObject = { {
-    QMetaObject::SuperData::link<QTextBrowser::staticMetaObject>(),
-    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN13MessageBubbleE_t>.stringdata,
-    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN13MessageBubbleE_t>.data,
+Q_CONSTINIT const QMetaObject WrapLabel::staticMetaObject = { {
+    QMetaObject::SuperData::link<QLabel::staticMetaObject>(),
+    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN9WrapLabelE_t>.stringdata,
+    qt_staticMetaObjectStaticContent<qt_meta_tag_ZN9WrapLabelE_t>.data,
     qt_static_metacall,
     nullptr,
-    qt_staticMetaObjectRelocatingContent<qt_meta_tag_ZN13MessageBubbleE_t>.metaTypes,
+    qt_staticMetaObjectRelocatingContent<qt_meta_tag_ZN9WrapLabelE_t>.metaTypes,
     nullptr
 } };
 
-void MessageBubble::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+void WrapLabel::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
 {
-    auto *_t = static_cast<MessageBubble *>(_o);
+    auto *_t = static_cast<WrapLabel *>(_o);
     (void)_t;
     (void)_c;
     (void)_id;
     (void)_a;
 }
 
-const QMetaObject *MessageBubble::metaObject() const
+const QMetaObject *WrapLabel::metaObject() const
 {
     return QObject::d_ptr->metaObject ? QObject::d_ptr->dynamicMetaObject() : &staticMetaObject;
 }
 
-void *MessageBubble::qt_metacast(const char *_clname)
+void *WrapLabel::qt_metacast(const char *_clname)
 {
     if (!_clname) return nullptr;
-    if (!strcmp(_clname, qt_staticMetaObjectStaticContent<qt_meta_tag_ZN13MessageBubbleE_t>.strings))
+    if (!strcmp(_clname, qt_staticMetaObjectStaticContent<qt_meta_tag_ZN9WrapLabelE_t>.strings))
         return static_cast<void*>(this);
-    return QTextBrowser::qt_metacast(_clname);
+    return QLabel::qt_metacast(_clname);
 }
 
-int MessageBubble::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+int WrapLabel::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
-    _id = QTextBrowser::qt_metacall(_c, _id, _a);
+    _id = QLabel::qt_metacall(_c, _id, _a);
     return _id;
 }
 QT_WARNING_POP

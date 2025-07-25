@@ -31,7 +31,6 @@ void Login::onLoginButtonClicked(){
         client->setClientStatus(Utils::statusFromString(parts.value(3)));
         client->setFriends(manager->fetchFriends(client->getClientID(), client->getFriends()));
         client->setClientData(client->getClientID(), client->getClientName(), client->getClientAvatar(), client->getFriends());
-        qDebug() << "status dyal client: " << client->getClientName() << " is: " << Utils::stringFromStatus(client->getClientStatus());
         QString host = "127.0.0.1";
         int port = 1234;
         client->connectToServer(host, port);

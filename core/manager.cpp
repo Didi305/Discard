@@ -314,7 +314,6 @@ QHash<Data , int>& Manager::fetchFriends(int user_id, QHash<Data , int> &friends
         Data d;
         d.avatar = query.value("users.avatar").toString();
         d.displayName = query.value("users.nickname").toString();
-        qDebug() << "amigos name:" << d.displayName;
         d.user_id = query.value("users.id").toString().toInt();
         d.status = Utils::statusFromString(query.value("users.status").toString());
         friends.insert(d, 0);
