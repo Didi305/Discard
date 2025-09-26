@@ -47,6 +47,9 @@ private slots:
     void onConnectionSuccess();
     void onAvatarButtonClicked();
     void onDisconnectClicked();
+    void onItemDragging(int n);
+    void onItemNotDragged();
+
 private:
     Ui::MainWindow   *ui;
     AddFriendPage    *m_addFriendPage;
@@ -57,5 +60,6 @@ private:
     Client           *client;
     QPushButton      *avatarButton;
     QLabel           *nameLabel;
+    DragBanner       * m_banner = nullptr;
 };
 #endif // MAINWINDOW_H

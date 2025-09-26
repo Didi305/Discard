@@ -783,6 +783,24 @@
 	"HEADERS" : 
 	[
 		[
+			"C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/attachmentchip.h",
+			"MU",
+			"GBFAFXFCVO/moc_attachmentchip.cpp",
+			null
+		],
+		[
+			"C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/dragbanner.h",
+			"MU",
+			"GBFAFXFCVO/moc_dragbanner.cpp",
+			null
+		],
+		[
+			"C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/emojipopup.h",
+			"MU",
+			"GBFAFXFCVO/moc_emojipopup.cpp",
+			null
+		],
+		[
 			"C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/friendrow.h",
 			"MU",
 			"GBFAFXFCVO/moc_friendrow.cpp",

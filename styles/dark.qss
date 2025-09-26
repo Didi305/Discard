@@ -33,7 +33,24 @@ Row {
     qproperty-hover: true;
 }        
 
+#GIFButton{
+    qproperty-hover: true;
+}
+#GIFButton:hover{
+    background: white;
+}
 
+#emotesButton{
+    qproperty-hover: true;
+}
+
+#emotesButton:hover, #sendButton:hover{
+    border-radius: 6px;
+    background:  rgba(255, 255, 255, 0.16);
+}
+#sendButton{
+    qproperty-hover: true;
+}
 #userAvatarButton{
   min-width: 48px; max-width: 48px;
   min-height: 48px; max-height: 48px;
@@ -135,6 +152,9 @@ Row {
     background:  #32353a;
 }
 
+#inputAttachments{
+    background:  #32353a;
+}
 
 #verticalLayoutMid {
     background: #2b2d31;
@@ -170,7 +190,19 @@ Row {
     font-size: 11px;
 }
 
+#messageInputFrame {
+    border-radius: 8px;
+}
 
+#GIFButton {
+    background: #DBDBDB;
+    color: #32353a;
+    font-weight: 675;
+}
+
+#emotesButton {
+    border: none;
+}
 
 
 

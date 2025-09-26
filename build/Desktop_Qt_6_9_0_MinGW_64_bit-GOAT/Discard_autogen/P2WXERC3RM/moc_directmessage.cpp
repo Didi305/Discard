@@ -40,17 +40,35 @@ template <> constexpr inline auto DirectMessage::qt_create_metaobjectdata<qt_met
     namespace QMC = QtMocConstants;
     QtMocHelpers::StringRefStorage qt_stringData {
         "DirectMessage",
-        "update",
+        "dragging",
         "",
+        "n",
+        "notdragging",
+        "update",
         "Data",
-        "d"
+        "d",
+        "onAddClicked",
+        "onGifClicked",
+        "onEmojiClicked"
     };
 
     QtMocHelpers::UintData qt_methods {
-        // Slot 'update'
-        QtMocHelpers::SlotData<void(Data)>(1, 2, QMC::AccessPrivate, QMetaType::Void, {{
-            { 0x80000000 | 3, 4 },
+        // Signal 'dragging'
+        QtMocHelpers::SignalData<void(int)>(1, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { QMetaType::Int, 3 },
         }}),
+        // Signal 'notdragging'
+        QtMocHelpers::SignalData<void()>(4, 2, QMC::AccessPublic, QMetaType::Void),
+        // Slot 'update'
+        QtMocHelpers::SlotData<void(Data)>(5, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { 0x80000000 | 6, 7 },
+        }}),
+        // Slot 'onAddClicked'
+        QtMocHelpers::SlotData<void()>(8, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onGifClicked'
+        QtMocHelpers::SlotData<void()>(9, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onEmojiClicked'
+        QtMocHelpers::SlotData<void()>(10, 2, QMC::AccessPrivate, QMetaType::Void),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -74,9 +92,20 @@ void DirectMessage::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
     auto *_t = static_cast<DirectMessage *>(_o);
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: _t->update((*reinterpret_cast< std::add_pointer_t<Data>>(_a[1]))); break;
+        case 0: _t->dragging((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
+        case 1: _t->notdragging(); break;
+        case 2: _t->update((*reinterpret_cast< std::add_pointer_t<Data>>(_a[1]))); break;
+        case 3: _t->onAddClicked(); break;
+        case 4: _t->onGifClicked(); break;
+        case 5: _t->onEmojiClicked(); break;
         default: ;
         }
+    }
+    if (_c == QMetaObject::IndexOfMethod) {
+        if (QtMocHelpers::indexOfMethod<void (DirectMessage::*)(int )>(_a, &DirectMessage::dragging, 0))
+            return;
+        if (QtMocHelpers::indexOfMethod<void (DirectMessage::*)()>(_a, &DirectMessage::notdragging, 1))
+            return;
     }
 }
 
@@ -99,15 +128,27 @@ int DirectMessage::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 1)
+        if (_id < 6)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 1;
+        _id -= 6;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 1)
+        if (_id < 6)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 1;
+        _id -= 6;
     }
     return _id;
+}
+
+// SIGNAL 0
+void DirectMessage::dragging(int _t1)
+{
+    QMetaObject::activate<void>(this, &staticMetaObject, 0, nullptr, _t1);
+}
+
+// SIGNAL 1
+void DirectMessage::notdragging()
+{
+    QMetaObject::activate(this, &staticMetaObject, 1, nullptr);
 }
 QT_WARNING_POP

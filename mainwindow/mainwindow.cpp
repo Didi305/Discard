@@ -11,6 +11,9 @@ MainWindow::MainWindow(QWidget *parent)
     , m_DirectMessagePage(new DirectMessage(this))
 {
     ui->setupUi(this);
+    m_banner = new DragBanner(this);
+    m_banner->hide();
+
     ui->userPanel->setAttribute(Qt::WA_StyledBackground, true);
     ui->ADD_OUTGOING->setAttribute(Qt::WA_StyledBackground, true);
     m_DirectMessagePage->setAttribute(Qt::WA_StyledBackground, true);
@@ -48,14 +51,23 @@ MainWindow::MainWindow(QWidget *parent)
                 QMessageBox::warning(this, "User not found", " or request is Pending");
                 }
             });
+    connect(m_DirectMessagePage, &DirectMessage::dragging, this, &MainWindow::onItemDragging);
+    connect(m_DirectMessagePage, &DirectMessage::notdragging, this, &MainWindow::onItemNotDragged);
 
+
+
+    const double margin = 26;
+    int upHeight = ui->userPanel->height();
+    int x = 9;
+    int y = this->height() - 1.5 * upHeight - margin;
+    ui->userPanel->move(x, y);
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)
 {
     QMainWindow::resizeEvent(event);
     // Each time the window resizes, move the userPanel
-    const double margin = 19;
+    const double margin = 26;
     int upHeight = ui->userPanel->height();
     int x = 9;
     int y = this->height() - 1.5 * upHeight - margin;
@@ -127,6 +139,16 @@ void MainWindow::onConnectionSuccess()
 {
     qDebug() << "User: " << client->getClientName();
     qDebug() << "ID: " << client->getClientID();
+}
+
+void MainWindow::onItemDragging(int n)
+{
+    m_banner->showBanner(tr("Drop to attach"), tr("Release to add files"), n);
+}
+
+void MainWindow::onItemNotDragged()
+{
+    m_banner->hideBanner();
 }
 
 

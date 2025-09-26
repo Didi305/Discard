@@ -795,6 +795,9 @@
             <string notr="true"/>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout">
+            <property name="bottomMargin">
+             <number>17</number>
+            </property>
             <item>
              <widget class="QWidget" name="options" native="true">
               <property name="sizePolicy">

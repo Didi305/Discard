@@ -618,7 +618,7 @@
 			"language" : "RC",
 			"sourceIndexes" : 
 			[
-				42
+				44
 			]
 		}
 	],
@@ -762,7 +762,7 @@
 				16,
 				17,
 				18,
-				42
+				44
 			]
 		},
 		{
@@ -770,7 +770,7 @@
 			"sourceIndexes" : 
 			[
 				2,
-				43
+				45
 			]
 		},
 		{
@@ -793,27 +793,29 @@
 				31,
 				32,
 				33,
-				34
+				34,
+				35,
+				36
 			]
 		},
 		{
 			"name" : "Forms",
 			"sourceIndexes" : 
 			[
-				35,
-				36,
 				37,
 				38,
 				39,
 				40,
-				41
+				41,
+				42,
+				43
 			]
 		},
 		{
 			"name" : "CMake Rules",
 			"sourceIndexes" : 
 			[
-				44
+				46
 			]
 		}
 	],
@@ -931,6 +933,16 @@
 			"compileGroupIndex" : 0,
 			"path" : "pages/register.cpp",
 			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "assets/dragbanner.h",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "assets/emojipopup.h",
+			"sourceGroupIndex" : 2
 		},
 		{
 			"backtrace" : 1,

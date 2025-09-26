@@ -72,6 +72,12 @@ struct Data
         status = other.status;
     }
 };
+
+static const QStringList kPickerEmojis = {
+    "😀","😁","😂","🤣","😊","😍","😎","😭","😡","👍","👎","🙏",
+    "👏","🔥","💯","🎉","❤️","💔","😅","🙃","🤔","😴","😇","🤗"
+};
+
 inline uint qHash(Data const &d, uint seed = 0) {
     // combine the hash of user_id (you can mix in other fields if needed)
     return ::qHash(d.user_id, seed);
@@ -233,6 +239,24 @@ inline QByteArray updateStatus(int user_id, bool online){
     QString payload = doc.toJson(QJsonDocument::Compact);
     payload.append('\n');
     return payload.toUtf8();
+}
+static QString toHtml(const QString &plain)
+{
+    return plain.toHtmlEscaped().replace('\n', "<br/>");
+}
+static QString wrapEmojisForHtml(QString htmlEscaped)
+{
+    for (const QString &e : kPickerEmojis) {
+        htmlEscaped.replace(e, "<span class=\"emoji\">" + e + "</span>");
+    }
+    return htmlEscaped;
+}
+static QString embedAvatar(QTextDocument *doc, const QPixmap &px)
+{
+    const QString id = QStringLiteral("ava_%1").arg((qulonglong)px.cacheKey());
+    if (!doc->resource(QTextDocument::ImageResource, QUrl(id)).isValid())
+        doc->addResource(QTextDocument::ImageResource, QUrl(id), px);
+    return id;
 }
 
 }

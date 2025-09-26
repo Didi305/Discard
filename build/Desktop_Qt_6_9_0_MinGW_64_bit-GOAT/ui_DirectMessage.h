@@ -15,6 +15,7 @@
 #include <QtWidgets/QFrame>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QScrollArea>
 #include <QtWidgets/QTextBrowser>
 #include <QtWidgets/QTextEdit>
 #include <QtWidgets/QToolButton>
@@ -26,14 +27,20 @@ QT_BEGIN_NAMESPACE
 class Ui_DirectMessage
 {
 public:
-    QVBoxLayout *verticalLayout;
+    QVBoxLayout *verticalLayout_2;
     QTextBrowser *messageView;
     QFrame *messageInputFrame;
+    QVBoxLayout *verticalLayout;
+    QScrollArea *scrollArea;
+    QWidget *inputAttachments;
     QHBoxLayout *horizontalLayout;
-    QPushButton *pushButton;
+    QVBoxLayout *leftButtonLayout;
+    QPushButton *addAttachButton;
     QTextEdit *messageInputLine;
-    QToolButton *toolButton;
-    QToolButton *toolButton_2;
+    QHBoxLayout *rightButtonsLayout;
+    QToolButton *emotesButton;
+    QToolButton *GIFButton;
+    QPushButton *sendButton;
 
     void setupUi(QWidget *DirectMessage)
     {
@@ -42,43 +49,85 @@ public:
         DirectMessage->resize(1063, 599);
         DirectMessage->setAutoFillBackground(true);
         DirectMessage->setStyleSheet(QString::fromUtf8(""));
-        verticalLayout = new QVBoxLayout(DirectMessage);
-        verticalLayout->setObjectName("verticalLayout");
+        verticalLayout_2 = new QVBoxLayout(DirectMessage);
+        verticalLayout_2->setObjectName("verticalLayout_2");
         messageView = new QTextBrowser(DirectMessage);
         messageView->setObjectName("messageView");
+        QFont font;
+        font.setPointSize(8);
+        messageView->setFont(font);
 
-        verticalLayout->addWidget(messageView);
+        verticalLayout_2->addWidget(messageView);
 
         messageInputFrame = new QFrame(DirectMessage);
         messageInputFrame->setObjectName("messageInputFrame");
-        QSizePolicy sizePolicy(QSizePolicy::Policy::MinimumExpanding, QSizePolicy::Policy::MinimumExpanding);
+        QSizePolicy sizePolicy(QSizePolicy::Policy::Preferred, QSizePolicy::Policy::Fixed);
         sizePolicy.setHorizontalStretch(0);
         sizePolicy.setVerticalStretch(0);
         sizePolicy.setHeightForWidth(messageInputFrame->sizePolicy().hasHeightForWidth());
         messageInputFrame->setSizePolicy(sizePolicy);
-        messageInputFrame->setMinimumSize(QSize(0, 0));
-        messageInputFrame->setMaximumSize(QSize(16777215, 80));
+        messageInputFrame->setMinimumSize(QSize(0, 75));
+        messageInputFrame->setMaximumSize(QSize(16777215, 16777215));
         messageInputFrame->setBaseSize(QSize(40, 50));
         messageInputFrame->setAutoFillBackground(true);
         messageInputFrame->setStyleSheet(QString::fromUtf8(""));
         messageInputFrame->setFrameShape(QFrame::Shape::StyledPanel);
         messageInputFrame->setFrameShadow(QFrame::Shadow::Raised);
-        horizontalLayout = new QHBoxLayout(messageInputFrame);
-        horizontalLayout->setObjectName("horizontalLayout");
-        pushButton = new QPushButton(messageInputFrame);
-        pushButton->setObjectName("pushButton");
-        pushButton->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        pushButton->setStyleSheet(QString::fromUtf8(""));
-        QIcon icon(QIcon::fromTheme(QIcon::ThemeIcon::ListAdd));
-        pushButton->setIcon(icon);
-        pushButton->setIconSize(QSize(24, 24));
-        pushButton->setFlat(true);
+        verticalLayout = new QVBoxLayout(messageInputFrame);
+        verticalLayout->setObjectName("verticalLayout");
+        scrollArea = new QScrollArea(messageInputFrame);
+        scrollArea->setObjectName("scrollArea");
+        QSizePolicy sizePolicy1(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Preferred);
+        sizePolicy1.setHorizontalStretch(0);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(scrollArea->sizePolicy().hasHeightForWidth());
+        scrollArea->setSizePolicy(sizePolicy1);
+        scrollArea->setMinimumSize(QSize(0, 0));
+        scrollArea->setMaximumSize(QSize(16777215, 16777215));
+        scrollArea->setAutoFillBackground(true);
+        scrollArea->setFrameShape(QFrame::Shape::NoFrame);
+        scrollArea->setWidgetResizable(true);
+        inputAttachments = new QWidget();
+        inputAttachments->setObjectName("inputAttachments");
+        inputAttachments->setGeometry(QRect(0, 0, 1025, 68));
+        QSizePolicy sizePolicy2(QSizePolicy::Policy::Preferred, QSizePolicy::Policy::Preferred);
+        sizePolicy2.setHorizontalStretch(0);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(inputAttachments->sizePolicy().hasHeightForWidth());
+        inputAttachments->setSizePolicy(sizePolicy2);
+        inputAttachments->setMinimumSize(QSize(0, 0));
+        inputAttachments->setStyleSheet(QString::fromUtf8(""));
+        scrollArea->setWidget(inputAttachments);
 
-        horizontalLayout->addWidget(pushButton);
+        verticalLayout->addWidget(scrollArea);
+
+        horizontalLayout = new QHBoxLayout();
+        horizontalLayout->setObjectName("horizontalLayout");
+        leftButtonLayout = new QVBoxLayout();
+        leftButtonLayout->setObjectName("leftButtonLayout");
+        leftButtonLayout->setContentsMargins(-1, 4, -1, -1);
+        addAttachButton = new QPushButton(messageInputFrame);
+        addAttachButton->setObjectName("addAttachButton");
+        sizePolicy2.setHeightForWidth(addAttachButton->sizePolicy().hasHeightForWidth());
+        addAttachButton->setSizePolicy(sizePolicy2);
+        addAttachButton->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        addAttachButton->setStyleSheet(QString::fromUtf8(""));
+        QIcon icon(QIcon::fromTheme(QIcon::ThemeIcon::ListAdd));
+        addAttachButton->setIcon(icon);
+        addAttachButton->setIconSize(QSize(24, 24));
+        addAttachButton->setFlat(true);
+
+        leftButtonLayout->addWidget(addAttachButton);
+
+
+        horizontalLayout->addLayout(leftButtonLayout);
 
         messageInputLine = new QTextEdit(messageInputFrame);
         messageInputLine->setObjectName("messageInputLine");
-        messageInputLine->setMaximumSize(QSize(16777215, 400));
+        sizePolicy1.setHeightForWidth(messageInputLine->sizePolicy().hasHeightForWidth());
+        messageInputLine->setSizePolicy(sizePolicy1);
+        messageInputLine->setMinimumSize(QSize(0, 20));
+        messageInputLine->setMaximumSize(QSize(16777215, 16777215));
         messageInputLine->setInputMethodHints(Qt::InputMethodHint::ImhDate|Qt::InputMethodHint::ImhMultiLine|Qt::InputMethodHint::ImhTime);
         messageInputLine->setVerticalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
         messageInputLine->setHorizontalScrollBarPolicy(Qt::ScrollBarPolicy::ScrollBarAlwaysOff);
@@ -87,20 +136,55 @@ public:
 
         horizontalLayout->addWidget(messageInputLine);
 
-        toolButton = new QToolButton(messageInputFrame);
-        toolButton->setObjectName("toolButton");
-        QIcon icon1(QIcon::fromTheme(QIcon::ThemeIcon::AddressBookNew));
-        toolButton->setIcon(icon1);
+        rightButtonsLayout = new QHBoxLayout();
+        rightButtonsLayout->setSpacing(24);
+        rightButtonsLayout->setObjectName("rightButtonsLayout");
+        rightButtonsLayout->setContentsMargins(-1, 4, 6, -1);
+        emotesButton = new QToolButton(messageInputFrame);
+        emotesButton->setObjectName("emotesButton");
+        emotesButton->setMinimumSize(QSize(32, 32));
+        emotesButton->setMaximumSize(QSize(32, 32));
+        emotesButton->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        emotesButton->setIconSize(QSize(21, 21));
+        emotesButton->setAutoRaise(true);
 
-        horizontalLayout->addWidget(toolButton);
+        rightButtonsLayout->addWidget(emotesButton);
 
-        toolButton_2 = new QToolButton(messageInputFrame);
-        toolButton_2->setObjectName("toolButton_2");
+        GIFButton = new QToolButton(messageInputFrame);
+        GIFButton->setObjectName("GIFButton");
+        GIFButton->setMinimumSize(QSize(28, 28));
+        QFont font1;
+        font1.setPointSize(9);
+        GIFButton->setFont(font1);
+        GIFButton->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        GIFButton->setStyleSheet(QString::fromUtf8(""));
+        GIFButton->setIconSize(QSize(24, 24));
+        GIFButton->setAutoRaise(false);
 
-        horizontalLayout->addWidget(toolButton_2);
+        rightButtonsLayout->addWidget(GIFButton);
+
+        sendButton = new QPushButton(messageInputFrame);
+        sendButton->setObjectName("sendButton");
+        sendButton->setMinimumSize(QSize(28, 28));
+        sendButton->setMaximumSize(QSize(32, 32));
+        sendButton->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        sendButton->setAutoFillBackground(false);
+        sendButton->setStyleSheet(QString::fromUtf8(""));
+        QIcon icon1(QIcon::fromTheme(QIcon::ThemeIcon::DocumentSend));
+        sendButton->setIcon(icon1);
+        sendButton->setIconSize(QSize(24, 24));
+        sendButton->setFlat(true);
+
+        rightButtonsLayout->addWidget(sendButton);
 
 
-        verticalLayout->addWidget(messageInputFrame);
+        horizontalLayout->addLayout(rightButtonsLayout);
+
+
+        verticalLayout->addLayout(horizontalLayout);
+
+
+        verticalLayout_2->addWidget(messageInputFrame);
 
 
         retranslateUi(DirectMessage);
@@ -111,9 +195,13 @@ public:
     void retranslateUi(QWidget *DirectMessage)
     {
         DirectMessage->setWindowTitle(QCoreApplication::translate("DirectMessage", "Form", nullptr));
-        pushButton->setText(QString());
-        toolButton->setText(QCoreApplication::translate("DirectMessage", "...", nullptr));
-        toolButton_2->setText(QCoreApplication::translate("DirectMessage", "GIF", nullptr));
+        addAttachButton->setText(QString());
+        emotesButton->setText(QCoreApplication::translate("DirectMessage", "...", nullptr));
+        GIFButton->setText(QCoreApplication::translate("DirectMessage", "GIF", nullptr));
+        sendButton->setText(QString());
+#if QT_CONFIG(shortcut)
+        sendButton->setShortcut(QString());
+#endif // QT_CONFIG(shortcut)
     } // retranslateUi
 
 };

@@ -292,6 +292,7 @@ public:
         something->setStyleSheet(QString::fromUtf8(""));
         verticalLayout = new QVBoxLayout(something);
         verticalLayout->setObjectName("verticalLayout");
+        verticalLayout->setContentsMargins(-1, -1, -1, 17);
         options = new QWidget(something);
         options->setObjectName("options");
         sizePolicy2.setHeightForWidth(options->sizePolicy().hasHeightForWidth());

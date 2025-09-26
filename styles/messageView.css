@@ -1,0 +1,26 @@
+.name  { font:650 16px "Segoe UI", sans-serif; color: white; margin-right:20px; }
+.time  { color: silver; font: 11px "Segoe UI"; }
+.body  { font:625 16px "Segoe UI"; color: silver; white-space: pre-wrap; word-wrap: break-word; margin-top: 8px; }
+.body .emoji { font-family: "Segoe UI Emoji","Apple Color Emoji","Noto Color Emoji"; font-weight:700; font-size:22px; line-height:1.1; vertical-align:-3px; }
+.placeholder { width:56px; height:56px; display:table-cell; }
+table.msg { border-collapse:collapse; margin:4px 0; width:100%; table-layout:fixed; padding-bottom:25px; }
+td.ava { width:32px; padding-right:8px; vertical-align:top; }
+td.ava img { width:32px; height:32px; border-radius:16px; }
+div.msgB { margin:2px 0 0 40px; }
+.body img { display:block; max-width:100%; height:auto; margin-top:4px; }
+
+
+#avatar{
+    padding:12px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:transparent;
+}
+
+#recipient{
+    padding:8px 12px;
+    font:625 16px 'Segoe UI';
+      color: white;
+      margin-bottom: 20px;
+}
