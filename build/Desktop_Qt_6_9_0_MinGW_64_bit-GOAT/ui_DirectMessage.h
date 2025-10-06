@@ -32,7 +32,7 @@ public:
     QFrame *messageInputFrame;
     QVBoxLayout *verticalLayout;
     QScrollArea *scrollArea;
-    QWidget *inputAttachments;
+    QWidget *inputAttachements;
     QHBoxLayout *horizontalLayout;
     QVBoxLayout *leftButtonLayout;
     QPushButton *addAttachButton;
@@ -87,17 +87,17 @@ public:
         scrollArea->setAutoFillBackground(true);
         scrollArea->setFrameShape(QFrame::Shape::NoFrame);
         scrollArea->setWidgetResizable(true);
-        inputAttachments = new QWidget();
-        inputAttachments->setObjectName("inputAttachments");
-        inputAttachments->setGeometry(QRect(0, 0, 1025, 68));
+        inputAttachements = new QWidget();
+        inputAttachements->setObjectName("inputAttachements");
+        inputAttachements->setGeometry(QRect(0, 0, 1025, 68));
         QSizePolicy sizePolicy2(QSizePolicy::Policy::Preferred, QSizePolicy::Policy::Preferred);
         sizePolicy2.setHorizontalStretch(0);
         sizePolicy2.setVerticalStretch(0);
-        sizePolicy2.setHeightForWidth(inputAttachments->sizePolicy().hasHeightForWidth());
-        inputAttachments->setSizePolicy(sizePolicy2);
-        inputAttachments->setMinimumSize(QSize(0, 0));
-        inputAttachments->setStyleSheet(QString::fromUtf8(""));
-        scrollArea->setWidget(inputAttachments);
+        sizePolicy2.setHeightForWidth(inputAttachements->sizePolicy().hasHeightForWidth());
+        inputAttachements->setSizePolicy(sizePolicy2);
+        inputAttachements->setMinimumSize(QSize(0, 0));
+        inputAttachements->setStyleSheet(QString::fromUtf8(""));
+        scrollArea->setWidget(inputAttachements);
 
         verticalLayout->addWidget(scrollArea);
 

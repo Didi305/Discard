@@ -6,6 +6,7 @@
 #include <QPushButton>
 #include <QHash>
 #include <qjsonobject.h>
+#include <qlayout.h>
 #include <qpainterpath.h>
 #include <qtcpsocket.h>
 #include <QLabel>
@@ -20,12 +21,22 @@ using namespace boost::multi_index;
 // tag names for the two indices
 struct BySeq {};
 struct ByKey {};
+struct Attachement{
+    QString name;
+    QString path;
+    QString type;
+
+};
 
 struct Message {
     QString body;
+    QVector<Attachement> attachs;
     int senderID;
     QString sentAt;
 };
+
+
+
 struct QStringHasher {
     std::size_t operator()(QString const &s) const noexcept {
         // Qt’s qHash(QString) returns a uint
@@ -259,4 +270,10 @@ static QString embedAvatar(QTextDocument *doc, const QPixmap &px)
     return id;
 }
 
+static void deleteChildren(QLayout* lay){
+    while (auto* item = lay->takeAt(0)){
+        item->widget()->deleteLater();
+        delete item;
+    }
+}
 }

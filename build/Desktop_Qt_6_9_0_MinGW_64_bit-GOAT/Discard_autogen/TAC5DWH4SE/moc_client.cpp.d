@@ -464,7 +464,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-
   C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wctype.h \
   C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/row.h \
   C:/Users/giler/OneDrive/Desktop/C++/Discard/core/chatserver.h \
-  C:/Users/giler/OneDrive/Desktop/C++/Discard/utils.h \
+  C:/Users/giler/OneDrive/Desktop/C++/Discard/utils/utils.h \
   C:/boost_1_88_0/boost/assert/source_location.hpp \
   C:/boost_1_88_0/boost/bind/arg.hpp \
   C:/boost_1_88_0/boost/bind/bind.hpp \

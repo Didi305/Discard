@@ -192,8 +192,12 @@ C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/QLabel \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/QPushButton \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/qabstractbutton.h \
+  C:/Qt/6.9.0/mingw_64/include/QtWidgets/qboxlayout.h \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/qframe.h \
+  C:/Qt/6.9.0/mingw_64/include/QtWidgets/qgridlayout.h \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/qlabel.h \
+  C:/Qt/6.9.0/mingw_64/include/QtWidgets/qlayout.h \
+  C:/Qt/6.9.0/mingw_64/include/QtWidgets/qlayoutitem.h \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/qpushbutton.h \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/qsizepolicy.h \
   C:/Qt/6.9.0/mingw_64/include/QtWidgets/qtwidgets-config.h \
@@ -428,7 +432,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-
   C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/vadefs.h \
   C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wchar.h \
   C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wctype.h \
-  C:/Users/giler/OneDrive/Desktop/C++/Discard/utils.h \
+  C:/Users/giler/OneDrive/Desktop/C++/Discard/utils/utils.h \
   C:/boost_1_88_0/boost/assert/source_location.hpp \
   C:/boost_1_88_0/boost/bind/arg.hpp \
   C:/boost_1_88_0/boost/bind/bind.hpp \

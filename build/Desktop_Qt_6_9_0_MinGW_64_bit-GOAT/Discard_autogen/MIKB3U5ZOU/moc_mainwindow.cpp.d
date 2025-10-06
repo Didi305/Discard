@@ -1,10 +1,14 @@
 C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/Discard_autogen/MIKB3U5ZOU/moc_mainwindow.cpp: C:/Users/giler/OneDrive/Desktop/C++/Discard/mainwindow/mainwindow.h \
   C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/Discard_autogen/moc_predefs.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/QBuffer \
   C:/Qt/6.9.0/mingw_64/include/QtCore/QDebug \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/QEvent \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/QEventLoop \
   C:/Qt/6.9.0/mingw_64/include/QtCore/QFileInfo \
   C:/Qt/6.9.0/mingw_64/include/QtCore/QHash \
   C:/Qt/6.9.0/mingw_64/include/QtCore/QList \
   C:/Qt/6.9.0/mingw_64/include/QtCore/QMap \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/QMargins \
   C:/Qt/6.9.0/mingw_64/include/QtCore/QMimeData \
   C:/Qt/6.9.0/mingw_64/include/QtCore/QMimeDatabase \
   C:/Qt/6.9.0/mingw_64/include/QtCore/QObject \
@@ -34,6 +38,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-
   C:/Qt/6.9.0/mingw_64/include/QtCore/qbasicatomic.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qbasictimer.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qbindingstorage.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/qbuffer.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qbytearray.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qbytearrayalgorithms.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qbytearraylist.h \
@@ -170,6 +175,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-
   C:/Qt/6.9.0/mingw_64/include/QtCore/qtypeinfo.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qtypes.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qurl.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/qurlquery.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qutf8stringview.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/quuid.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qvariant.h \
@@ -185,10 +191,12 @@ C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-
   C:/Qt/6.9.0/mingw_64/include/QtGui/QPainter \
   C:/Qt/6.9.0/mingw_64/include/QtGui/QPainterPath \
   C:/Qt/6.9.0/mingw_64/include/QtGui/QPixmap \
+  C:/Qt/6.9.0/mingw_64/include/QtGui/QScreen \
   C:/Qt/6.9.0/mingw_64/include/QtGui/QShortcut \
   C:/Qt/6.9.0/mingw_64/include/QtGui/QTextCursor \
   C:/Qt/6.9.0/mingw_64/include/QtGui/QTextDocument \
   C:/Qt/6.9.0/mingw_64/include/QtGui/QTransform \
+  C:/Qt/6.9.0/mingw_64/include/QtGui/QWindow \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qabstractfileiconprovider.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qabstracttextdocumentlayout.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qaction.h \
@@ -213,6 +221,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-
   C:/Qt/6.9.0/mingw_64/include/QtGui/qinputdevice.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qinputmethod.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qkeysequence.h \
+  C:/Qt/6.9.0/mingw_64/include/QtGui/qmovie.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qpaintdevice.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qpainter.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qpainterpath.h \
@@ -230,6 +239,8 @@ C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-
   C:/Qt/6.9.0/mingw_64/include/QtGui/qscreen.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qscreen_platform.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qshortcut.h \
+  C:/Qt/6.9.0/mingw_64/include/QtGui/qsurface.h \
+  C:/Qt/6.9.0/mingw_64/include/QtGui/qsurfaceformat.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qtextcursor.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qtextdocument.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qtextformat.h \
@@ -241,8 +252,22 @@ C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-
   C:/Qt/6.9.0/mingw_64/include/QtGui/qtransform.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qvector2d.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qvectornd.h \
+  C:/Qt/6.9.0/mingw_64/include/QtGui/qwindow.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qwindowdefs.h \
   C:/Qt/6.9.0/mingw_64/include/QtGui/qwindowdefs_win.h \
+  C:/Qt/6.9.0/mingw_64/include/QtMultimedia/QMediaPlayer \
+  C:/Qt/6.9.0/mingw_64/include/QtMultimedia/QVideoFrame \
+  C:/Qt/6.9.0/mingw_64/include/QtMultimedia/QVideoSink \
+  C:/Qt/6.9.0/mingw_64/include/QtMultimedia/qaudio.h \
+  C:/Qt/6.9.0/mingw_64/include/QtMultimedia/qmediaplayer.h \
+  C:/Qt/6.9.0/mingw_64/include/QtMultimedia/qtaudio.h \
+  C:/Qt/6.9.0/mingw_64/include/QtMultimedia/qtmultimedia-config.h \
+  C:/Qt/6.9.0/mingw_64/include/QtMultimedia/qtmultimediaexports.h \
+  C:/Qt/6.9.0/mingw_64/include/QtMultimedia/qtmultimediaglobal.h \
+  C:/Qt/6.9.0/mingw_64/include/QtMultimedia/qtvideo.h \
+  C:/Qt/6.9.0/mingw_64/include/QtMultimedia/qvideoframe.h \
+  C:/Qt/6.9.0/mingw_64/include/QtMultimedia/qvideoframeformat.h \
+  C:/Qt/6.9.0/mingw_64/include/QtMultimedia/qvideosink.h \
   C:/Qt/6.9.0/mingw_64/include/QtNetwork/QTcpServer \
   C:/Qt/6.9.0/mingw_64/include/QtNetwork/QTcpSocket \
   C:/Qt/6.9.0/mingw_64/include/QtNetwork/qabstractsocket.h \
@@ -557,10 +582,11 @@ C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-
   C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/vadefs.h \
   C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wchar.h \
   C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wctype.h \
-  C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/attachmentchip.h \
+  C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/attachementchip.h \
   C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/dragbanner.h \
   C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/emojipopup.h \
   C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/friendrow.h \
+  C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/lightbox.h \
   C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/outgoingrow.h \
   C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/pendingrow.h \
   C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/row.h \
@@ -576,7 +602,8 @@ C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-
   C:/Users/giler/OneDrive/Desktop/C++/Discard/pages/login.h \
   C:/Users/giler/OneDrive/Desktop/C++/Discard/pages/outgoingpage.h \
   C:/Users/giler/OneDrive/Desktop/C++/Discard/pages/register.h \
-  C:/Users/giler/OneDrive/Desktop/C++/Discard/utils.h \
+  C:/Users/giler/OneDrive/Desktop/C++/Discard/utils/mediaUtils.h \
+  C:/Users/giler/OneDrive/Desktop/C++/Discard/utils/utils.h \
   C:/boost_1_88_0/boost/assert/source_location.hpp \
   C:/boost_1_88_0/boost/bind/arg.hpp \
   C:/boost_1_88_0/boost/bind/bind.hpp \

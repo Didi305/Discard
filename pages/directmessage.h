@@ -1,9 +1,11 @@
 #ifndef DIRECTMESSAGE_H
 #define DIRECTMESSAGE_H
-#include "attachmentchip.h"
-#include "dragbanner.h"
+#include "attachementchip.h"
+#include "lightbox.h"
+#include <QBuffer>
 #include "manager.h"
 #include "utils.h"
+#include "mediaUtils.h"
 #include "emojipopup.h"
 #include <QShortcut>
 #include <QFileDialog>
@@ -13,10 +15,16 @@
 #include <QTextCursor>
 #include <QTextDocument>
 #include <QScrollBar>
+#include <QVideoFrame>
 #include <QAbstractTextDocumentLayout>
 #include <QMenu>
 #include <QMimeData>
+#include <QMimeDatabase>
+#include <QFileIconProvider>
 #include <QTimer>
+
+class VideoPlayerDialog;
+
 namespace Ui {
 class DirectMessage;
 }
@@ -32,21 +40,14 @@ public:
     bool eventFilter(QObject *object, QEvent *event) override;
     QString htmlEscaped(const QString &text) const;
     void insertConversationHeader(const QString &recipientName, const QPixmap  &avatarOrig);
-    void appendMessage(QString name,
-                       QString text,
-                       QPixmap avatar,
-                       QString time,
-                       bool withAvatar);
+    void appendMessage(QString name, QString text, QPixmap avatar, QString time, bool withAvatar);
     void adjustInputHeight();
     void insertEmoji(const QString& e);
     void syncInputDocWidth();
     void autosizeInput();
-    void handleAttachment(const QString &path);
-    void addAttachment(const QString& path);
-    void removeAttachment(AttachmentChip* chip);
-    void updateAttachmentsHeight();
-    void appendImageToView(const QString &filePath);
-    void appendFileChipToView(const QFileInfo &fi);
+    void addAttachement(const QString& path);
+    void removeAttachement(AttachementChip* chip);
+    void updateAttachementsHeight();
     ~DirectMessage();
 
 protected:
@@ -58,6 +59,7 @@ private slots:
     void onAddClicked();
     void onGifClicked();
     void onEmojiClicked();
+    void onAnchorClicked(const QUrl& url);
 private: signals:
     void dragging(int n);
     void notdragging();
@@ -66,7 +68,9 @@ private:
     Manager* m_manager;
     EmojiPopup *m_emojiPopup = nullptr;
     StringContainer messages;
-    QVector<AttachmentChip*> m_pending;
+    QVector<AttachementChip*> m_pending;
+    QTextDocument *doc;
+    qreal dpr;
     int height;
     int receiverID;
     int conversaionID;

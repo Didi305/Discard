@@ -1,3 +1,4 @@
+#include "attachementchip.h"
 #include <qobject.h>
 #include <QDebug>
 #include <QSqlDatabase>
@@ -6,7 +7,8 @@
 #include <QSqlError>
 #include <QApplication>
 #include <QFile>
-#include <QJsonObject>
+#include <QJsonObject>*
+
 #include <QCryptographicHash>
 #include <QDateTime>
 #include <QStandardPaths>
@@ -430,11 +432,13 @@ int Manager::checkConversation(int user1_ID, int user2_ID){
     return query.value("conversation_id").toInt();
 }
 
-void Manager::postMessage(QString message, int conversation_ID, int sender_ID){
+quint64 Manager::postMessage(QString message, int conversation_ID, int sender_ID){
+    qint64 message_id;
     QSqlQuery query(db());
     QString sql = QStringLiteral(
         "INSERT INTO message (body, sent_by, sent_at, sent_in) "
         "VALUES (:m, :s, :d, :c ) "
+        "RETURNING id "
         );
     query.prepare(sql);
     query.bindValue(":m", message);
@@ -444,10 +448,54 @@ void Manager::postMessage(QString message, int conversation_ID, int sender_ID){
     if(!query.exec()){
         qCritical() << query.lastError().text();
     }
+    if(query.next()){
+        message_id = query.value(0).toLongLong();
+    }
+    qDebug() << "message_ id: " << message_id;
+    return message_id;
 }
 
+void Manager::postAttachement(QFileInfo info, quint64 message_id){
+    QSqlQuery query(db());
+    QString sql = QStringLiteral(
+        "INSERT INTO Attachement (message_id, filename, content_type, size_bytes, data) "
+        "VALUES (:id, :n, :type, :size, :d ) "
+        );
+    query.prepare(sql);
+    query.bindValue(":id", message_id);
+    query.bindValue(":n", info.fileName());
+    query.bindValue(":type", info.suffix());
+    query.bindValue(":size", info.size());
+    query.bindValue(":d", info.absoluteFilePath());
+
+    if(!query.exec()){
+        qCritical() << "zmel attach" << query.lastError().text();
+    }
+}
 StringContainer Manager::fetchMessages(int conversationID){
     StringContainer messages;
+    QSqlQuery query(db());
+    QString sql = QStringLiteral(
+        "SELECT body, sent_by, sent_at "
+        "FROM message "
+        "WHERE sent_in = :c "
+        "ORDER BY sent_at ASC"
+        );
+    query.prepare(sql);
+    query.bindValue(":c", conversationID);
+    if(!query.exec()){
+        qCritical() << "la walo" << query.lastError().text();
+    }
+    while(query.next()){
+        Message msg = {query.value("body").toString(), query.value("sent_by").toInt(), query.value("sent_at").toString()};
+        messages.push_back(msg);
+    }
+
+    return messages;
+}
+
+QVector<QString> Manager::fetchAttachements(qint64 message_id){
+    QVector<QString> attachs;
     QSqlQuery query(db());
     QString sql = QStringLiteral(
         "SELECT body, sent_by, sent_at "

@@ -49,7 +49,9 @@ template <> constexpr inline auto DirectMessage::qt_create_metaobjectdata<qt_met
         "d",
         "onAddClicked",
         "onGifClicked",
-        "onEmojiClicked"
+        "onEmojiClicked",
+        "onAnchorClicked",
+        "url"
     };
 
     QtMocHelpers::UintData qt_methods {
@@ -69,6 +71,10 @@ template <> constexpr inline auto DirectMessage::qt_create_metaobjectdata<qt_met
         QtMocHelpers::SlotData<void()>(9, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onEmojiClicked'
         QtMocHelpers::SlotData<void()>(10, 2, QMC::AccessPrivate, QMetaType::Void),
+        // Slot 'onAnchorClicked'
+        QtMocHelpers::SlotData<void(const QUrl &)>(11, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::QUrl, 12 },
+        }}),
     };
     QtMocHelpers::UintData qt_properties {
     };
@@ -98,6 +104,7 @@ void DirectMessage::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
         case 3: _t->onAddClicked(); break;
         case 4: _t->onGifClicked(); break;
         case 5: _t->onEmojiClicked(); break;
+        case 6: _t->onAnchorClicked((*reinterpret_cast< std::add_pointer_t<QUrl>>(_a[1]))); break;
         default: ;
         }
     }
@@ -128,14 +135,14 @@ int DirectMessage::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 6)
+        if (_id < 7)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 6;
+        _id -= 7;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 6)
+        if (_id < 7)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 6;
+        _id -= 7;
     }
     return _id;
 }

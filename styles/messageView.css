@@ -7,7 +7,45 @@ table.msg { border-collapse:collapse; margin:4px 0; width:100%; table-layout:fix
 td.ava { width:32px; padding-right:8px; vertical-align:top; }
 td.ava img { width:32px; height:32px; border-radius:16px; }
 div.msgB { margin:2px 0 0 40px; }
-.body img { display:block; max-width:100%; height:auto; margin-top:4px; }
+
+table.attstrip { border-collapse:separate; border-spacing:12px 12px; }
+table.attstrip td.att { padding:0; border:0; vertical-align:top; border-radius:12px; overflow:hidden; }
+table.mediaGrid         { border-collapse:separate; border-spacing:12px 12px; }
+table.mediaGrid td.tile { padding:0; border:0; vertical-align:top; border-radius:12px; overflow:hidden; }
+.tile{
+  position:relative;
+  display:inline-block;
+  margin:0 12px 12px 0;
+  border-radius:12px;
+  overflow:hidden;
+  vertical-align:top;
+}
+
+/* thumbnail */
+.tile-img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+a:focus { outline: none !important; }
+a img { border: 0; }
+a:focus img { outline: none !important; }
+
+a.media:focus,
+a.media:focus img { outline: none !important; }
+/* optional, belt-and-suspenders */
+*:focus { outline: none !important; }
+
+/* ---- FILE CHIPS (non-media) ---- */
+table.fileList           { width:100%; border-collapse:separate; border-spacing:0 8px; }
+table.fileList td        { padding:0; border:0; vertical-align:middle; }
+.fileChip                { background:#2e3237; border-radius:10px; padding:10px 12px; }
+.fileIcon                { width:32px; height:32px; display:block; border-radius:4px; }
+.fileMeta                { padding-left:10px; }
+.fileName                { font:600 13px "Segoe UI"; color:#a7c5ff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.fileSize                { font:500 11px "Segoe UI"; color:#9aa0a6; margin-top:2px; }
+
 
 
 #avatar{

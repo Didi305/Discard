@@ -1,40 +1,48 @@
 #include "directmessage.h"
 #include "ui_directmessage.h"
-
+#include <QDesktopServices>
+#include <qurlquery.h>
 DirectMessage::DirectMessage(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::DirectMessage)
     , m_manager(Manager::get())
+    , dpr(devicePixelRatioF())
 {
     ui->setupUi(this);
-    ui->messageView->setOpenExternalLinks(true);
+    ui->messageView->setOpenLinks(false);           // <-- IMPORTANT
+    ui->messageView->setOpenExternalLinks(false);
+    doc = ui->messageView->document();
     setAcceptDrops(true);
     ui->messageView->viewport()->setAcceptDrops(false);
     ui->messageInputLine->viewport()->setAcceptDrops(false);
     qDebug() << QImageReader::supportedImageFormats();
-    Q_ASSERT(ui->scrollArea->widget() == ui->inputAttachments);
-    if (!ui->inputAttachments->layout()) {                 // ensure it has a layout
-        auto row = new QHBoxLayout(ui->inputAttachments);
+    Q_ASSERT(ui->scrollArea->widget() == ui->inputAttachements);
+    if (!ui->inputAttachements->layout()) {                 // ensure it has a layout
+        auto row = new QHBoxLayout(ui->inputAttachements);
         row->setContentsMargins(8,8,8,8);
         row->setSpacing(8);
         row->setAlignment(Qt::AlignLeft);
-        ui->inputAttachments->setLayout(row);
+        ui->inputAttachements->setLayout(row);
     }
     ui->scrollArea->setVisible(false);
-    ui->inputAttachments->installEventFilter(this);
+    ui->inputAttachements->installEventFilter(this);
     ui->scrollArea->viewport()->installEventFilter(this);
 
-    auto browser = ui->messageView;
-    QFile f(path + "/styles/messageView.css");
-    if (f.open(QIODevice::ReadOnly)) {
+    QFile f(path + "/styles/messageView.css");   // or :/styles/messageView.css if in qrc
+    if (!f.open(QIODevice::ReadOnly)) {
+        qWarning() << "CSS open failed:" << f.errorString() << f.fileName();
+    } else {
         const QString css = QString::fromUtf8(f.readAll());
-        ui->messageView->document()->setDefaultStyleSheet(css);
+        doc->setDefaultStyleSheet(doc->defaultStyleSheet() + "\n" + css);
+        qDebug() << "CSS bytes =" << css.size();
+        qDebug() << "DefaultStyleSheet starts with:"
+                 << doc->defaultStyleSheet().left(120);
     }
 
     /* --------------- wrap‑mode so long words break ------------- */
-    QTextOption opt = browser->document()->defaultTextOption();
+    QTextOption opt = doc->defaultTextOption();
     opt.setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
-    browser->document()->setDefaultTextOption(opt);
+    doc->setDefaultTextOption(opt);
 
     /* --------------- other wiring (input box etc.) ------------- */
     ui->messageInputLine->installEventFilter(this);
@@ -48,7 +56,7 @@ DirectMessage::DirectMessage(QWidget *parent)
     connect(ui->addAttachButton, &QToolButton::clicked, this, &DirectMessage::onAddClicked);
     connect(ui->emotesButton, &QToolButton::clicked, this, &DirectMessage::onEmojiClicked);
     connect(ui->GIFButton,   &QPushButton::clicked, this, &DirectMessage::onGifClicked);
-
+    connect(ui->messageView, &QTextBrowser::anchorClicked,this,  &DirectMessage::onAnchorClicked);
     auto te = ui->messageInputLine;
 
 
@@ -109,11 +117,7 @@ void DirectMessage::insertConversationHeader(const QString &recipientName,
     // 4) Push it into the view.
     ui->messageView->append(headerHtml);
 }
-void DirectMessage::appendMessage(QString name,
-                                  QString text,
-                                  QPixmap avatarOrig,
-                                  QString time,
-                                  bool withAvatar)
+void DirectMessage::appendMessage(QString name, QString text, QPixmap avatarOrig, QString time, bool withAvatar)
 {
     // 1 — Make your avatar rounded‑48px as before
     const QPixmap avatar = Utils::makeRoundedAvatar(avatarOrig, 48);
@@ -131,19 +135,20 @@ void DirectMessage::appendMessage(QString name,
                                    ? "style=\"margin-top:24px;\""
                                    : QString();
     const QString bodyEscaped = Utils::toHtml(text);      // escape first
-    const QString bodyHtml    = Utils::wrapEmojisForHtml(bodyEscaped); // then wrap
-    const QString html = QStringLiteral(R"(
-<table class="msg" width="100%%" cellspacing="0" cellpadding="0" %1>
-  <tr>
-    %2
+    const QString bodyHtml    = (!text.isEmpty()) ? Utils::wrapEmojisForHtml(bodyEscaped) : ""; // then wrap
+    const QString attHtml = mediaUtils::attachementsHtmlFor(m_pending, doc, dpr);
+    const QString msgHtml = QString(R"(
+<table class="msg" width="100%%" cellspacing="0" cellpadding="0">
+  <tr>%1
     <td class="cont" style="padding-left:8px;">
-      <div class="name">%3 <span class="time">%4</span></div>
-      <div class="body">%5</div>
+      <div class="name">%2 <span class="time">%3</span></div>
+      <div class="body">%4</div>
+      %5
     </td>
   </tr>
-</table>
-)").arg(tableStyle, avatarCell, Utils::toHtml(name), Utils::toHtml(time), bodyHtml);
-    ui->messageView->append(html);
+</table>)")
+                                .arg(avatarCell, Utils::toHtml(name), Utils::toHtml(time), bodyHtml, attHtml);
+    ui->messageView->append(msgHtml);
 }
 
 /* ------------------------------------------------------------------ */
@@ -189,8 +194,9 @@ bool DirectMessage::eventFilter(QObject *obj, QEvent *ev)
         if (ke->key() == Qt::Key_Return && !ke->modifiers()) {
 
             QString txt = ui->messageInputLine->toPlainText().trimmed();
-            if (txt.isEmpty() && ui->inputAttachments->layout()->isEmpty()) return true;
+            if (txt.isEmpty() && m_pending.empty()) return true;
             ui->messageInputLine->clear();
+            if (m_pending.size() > 0) Utils::deleteChildren(ui->inputAttachements->layout());
 
             Data self = m_manager->getClient()->getClientData();
             self.message = { txt, self.user_id,
@@ -203,9 +209,14 @@ bool DirectMessage::eventFilter(QObject *obj, QEvent *ev)
             // send over network
             self.user_id = receiverID;
             m_manager->getClient()->sendMessage(self, "message");
-            m_manager->postMessage(txt, conversaionID,
-                                   m_manager->getClient()->getClientID());
+            auto message_id = m_manager->postMessage(txt, conversaionID, m_manager->getClient()->getClientID());
+            qDebug() << "message id: " << message_id;
+            for (auto *c : m_pending){
+                m_manager->postAttachement(c->info(), message_id);
+            }
             v->setValue(v->maximum());
+            ui->scrollArea->setVisible(false);
+            m_pending.clear();
             return true;
         }
     }
@@ -257,7 +268,7 @@ void DirectMessage::onAddClicked()
         paths = QFileDialog::getOpenFileNames(this, "Choose files");
     }
 
-    for (const QString &p : paths) handleAttachment(p);
+    for (const QString &p : paths) addAttachement(p);
 }
 
 void DirectMessage::onEmojiClicked()
@@ -333,95 +344,75 @@ void DirectMessage::dropEvent(QDropEvent* e)
 
     for (const QUrl& u : e->mimeData()->urls()) {
         const QString p = u.toLocalFile();
-        if (!p.isEmpty()) addAttachment(p);
+        if (!p.isEmpty()) addAttachement(p);
     }
-    // TODO (next step): put files into your “pending attachments” strip
-    // for (const QUrl& u : e->mimeData()->urls()) handleAttachment(u.toLocalFile());
+    // TODO (next step): put files into your “pending Attachements” strip
+    // for (const QUrl& u : e->mimeData()->urls()) handleAttachement(u.toLocalFile());
 }
 void DirectMessage::dragLeaveEvent(QDragLeaveEvent*)
 {
     emit notdragging();
 }
 
-void DirectMessage::addAttachment(const QString& path)
+void DirectMessage::addAttachement(const QString& path)
 {
     if (path.isEmpty()) return;
-    qDebug() << "tried adding an attachment";
-    auto chip = new AttachmentChip(path, ui->inputAttachments);
-    connect(chip, &AttachmentChip::removeMe, this, &DirectMessage::removeAttachment);
+    qDebug() << "tried adding an Attachement";
+    auto chip = new AttachementChip(path, ui->inputAttachements);
+    connect(chip, &AttachementChip::removeMe, this, &DirectMessage::removeAttachement);
     chip->setMinimumHeight(52);
-    ui->inputAttachments->layout()->addWidget(chip);
+    ui->inputAttachements->layout()->addWidget(chip);
     m_pending.push_back(chip);
 
     ui->scrollArea->setVisible(true);
-    ui->inputAttachments->layout()->activate();           // refresh sizeHint
-    updateAttachmentsHeight();                        // grow strip as needed
+    ui->inputAttachements->layout()->activate();           // refresh sizeHint
+    updateAttachementsHeight();                        // grow strip as needed
 }
 
-void DirectMessage::removeAttachment(AttachmentChip* chip)
+void DirectMessage::removeAttachement(AttachementChip* chip)
 {
     if (!chip) return;
     m_pending.erase(std::remove(m_pending.begin(), m_pending.end(), chip), m_pending.end());
-    ui->inputAttachments->layout()->removeWidget(chip);
+    ui->inputAttachements->layout()->removeWidget(chip);
     chip->deleteLater();
-    updateAttachmentsHeight();                         // shrink when empty
+    if(m_pending.size() == 0) ui->scrollArea->setVisible(false);             // shrink when empty
 }
 
-void DirectMessage::handleAttachment(const QString &path)
-{
-    if (path.isEmpty()) return;
-    qDebug() << "handle called";
-    QFileInfo fi(path);
-    const QString ext = fi.suffix().toLower();
 
-    if (QStringList{"png","jpg","jpeg","webp","gif"}.contains(ext)) {
-        appendImageToView(path);                 // GIFs animate automatically
-        // TODO: send with your Manager here
-    } else {
-        appendFileChipToView(fi);
-        // TODO: upload/send file
+void DirectMessage::onAnchorClicked(const QUrl& url)
+{
+    qDebug() << "[anchor] url =" << url;
+    ui->messageView->clearFocus();
+    if (url.scheme() == "att" && url.host() == "open") {
+        QString path;
+
+        // Prefer query ?path=...
+        if (url.hasQuery()) {
+            QUrlQuery q(url);
+            path = QUrl::fromPercentEncoding(q.queryItemValue("path").toUtf8());
+        } else {
+            // Fallback for att://open/C:/... form
+            path = url.path();
+#ifdef Q_OS_WIN
+            if (path.startsWith('/')) path.remove(0, 1);  // remove leading slash before drive letter
+#endif
+        }
+        qDebug() << "[anchor] decoded path =" << path;
+
+        if (!path.isEmpty()) {
+            auto* lb = new Lightbox;                // HEAP-allocate!
+            lb->openOver(this, path);               // show overlay in *this* window
+        }
+        return;
     }
+
+    // For any other link, let OS handle it
+    QDesktopServices::openUrl(url);
 }
-
-
-void DirectMessage::appendImageToView(const QString &filePath)
-{
-    // Use a file URL so GIFs animate in QTextBrowser
-    const QString url = QUrl::fromLocalFile(filePath).toString();
-    const QString html = QStringLiteral(
-                             R"(<div class="body" style="margin:6px 0;">
-             <img src="%1" style="max-width:100%%;height:auto;border-radius:8px;"/>
-           </div>)").arg(url);
-    ui->messageView->append(html);
-}
-
-
-void DirectMessage::appendFileChipToView(const QFileInfo &fi)
-{
-    if (m_pending.empty()) return;
-    QString initialHTML = QStringLiteral(R"(
-<table class="attachments" width="100%%" cellspacing="0" cellpadding="0">
-  <tr>
-    <td class="content" style="padding-left:8px;">
-)");
-
-    for (auto *attach : m_pending){
-        const QString url  = QUrl::fromLocalFile(attach->path()).toString();
-        initialHTML += QStringLiteral(R"(       <a href="%1">twimel.txt</a>)").arg(url) + "\n";
-    }
-    const QString finalHTML = QStringLiteral(R"(
-    </td>
-  </tr>
-</table>)");
-    auto html = initialHTML + finalHTML;
-    qDebug().noquote() << "HTML is: " << html;
-    ui->messageView->append(html);
-}
-
-void DirectMessage::updateAttachmentsHeight()
+void DirectMessage::updateAttachementsHeight()
 {
     auto sa   = ui->scrollArea;
-    auto cont = ui->inputAttachments;
+    auto cont = ui->inputAttachements;
 
     int contentH = 0;
     if (auto lay = cont->layout()) {

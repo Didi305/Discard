@@ -5,9 +5,10 @@
 #include <qpushbutton.h>
 #include <QLabel>
 #include "client.h"
+#include "login.h"
 #include "directmessage.h"
 #include "friends.h"
-#include "login.h"
+#include "dragbanner.h"
 #include "manager.h"
 #include "ui_MainWindow.h"
 #include "outgoingpage.h"

@@ -29,6 +29,7 @@ file(GLOB_RECURSE HEADERS
     "${CMAKE_SOURCE_DIR}/mainwindow/*.h"
     "${CMAKE_SOURCE_DIR}/pages/*.h"
     "${CMAKE_SOURCE_DIR}/assets/*.h"
+    "${CMAKE_SOURCE_DIR}/utils/*.h"
 )
 
 # Grab every .ui under mainwindow/ and pages/
@@ -46,12 +47,12 @@ if (WIN32)
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
+find_package(Qt6 REQUIRED COMPONENTS Widgets Multimedia MultimediaWidgets)
 
     add_executable(Discard
         WIN32
         main.cpp
         styles/dark.qss
-        utils.h
         ${CPP_SOURCES}
         ${HEADERS}
         ${UI_FILES}
@@ -59,10 +60,8 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets)
         ${app_icon}
     )
 
-target_link_libraries(Discard PRIVATE Qt6::Widgets)
-target_link_libraries(Discard PRIVATE Qt6::Widgets)
-target_link_libraries(Discard PRIVATE Qt6::Widgets)
-target_link_libraries(Discard PRIVATE Qt6::Widgets)
+target_link_libraries(Discard PRIVATE Qt6::Widgets Qt6::Multimedia Qt6::MultimediaWidgets)
+
 endif()
 target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets

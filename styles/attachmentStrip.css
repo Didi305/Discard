@@ -1,0 +1,29 @@
+/* strip */
+.attstrip { margin:8px 0 0 0; padding:10px; background:#2b2f33; border-radius:10px; }
+.att      { display:inline-block; width:148px; margin:0 12px 0 0; position:relative; }
+
+/* thumbnail tile */
+.att .thumb {
+  width:148px; height:106px; border-radius:8px; background:#1f2124;
+  overflow:hidden; display:block;
+}
+.att .thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+
+/* filename + size */
+.att .name { margin-top:6px; font:600 13px "Segoe UI"; color:#dfe2e6; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.att .size { font:500 11px "Segoe UI"; color:#9aa0a6; margin-top:2px; }
+
+/* close (×) */
+.att .close {
+  position:absolute; top:-6px; right:-6px; width:20px; height:20px;
+  background:#34393e; color:#cfd3d7; border-radius:10px; text-align:center;
+  line-height:20px; font:700 12px "Segoe UI"; text-decoration:none;
+}
+.att .close:hover { background:#485058; }
+
+/* video badge */
+.att .vid::after{
+  content:"▶"; position:absolute; right:8px; bottom:8px;
+  width:22px; height:22px; border-radius:11px; background:rgba(0,0,0,.55);
+  color:white; font:700 12px "Segoe UI"; line-height:22px; text-align:center;
+}

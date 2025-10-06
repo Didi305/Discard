@@ -97,7 +97,7 @@
         <property name="widgetResizable">
          <bool>true</bool>
         </property>
-        <widget class="QWidget" name="inputAttachments">
+        <widget class="QWidget" name="inputAttachements">
          <property name="geometry">
           <rect>
            <x>0</x>
