@@ -174,7 +174,7 @@ static QString humanReadableSize(quint64 bytes)
     return QString::number(sz, 'f', (u==0 ? 0 : (sz < 10 ? 2 : 1))) + ' ' + units[u];
 }
 static QString makeMediaGridHtml(QTextDocument* doc,
-                          QList<Att>& media,
+                          QList<Attachement>& media,
                           const QSize& tile,
                           qreal dpr)
 {
@@ -227,7 +227,7 @@ static QString makeMediaGridHtml(QTextDocument* doc,
     html += "</tr></table>";
     return html;
 }
-static QString makeFileListHtml(QTextDocument* doc, QList<Att>& files, qreal dpr)
+static QString makeFileListHtml(QTextDocument* doc, QList<Attachement>& files, qreal dpr)
 {
     const QSize iconSz = {32,32};
     QString html = R"(<table class="fileList">)";
@@ -259,15 +259,11 @@ static QString makeFileListHtml(QTextDocument* doc, QList<Att>& files, qreal dpr
     return html;
 }
 
-static QString attachementsHtmlFor(const QVector<AttachementChip*>& chips, QTextDocument *doc, qreal dpr)
+static QString attachementsHtmlFor(const QVector<Attachement>& attachs, QTextDocument *doc, qreal dpr)
 {
-    QList<Att> media, files;
-    for (auto* c : chips) {
-        Att a;
-        a.path = c->path();
-        a.name = QFileInfo(a.path).fileName();
-        a.size = mediaUtils::humanReadableSize(QFileInfo(a.path).size()); // your helper
-        a.id   = QUuid::createUuid().toString(QUuid::Id128);
+    QList<Attachement> media, files;
+    for (auto a : attachs) {
+
 
         a.isImage = mediaUtils::isImagePath(a.path);
         a.isVideo = !a.isImage && mediaUtils::isVideoPath(a.path);
@@ -287,7 +283,11 @@ static QString attachementsHtmlFor(const QVector<AttachementChip*>& chips, QText
 
 static QVector<Attachement> chipToData(QVector<AttachementChip*> chips){
     QVector<Attachement> attachs;
-    for
+    for (auto *c : chips){
+        Attachement attach = {c->info().fileName(), c->info().absoluteFilePath(), c->info().suffix()};
+        attachs.append(attach);
+    }
+    return attachs;
 }
 }
 

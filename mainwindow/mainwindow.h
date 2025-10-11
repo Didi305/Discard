@@ -43,14 +43,15 @@ public:
     ~MainWindow() override = default;
     void updateAvatar(const QString &fileName);
     void refreshForUser();
-    void resizeEvent(QResizeEvent *event);
+    void resizeEvent(QResizeEvent *event) override;
+    void loadConversations();
 private slots:
     void onConnectionSuccess();
     void onAvatarButtonClicked();
     void onDisconnectClicked();
     void onItemDragging(int n);
     void onItemNotDragged();
-
+    void updateConversations(Message& lastMessage, Data& partner);
 private:
     Ui::MainWindow   *ui;
     AddFriendPage    *m_addFriendPage;
@@ -62,5 +63,6 @@ private:
     QPushButton      *avatarButton;
     QLabel           *nameLabel;
     DragBanner       * m_banner = nullptr;
+    std::vector<std::unique_ptr<ConversationRow>> conversations;
 };
 #endif // MAINWINDOW_H

@@ -10,6 +10,8 @@ Register::Register(QWidget *parent)
     , manager(Manager::get())
 {
     ui->setupUi(this);
+    setStyleSheet(Utils::readText(":/styles/login_register.qss", "login_register.qss"));
+    ui->cancelButton->setProperty("role", "secondary");
     ui->usernameUnavailableError->hide();
     ui->nicknameUnavailableError->hide();
     ui->passwordNotMatchingError->hide();

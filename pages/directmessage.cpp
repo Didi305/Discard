@@ -15,7 +15,6 @@ DirectMessage::DirectMessage(QWidget *parent)
     setAcceptDrops(true);
     ui->messageView->viewport()->setAcceptDrops(false);
     ui->messageInputLine->viewport()->setAcceptDrops(false);
-    qDebug() << QImageReader::supportedImageFormats();
     Q_ASSERT(ui->scrollArea->widget() == ui->inputAttachements);
     if (!ui->inputAttachements->layout()) {                 // ensure it has a layout
         auto row = new QHBoxLayout(ui->inputAttachements);
@@ -28,16 +27,8 @@ DirectMessage::DirectMessage(QWidget *parent)
     ui->inputAttachements->installEventFilter(this);
     ui->scrollArea->viewport()->installEventFilter(this);
 
-    QFile f(path + "/styles/messageView.css");   // or :/styles/messageView.css if in qrc
-    if (!f.open(QIODevice::ReadOnly)) {
-        qWarning() << "CSS open failed:" << f.errorString() << f.fileName();
-    } else {
-        const QString css = QString::fromUtf8(f.readAll());
-        doc->setDefaultStyleSheet(doc->defaultStyleSheet() + "\n" + css);
-        qDebug() << "CSS bytes =" << css.size();
-        qDebug() << "DefaultStyleSheet starts with:"
-                 << doc->defaultStyleSheet().left(120);
-    }
+    QString css = Utils::readText(":/styles/messageView.css", "messageView.css");
+    ui->messageView->document()->setDefaultStyleSheet(css);
 
     /* --------------- wrap‑mode so long words break ------------- */
     QTextOption opt = doc->defaultTextOption();
@@ -117,7 +108,7 @@ void DirectMessage::insertConversationHeader(const QString &recipientName,
     // 4) Push it into the view.
     ui->messageView->append(headerHtml);
 }
-void DirectMessage::appendMessage(QString name, QString text, QPixmap avatarOrig, QString time, bool withAvatar)
+void DirectMessage::appendMessage(QString name, QString text, QVector<Attachement> attachs, QPixmap avatarOrig, QString time, bool withAvatar)
 {
     // 1 — Make your avatar rounded‑48px as before
     const QPixmap avatar = Utils::makeRoundedAvatar(avatarOrig, 48);
@@ -136,7 +127,7 @@ void DirectMessage::appendMessage(QString name, QString text, QPixmap avatarOrig
                                    : QString();
     const QString bodyEscaped = Utils::toHtml(text);      // escape first
     const QString bodyHtml    = (!text.isEmpty()) ? Utils::wrapEmojisForHtml(bodyEscaped) : ""; // then wrap
-    const QString attHtml = mediaUtils::attachementsHtmlFor(m_pending, doc, dpr);
+    const QString attHtml = mediaUtils::attachementsHtmlFor(attachs, doc, dpr);
     const QString msgHtml = QString(R"(
 <table class="msg" width="100%%" cellspacing="0" cellpadding="0">
   <tr>%1
@@ -156,29 +147,28 @@ void DirectMessage::appendMessage(QString name, QString text, QPixmap avatarOrig
 /* ------------------------------------------------------------------ */
 void DirectMessage::load(Data partner)
 {
-    // clear old document
+    lastMessageSender = -1;
     ui->messageView->clear();
     insertConversationHeader(partner.displayName, partner.avatar);
 
     int ownID   = m_manager->getClient()->getClientID();
-    conversaionID   = m_manager->checkConversation(ownID, partner.user_id);
-    receiverID      = partner.user_id;
-    messages        = m_manager->fetchMessages(conversaionID);
-
+    conversationID   = m_manager->checkConversation(ownID, partner.user_id);
+    m_partner      = partner;
+    messages        = m_manager->fetchMessages(conversationID);
     for (auto &m : messages.get<BySeq>()) {
         Data d = (m.senderID == ownID)
         ? m_manager->getClient()->getClientData()
-        : partner;
+        : m_partner;
         d.message = m;                           // embed message into Data
         bool first = (m.senderID != lastMessageSender);
-        appendMessage(d.displayName, m.body, d.avatar, m.sentAt, first);
+        appendMessage(d.displayName, m.body, m.attachs, d.avatar, m.sentAt, first);
         lastMessageSender = m.senderID;
     }
 }
 
 void DirectMessage::update(Data d)
 {
-    appendMessage(d.displayName, d.message.body, d.avatar, d.message.sentAt, lastMessageSender != d.user_id);
+    appendMessage(d.displayName, d.message.body, d.message.attachs, d.avatar, d.message.sentAt, lastMessageSender != d.user_id);
     lastMessageSender = d.user_id;
     messages.push_back(d.message);
 }
@@ -199,21 +189,21 @@ bool DirectMessage::eventFilter(QObject *obj, QEvent *ev)
             if (m_pending.size() > 0) Utils::deleteChildren(ui->inputAttachements->layout());
 
             Data self = m_manager->getClient()->getClientData();
-            self.message = { txt, self.user_id,
-                            QDateTime::currentDateTimeUtc().toString() };
+            self.message = { txt, self.user_id, conversationID, mediaUtils::chipToData(m_pending), QDateTime::currentDateTimeUtc().toString() };
+            m_manager->getClient()->setClientData(self);
 
-            appendMessage(self.displayName, self.message.body, self.avatar, self.message.sentAt, lastMessageSender != self.user_id);
+            appendMessage(self.displayName, self.message.body, self.message.attachs, self.avatar, self.message.sentAt, lastMessageSender != self.user_id);
             lastMessageSender = self.user_id;
             messages.push_back(self.message);
 
             // send over network
-            self.user_id = receiverID;
+            self.user_id = m_partner.user_id;
             m_manager->getClient()->sendMessage(self, "message");
-            auto message_id = m_manager->postMessage(txt, conversaionID, m_manager->getClient()->getClientID());
-            qDebug() << "message id: " << message_id;
+            auto message_id = m_manager->postMessage(txt, conversationID, m_manager->getClient()->getClientID(), m_partner.user_id);
             for (auto *c : m_pending){
                 m_manager->postAttachement(c->info(), message_id);
             }
+            emit newMessage(self.message, m_partner);
             v->setValue(v->maximum());
             ui->scrollArea->setVisible(false);
             m_pending.clear();

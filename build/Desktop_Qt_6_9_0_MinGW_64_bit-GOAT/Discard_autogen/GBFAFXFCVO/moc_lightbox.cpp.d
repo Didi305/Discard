@@ -85,6 +85,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-
   C:/Qt/6.9.0/mingw_64/include/QtCore/qiodevicebase.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qiterable.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qiterator.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/qjsonarray.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qjsondocument.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qjsonobject.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qjsonparseerror.h \

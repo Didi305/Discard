@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
 {
     qSetMessagePattern("%{time hh:mm:ss.zzz} %{message}");
     QApplication a(argc, argv);
-    a.setStyleSheet(loadStyle(path + "/styles/dark.qss"));
+
     a.setApplicationDisplayName("Discard");
     Manager *mgr = Manager::get();
     ChatServer server;

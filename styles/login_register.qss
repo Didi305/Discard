@@ -1,0 +1,101 @@
+QDialog, QWidget {
+    background-color: #1e1f22;       /* app bg */
+    color: #e8e8ea;
+    font-family: Segoe UI, Roboto, "Noto Sans", "Helvetica Neue", Arial;
+    font-size: 14px;
+}
+
+/* Big title */
+QLabel#title {
+    font-size: 32px;
+    font-weight: 600;
+    color: #ffffff;
+    padding: 6px 0 18px 0;
+    letter-spacing: 0.5px;
+}
+
+/* Field labels */
+QLabel {
+    color: #c8c9cc;
+    font-size: 15px;
+    font-weight: 625;
+}
+
+/* ===== Inputs ===== */
+QLineEdit {
+    background-color: #2a2c30;
+    color: #f0f0f2;
+    border: 1px solid #363a40;
+    border-radius: 8px;
+    padding: 8px 12px;
+    selection-background-color: #3b82f6;
+    selection-color: #ffffff;
+}
+
+QLineEdit:hover {
+    border-color: #4a515b;
+}
+
+QLineEdit:focus {
+    border-color: #6aa0ff;
+    background-color: #2d3035;
+}
+
+
+/* ===== Buttons (shared) ===== */
+QPushButton {
+    background-color: #2f3338;
+    color: #eaecef;
+    border: 1px solid #454a52;
+    border-radius: 8px;
+    padding: 7px 16px;
+    min-width: 96px;
+}
+QPushButton:hover {
+    background-color: #353a40;
+    border-color: #555c66;
+}
+QPushButton:pressed {
+    background-color: #2a2e33;
+    border-color: #3f444b;
+}
+QPushButton:disabled {
+    background-color: #2a2c2f;
+    color: #8c8f93;
+    border-color: #3a3f45;
+}
+
+/* Primary action (Login) */
+#loginButton, #registerButton {
+    background-color: #3b82f6;       /* blue */
+    border: 1px solid #2f6dd0;
+    color: #ffffff;
+    font-weight: 600;
+}
+#loginButton:hover, #registerButton:hover {
+    background-color: #4c8ef7;
+    border-color: #3b78e2;
+}
+#loginButton:pressed, #registerButton:pressed {
+    background-color: #2f6dd0;
+    border-color: #295fb6;
+}
+#loginButton:disabled, #registerButton:disabled {
+    background-color: #2a477e;
+    color: #cfd9ff;
+    border-color: #2a477e;
+}
+
+/* Secondary action (Create Account) */
+QPushButton[role="secondary"] {
+    background-color: #3a3d42;
+    border: 1px solid #50555d;
+    color: #e5e7eb;
+}
+QPushButton[role="secondary"]:hover {
+    background-color: #44484e;
+}
+QPushButton[role="secondary"]:pressed {
+    background-color: #35393f;
+}
+

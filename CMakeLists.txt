@@ -6,7 +6,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_AUTORCC ON)
 set(app_icon "${CMAKE_CURRENT_SOURCE_DIR}/app.rc")
+
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Network Svg Sql)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network Svg Sql)
 set(BOOST_ROOT "C:/boost_1_88_0")
@@ -42,17 +44,15 @@ file(GLOB_RECURSE UI_FILES
 qt6_wrap_ui(UI_HEADERS ${UI_FILES})
 
 
-if (WIN32)
-    find_package(Qt6 REQUIRED COMPONENTS Widgets)
+
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Svg Multimedia MultimediaWidgets)
 find_package(Qt6 REQUIRED COMPONENTS Widgets)
-find_package(Qt6 REQUIRED COMPONENTS Widgets)
-find_package(Qt6 REQUIRED COMPONENTS Widgets)
-find_package(Qt6 REQUIRED COMPONENTS Widgets Multimedia MultimediaWidgets)
 
     add_executable(Discard
         WIN32
         main.cpp
         styles/dark.qss
+        resource.qrc
         ${CPP_SOURCES}
         ${HEADERS}
         ${UI_FILES}
@@ -60,9 +60,10 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets Multimedia MultimediaWidgets)
         ${app_icon}
     )
 
-target_link_libraries(Discard PRIVATE Qt6::Widgets Qt6::Multimedia Qt6::MultimediaWidgets)
+target_link_libraries(Discard PRIVATE Qt6::Core Qt6::Gui Qt6::Svg Qt6::Widgets Qt6::Multimedia Qt6::MultimediaWidgets)
+target_link_libraries(Discard PRIVATE Qt6::Widgets)
 
-endif()
+
 target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Network

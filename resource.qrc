@@ -7,4 +7,14 @@
         <file>resources/icons/hidden.svg</file>
         <file>resources/icons/WAPP.ico</file>
     </qresource>
+
+    <qresource prefix="/styles">
+        <file alias="messageView.css">styles/messageView.css</file>
+        <file alias="attachmentStrip.css">styles/attachmentStrip.css</file>
+        <file alias="dark.qss">styles/dark.qss</file>
+        <file alias="login_register.qss">styles/login_register.qss</file>
+    </qresource>
+    <qresource prefix="/config">
+        <file alias="config.json">config.json</file>
+    </qresource>
 </RCC>

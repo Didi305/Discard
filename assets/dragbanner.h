@@ -62,13 +62,13 @@ protected:
 
         // 3) text
         p.setPen(Qt::white);
-        QFont f = font(); f.setBold(true); f.setPointSize(14); p.setFont(f);
+        QFont f = font(); f.setPointSize(14); p.setFont(f);
         QString title = m_title;
         if (m_count > 1) title += QString(" (%1)").arg(m_count);
         p.drawText(QRect(card.left()+100, card.top()+36, card.width()-120, 28),
                    Qt::AlignLeft|Qt::AlignVCenter, title);
 
-        f.setBold(false); f.setPointSize(11); p.setFont(f);
+        f.setPointSize(11); p.setFont(f);
         p.setPen(QColor(240,240,255,230));
         p.drawText(QRect(card.left()+100, card.top()+70, card.width()-120, 24),
                    Qt::AlignLeft|Qt::AlignVCenter, m_sub);

@@ -1,0 +1,35 @@
+{
+	"BUILD_DIR" : "C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/Discard_autogen",
+	"CMAKE_BINARY_DIR" : "C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT",
+	"CMAKE_CURRENT_BINARY_DIR" : "C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT",
+	"CMAKE_CURRENT_SOURCE_DIR" : "C:/Users/giler/OneDrive/Desktop/C++/Discard",
+	"CMAKE_SOURCE_DIR" : "C:/Users/giler/OneDrive/Desktop/C++/Discard",
+	"CROSS_CONFIG" : false,
+	"GENERATOR" : "Ninja",
+	"INCLUDE_DIR" : "C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/Discard_autogen/include",
+	"INPUTS" : 
+	[
+		"C:/Users/giler/OneDrive/Desktop/C++/Discard/config.json",
+		"C:/Users/giler/OneDrive/Desktop/C++/Discard/styles/dark.qss",
+		"C:/Users/giler/OneDrive/Desktop/C++/Discard/styles/messageView.css",
+		"C:/Users/giler/OneDrive/Desktop/C++/Discard/styles/login_register.qss",
+		"C:/Users/giler/OneDrive/Desktop/C++/Discard/styles/attachmentStrip.css",
+		"C:/Users/giler/OneDrive/Desktop/C++/Discard/resources/icons/active.svg",
+		"C:/Users/giler/OneDrive/Desktop/C++/Discard/resources/icons/hidden.svg",
+		"C:/Users/giler/OneDrive/Desktop/C++/Discard/resources/icons/disturb.svg",
+		"C:/Users/giler/OneDrive/Desktop/C++/Discard/resources/icons/close.svg",
+		"C:/Users/giler/OneDrive/Desktop/C++/Discard/resources/icons/check.svg",
+		"C:/Users/giler/OneDrive/Desktop/C++/Discard/resources/icons/WAPP.ico"
+	],
+	"LOCK_FILE" : "C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/CMakeFiles/Discard_autogen.dir/AutoRcc_resource_EWIEGA46WW_Lock.lock",
+	"MULTI_CONFIG" : false,
+	"OPTIONS" : [ "--no-zstd", "-name", "resource" ],
+	"OUTPUT_CHECKSUM" : "EWIEGA46WW",
+	"OUTPUT_NAME" : "qrc_resource.cpp",
+	"RCC_EXECUTABLE" : "C:/Qt/6.9.0/mingw_64/bin/rcc.exe",
+	"RCC_LIST_OPTIONS" : [ "--list" ],
+	"SETTINGS_FILE" : "C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/CMakeFiles/Discard_autogen.dir/AutoRcc_resource_EWIEGA46WW_Used.txt",
+	"SOURCE" : "C:/Users/giler/OneDrive/Desktop/C++/Discard/resource.qrc",
+	"USE_BETTER_GRAPH" : true,
+	"VERBOSITY" : 0
+}

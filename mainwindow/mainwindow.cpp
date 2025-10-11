@@ -5,20 +5,20 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
     , manager(Manager::get())
     , client(manager->getClient())
+    , conversations(manager->fetchConversations(client->getClientData()))
     , m_addFriendPage(new AddFriendPage(this))
     , m_outgoingPage(new OutgoingPage(this))
     , m_FriendsPage(new Friends(this))
     , m_DirectMessagePage(new DirectMessage(this))
 {
     ui->setupUi(this);
+    setStyleSheet(Utils::readText(":/styles/dark.qss", "dark.qss"));
     m_banner = new DragBanner(this);
     m_banner->hide();
+    ui->conversationList->setAlignment(Qt::AlignTop | Qt::AlignLeft);
 
-    ui->userPanel->setAttribute(Qt::WA_StyledBackground, true);
-    ui->ADD_OUTGOING->setAttribute(Qt::WA_StyledBackground, true);
-    m_DirectMessagePage->setAttribute(Qt::WA_StyledBackground, true);
     ui->verticalLayoutMid->addWidget(m_DirectMessagePage);
-    ui->verticalLayoutMid->setCurrentIndex(1);
+    ui->verticalLayoutMid->setCurrentIndex(0);
     ui->ADD_OUTGOING->addWidget(m_addFriendPage);
     ui->ADD_OUTGOING->addWidget(m_outgoingPage); // index 1
     ui->verticalLayoutRight->addWidget(m_FriendsPage);
@@ -53,8 +53,8 @@ MainWindow::MainWindow(QWidget *parent)
             });
     connect(m_DirectMessagePage, &DirectMessage::dragging, this, &MainWindow::onItemDragging);
     connect(m_DirectMessagePage, &DirectMessage::notdragging, this, &MainWindow::onItemNotDragged);
-
-
+    connect(m_DirectMessagePage, &DirectMessage::newMessage, this, &MainWindow::updateConversations);
+    connect(manager->getClient(), &Client::updateConversations, this, &MainWindow::updateConversations);
 
     const double margin = 26;
     int upHeight = ui->userPanel->height();
@@ -122,6 +122,7 @@ void MainWindow::refreshForUser(){
     ui->ADD_OUTGOING->setCurrentWidget(m_addFriendPage);
     m_addFriendPage->load(client->getClientID());
     m_FriendsPage->load(client->getFriends());
+    loadConversations();
 }
 
 void MainWindow::onDisconnectClicked(){
@@ -139,8 +140,62 @@ void MainWindow::onConnectionSuccess()
 {
     qDebug() << "User: " << client->getClientName();
     qDebug() << "ID: " << client->getClientID();
+    loadConversations();
 }
 
+void MainWindow::loadConversations(){
+    QLayoutItem *child;
+    while ((child = ui->conversationList->takeAt(0))) {
+        delete child->widget();
+        delete child;
+    }
+    conversations = manager->fetchConversations(client->getClientData());
+    qDebug() << "tried loading convs";
+    qDebug() << "convs: " << conversations.size();
+    for (auto& conv : conversations){
+        ConversationRow* row = new ConversationRow(conv->getConvID(), conv->data(), conv->getlastMessage());
+        connect(row, &ConversationRow::clicked, this, [this](Data d){
+            ui->verticalLayoutMid->setCurrentIndex(1);
+            m_DirectMessagePage->load(d);
+        });
+        ui->conversationList->addWidget(row);
+    }
+}
+
+void MainWindow::updateConversations(Message& lastMessage, Data& partner){
+    qDebug() << "tried updating convs";
+    qDebug() << "partner: " << partner.displayName << ", " << partner.user_id << ", " << Utils::stringFromStatus(partner.status);
+    ConversationRow* row;
+    for(int i = 0; i < ui->conversationList->count(); i++)
+    {
+        row = static_cast<ConversationRow*>(ui->conversationList->itemAt(i)->widget());
+        qDebug() << row->getConvID() << " and " << lastMessage.sentIn;
+        if (row->getConvID() == lastMessage.sentIn) {
+
+            auto *replacement =
+                new ConversationRow(lastMessage.sentIn, partner, lastMessage, /*parent=*/row->parentWidget());
+
+            // put the new row at the same index
+            ui->conversationList->insertWidget(0, replacement);
+
+            // detach and delete the old one
+            QLayoutItem *li = ui->conversationList->takeAt(i + 1); // old row moved to next slot
+            if (li) {
+                if (auto *old = li->widget()) old->deleteLater();   // or delete old;
+                delete li;                                          // delete the layout item wrapper
+            }
+
+            // your connections...
+            connect(replacement, &ConversationRow::clicked, this, [=](Data partner){
+                ui->verticalLayoutMid->setCurrentIndex(1);
+                m_DirectMessagePage->load(partner);
+            });
+            return;
+        }
+    }
+    ConversationRow* newConvRow = new ConversationRow(lastMessage.sentIn, partner, lastMessage);
+    ui->conversationList->addWidget(newConvRow);
+}
 void MainWindow::onItemDragging(int n)
 {
     m_banner->showBanner(tr("Drop to attach"), tr("Release to add files"), n);

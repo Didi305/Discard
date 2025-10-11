@@ -5,6 +5,9 @@
 #include <QStandardPaths>
 #include <QPushButton>
 #include <QHash>
+#include <qdir.h>
+#include <qfileinfo.h>
+#include <qjsonarray.h>
 #include <qjsonobject.h>
 #include <qlayout.h>
 #include <qpainterpath.h>
@@ -25,13 +28,16 @@ struct Attachement{
     QString name;
     QString path;
     QString type;
+    QString size;
+    bool isImage=false, isVideo=false;
 
 };
 
 struct Message {
     QString body;
-    QVector<Attachement> attachs;
     int senderID;
+    int sentIn;
+    QVector<Attachement> attachs;
     QString sentAt;
 };
 
@@ -49,7 +55,7 @@ using StringContainer = multi_index_container<
         // 0) keep insertion order
         sequenced<tag<BySeq>>,
         // 1) hash‐lookup by Message::body, using your QStringHasher
-        hashed_unique<
+        hashed_non_unique<
             tag<ByKey>,
             member<Message,QString,&Message::body>,
             QStringHasher,          // <- your functor here
@@ -96,7 +102,45 @@ inline uint qHash(Data const &d, uint seed = 0) {
 
 namespace Utils {
 
+static QString readText(const QString& p, const char* tag)
+{
+    QFile f(p);
+    if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        return {};
+    }
+    const auto s = QString::fromUtf8(f.readAll());
+    return s;
+}
 
+static QString appConfigPath() {
+    auto dir = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+    QDir().mkpath(dir);
+    return dir + "/config.json";
+}
+
+static QJsonObject loadJson(const QString& pathOrQrc) {
+    QFile f(pathOrQrc);
+    if (!f.open(QIODevice::ReadOnly)) return {};
+    auto doc = QJsonDocument::fromJson(f.readAll());
+    return doc.isObject() ? doc.object() : QJsonObject{};
+}
+
+static QJsonObject loadAppConfig() {
+    // 1) try user/machine override
+    const QString diskCfg = appConfigPath();
+    if (QFile::exists(diskCfg))
+        return loadJson(diskCfg);
+
+    // 2) fallback to baked-in defaults
+    auto cfg = loadJson(":/config.json");
+
+    // 3) optionally materialize a template on disk the first run
+    QFile out(diskCfg);
+    if (out.open(QIODevice::WriteOnly))
+        out.write(QJsonDocument(cfg).toJson(QJsonDocument::Indented));
+
+    return cfg;
+}
 
 inline QPixmap makeAvatarWithHole(const QPixmap &src, int diameter, QSvgRenderer *statusRenderer) {
     // size of the little status slot
@@ -203,6 +247,38 @@ inline QString stringFromStatus(const Status stat) {
     return status;
 }
 
+static QJsonValue attachsToJson(QVector<Attachement> attachs){
+    QJsonArray attachsArray;
+    QJsonObject attachObj;
+    for (auto a : attachs){
+        attachObj["name"] = a.name;
+        attachObj["path"] = a.path;
+        attachObj["size"] = a.size;
+        attachObj["type"] = a.type;
+        attachObj["isImage"] = a.isImage;
+        attachObj["isVideo"] = a.isVideo;
+        attachsArray.append(attachObj);
+    }
+    QJsonValue attachsValue(attachsArray);
+
+    return attachsValue;
+}
+
+static QVector<Attachement> attachsJsonToData(QJsonArray attachs){
+    QVector<Attachement> attachements;
+    Attachement attach;
+    for (auto a : attachs){
+        attach.name = a.toObject()["name"].toString();
+        attach.path = a.toObject()["path"].toString();
+        attach.size = a.toObject()["size"].toString();
+        attach.type = a.toObject()["type"].toString();
+        attach.isImage = a.toObject()["isImage"].toBool();
+        attach.isVideo = a.toObject()["isVideo"].toBool();
+        attachements.append(attach);
+    }
+    return attachements;
+}
+
 inline QByteArray jsonObjectToData(const QJsonObject &obj){
     QJsonDocument doc(obj);
     QString jsonString = doc.toJson(QJsonDocument::Compact);
@@ -218,12 +294,15 @@ inline QJsonObject parseJson(const QByteArray &data){
 
 inline QJsonObject buildJson(const Data &d){
     QJsonObject obj;
+
     obj["id"] = d.user_id;
     obj["name"] = d.displayName;
     obj["avatar"] = d.avatar;
     obj["status"] = stringFromStatus(d.status);
     obj["messageBody"] = d.message.body;
     obj["messageSender"] = d.message.senderID;
+    obj["messageSentIn"] = d.message.sentIn;
+    obj["attachs"] = attachsToJson(d.message.attachs);
     obj["messageTime"] = d.message.sentAt;
     return obj;
 }
@@ -235,6 +314,8 @@ inline Data buildData(const QJsonObject &obj){
     d.status = statusFromString(obj["status"].toString());
     d.message.body = obj["messageBody"].toString();
     d.message.senderID = obj["messageSender"].toInt();
+    d.message.sentIn = obj["messageSentIn"].toInt();
+    d.message.attachs = attachsJsonToData(obj["attachs"].toArray());
     d.message.sentAt = obj["messageTime"].toString();
     return d;
 }

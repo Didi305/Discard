@@ -17,7 +17,7 @@ Row::Row(const Data &d, QWidget *parent)
 {
     h = new QHBoxLayout(this);
     v = new QVBoxLayout;
-
+    setFixedHeight(68);
     setCursor(Qt::PointingHandCursor);
     setAttribute(Qt::WA_Hover);
     static std::unordered_map<Status, QString> statusPaths = {
@@ -70,6 +70,6 @@ void Row::paintEvent(QPaintEvent* e)
         p.drawRoundedRect(rect().adjusted(0,0,-1,-1), 8, 8);
     }
     p.setPen(QColor("#3a3c43"));            // separator
-    p.drawLine(6, height()-1, width()-6, height()-1);
+    if (drawLine) p.drawLine(6, height()-1, width()-6, height()-1);
     QWidget::paintEvent(e);
 }

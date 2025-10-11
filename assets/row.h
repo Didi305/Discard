@@ -25,5 +25,6 @@ protected:
     Manager* m_manager;
     QHBoxLayout* h;
     QVBoxLayout* v;
+    bool drawLine = true;
 };
 #endif

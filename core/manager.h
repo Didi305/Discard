@@ -3,6 +3,7 @@
 #include <qobject.h>
 #include <QFileInfo>
 #include "attachementchip.h"
+#include "conversationrow.h"
 #include "row.h"
 #include <vector>
 #include "utils.h"
@@ -50,10 +51,11 @@ public:
     /*---------------DM's--------------------*/
     int createConversation(int user1_ID, int user2_ID);
     int checkConversation(int user1_ID, int user2_ID);
-    quint64 postMessage(QString message, int conversation_ID, int sender_ID);
+    quint64 postMessage(QString message, int conversation_ID, int sender_ID, int receiver_ID);
     void postAttachement(QFileInfo info, quint64 message_id);
     StringContainer fetchMessages(int conversationID);
     QVector<Attachement> fetchAttachements(qint64 message_id);
+    std::vector<std::unique_ptr<ConversationRow>> fetchConversations(Data& d);
 private:
     Manager() = default;
     ~Manager() = default;

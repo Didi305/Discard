@@ -18,6 +18,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QScrollArea>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStackedWidget>
 #include <QtWidgets/QVBoxLayout>
@@ -52,7 +53,11 @@ public:
     QPushButton *pushButton_2;
     QPushButton *pushButton_3;
     QPushButton *pushButton_4;
-    QWidget *widget_2;
+    QLabel *label;
+    QScrollArea *scrollArea;
+    QWidget *scrollAreaWidgetContents;
+    QVBoxLayout *verticalLayout_6;
+    QVBoxLayout *conversationList;
     QFrame *userPanel;
     QHBoxLayout *horizontalLayout_4;
     QPushButton *userAvatarButton;
@@ -69,7 +74,7 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(1093, 762);
+        MainWindow->resize(1054, 762);
         MainWindow->setStyleSheet(QString::fromUtf8(""));
         MainWindow->setIconSize(QSize(64, 64));
         mainContainer = new QWidget(MainWindow);
@@ -353,11 +358,42 @@ public:
 
         verticalLayout->addWidget(options);
 
-        widget_2 = new QWidget(something);
-        widget_2->setObjectName("widget_2");
-        widget_2->setStyleSheet(QString::fromUtf8("background: 030303ff;;"));
+        label = new QLabel(something);
+        label->setObjectName("label");
+        sizePolicy2.setHeightForWidth(label->sizePolicy().hasHeightForWidth());
+        label->setSizePolicy(sizePolicy2);
+        label->setStyleSheet(QString::fromUtf8("color: rgba(255, 255, 255, 0.86);\n"
+"font-weight: 625;\n"
+"font-size: 15px;\n"
+"padding-left: 7px;"));
 
-        verticalLayout->addWidget(widget_2);
+        verticalLayout->addWidget(label);
+
+        scrollArea = new QScrollArea(something);
+        scrollArea->setObjectName("scrollArea");
+        sizePolicy.setHeightForWidth(scrollArea->sizePolicy().hasHeightForWidth());
+        scrollArea->setSizePolicy(sizePolicy);
+        scrollArea->setWidgetResizable(true);
+        scrollAreaWidgetContents = new QWidget();
+        scrollAreaWidgetContents->setObjectName("scrollAreaWidgetContents");
+        scrollAreaWidgetContents->setGeometry(QRect(0, 0, 335, 373));
+        QSizePolicy sizePolicy3(QSizePolicy::Policy::Expanding, QSizePolicy::Policy::Preferred);
+        sizePolicy3.setHorizontalStretch(0);
+        sizePolicy3.setVerticalStretch(0);
+        sizePolicy3.setHeightForWidth(scrollAreaWidgetContents->sizePolicy().hasHeightForWidth());
+        scrollAreaWidgetContents->setSizePolicy(sizePolicy3);
+        verticalLayout_6 = new QVBoxLayout(scrollAreaWidgetContents);
+        verticalLayout_6->setSpacing(0);
+        verticalLayout_6->setObjectName("verticalLayout_6");
+        verticalLayout_6->setContentsMargins(0, 0, 0, 0);
+        conversationList = new QVBoxLayout();
+        conversationList->setObjectName("conversationList");
+
+        verticalLayout_6->addLayout(conversationList);
+
+        scrollArea->setWidget(scrollAreaWidgetContents);
+
+        verticalLayout->addWidget(scrollArea);
 
         userPanel = new QFrame(something);
         userPanel->setObjectName("userPanel");
@@ -388,7 +424,7 @@ public:
 
         userNameLabel = new QLabel(userPanel);
         userNameLabel->setObjectName("userNameLabel");
-        userNameLabel->setStyleSheet(QString::fromUtf8("setBold: true;"));
+        userNameLabel->setStyleSheet(QString::fromUtf8(""));
 
         horizontalLayout_4->addWidget(userNameLabel);
 
@@ -468,7 +504,7 @@ public:
         MainWindow->setCentralWidget(mainContainer);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 1093, 21));
+        menubar->setGeometry(QRect(0, 0, 1054, 21));
         MainWindow->setMenuBar(menubar);
 
         retranslateUi(MainWindow);
@@ -490,6 +526,7 @@ public:
         pushButton_2->setText(QCoreApplication::translate("MainWindow", "   Message Requests", nullptr));
         pushButton_3->setText(QCoreApplication::translate("MainWindow", "   Helala Music", nullptr));
         pushButton_4->setText(QCoreApplication::translate("MainWindow", "   Idk", nullptr));
+        label->setText(QCoreApplication::translate("MainWindow", "Direct Messages", nullptr));
         userAvatarButton->setText(QString());
         userNameLabel->setText(QString());
         disconnectButton->setText(QString());

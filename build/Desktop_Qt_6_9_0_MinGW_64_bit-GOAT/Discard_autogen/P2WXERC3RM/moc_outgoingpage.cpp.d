@@ -57,6 +57,8 @@ C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-
   C:/Qt/6.9.0/mingw_64/include/QtCore/qdatetime.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qdeadlinetimer.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qdebug.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/qdir.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/qdirlisting.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qelapsedtimer.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qendian.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qeventloop.h \
@@ -79,6 +81,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-
   C:/Qt/6.9.0/mingw_64/include/QtCore/qiodevicebase.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qiterable.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qiterator.h \
+  C:/Qt/6.9.0/mingw_64/include/QtCore/qjsonarray.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qjsondocument.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qjsonobject.h \
   C:/Qt/6.9.0/mingw_64/include/QtCore/qjsonparseerror.h \
@@ -513,6 +516,7 @@ C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-
   C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wchar.h \
   C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wctype.h \
   C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/attachementchip.h \
+  C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/conversationrow.h \
   C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/friendrow.h \
   C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/outgoingrow.h \
   C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/pendingrow.h \

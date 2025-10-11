@@ -26,7 +26,6 @@ Discard_autogen/timestamp: \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/q20utility.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/q23utility.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qabstracteventdispatcher.h \
-	C:/Qt/6.9.0/mingw_64/include/QtCore/qabstractitemmodel.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qalgorithms.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qanystringview.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qarraydata.h \
@@ -89,6 +88,7 @@ Discard_autogen/timestamp: \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qiodevicebase.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qiterable.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qiterator.h \
+	C:/Qt/6.9.0/mingw_64/include/QtCore/qjsonarray.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qjsondocument.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qjsonobject.h \
 	C:/Qt/6.9.0/mingw_64/include/QtCore/qjsonparseerror.h \
@@ -250,7 +250,6 @@ Discard_autogen/timestamp: \
 	C:/Qt/6.9.0/mingw_64/include/QtGui/qtguiexports.h \
 	C:/Qt/6.9.0/mingw_64/include/QtGui/qtguiglobal.h \
 	C:/Qt/6.9.0/mingw_64/include/QtGui/qtransform.h \
-	C:/Qt/6.9.0/mingw_64/include/QtGui/qvalidator.h \
 	C:/Qt/6.9.0/mingw_64/include/QtGui/qvector2d.h \
 	C:/Qt/6.9.0/mingw_64/include/QtGui/qvectornd.h \
 	C:/Qt/6.9.0/mingw_64/include/QtGui/qwindow.h \
@@ -311,7 +310,6 @@ Discard_autogen/timestamp: \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qabstractbutton.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qabstractscrollarea.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qabstractslider.h \
-	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qabstractspinbox.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qapplication.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qboxlayout.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qdialog.h \
@@ -329,15 +327,11 @@ Discard_autogen/timestamp: \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qmenubar.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qmessagebox.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qpushbutton.h \
-	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qrubberband.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qscrollarea.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qscrollbar.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qsizepolicy.h \
-	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qslider.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qstackedwidget.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qstyle.h \
-	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qstyleoption.h \
-	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qtabbar.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qtabwidget.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qtextbrowser.h \
 	C:/Qt/6.9.0/mingw_64/include/QtWidgets/qtextedit.h \
@@ -921,15 +915,14 @@ Discard_autogen/timestamp: \
 	C:/Qt/Tools/mingw1310_64/x86_64-w64-mingw32/include/wctype.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Discard/CMakeLists.txt \
 	C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/attachementchip.h \
+	C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/conversationrow.cpp \
+	C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/conversationrow.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/dragbanner.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/emojipopup.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/friendrow.cpp \
 	C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/friendrow.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/lightbox.cpp \
 	C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/lightbox.h \
-	C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/messagebubble.h \
-	C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/messagerow.cpp \
-	C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/messagerow.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/outgoingrow.cpp \
 	C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/outgoingrow.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Discard/assets/pendingrow.cpp \
@@ -963,6 +956,7 @@ Discard_autogen/timestamp: \
 	C:/Users/giler/OneDrive/Desktop/C++/Discard/pages/outgoingpage.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Discard/pages/register.cpp \
 	C:/Users/giler/OneDrive/Desktop/C++/Discard/pages/register.h \
+	C:/Users/giler/OneDrive/Desktop/C++/Discard/resource.qrc \
 	C:/Users/giler/OneDrive/Desktop/C++/Discard/utils/mediaUtils.h \
 	C:/Users/giler/OneDrive/Desktop/C++/Discard/utils/utils.h \
 	C:/boost_1_88_0/boost/assert/source_location.hpp \

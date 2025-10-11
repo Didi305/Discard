@@ -1,21 +1,39 @@
 
 QScrollArea, QFrame, #AddFriendPage, #DirectMessage, #scrollAreaWidgetContents {
-    background-color: transparent;
+    background: transparent;
     border: none;
 }
 
-#ADD_OUTGOING QPushButton {
+#addFriendInput, #searchInput{
+    color: rgba(255, 255, 255, 0.86);
+    font-weight: 635;
+    font-size: 15px;
+}
+
+#accept, #decline, #cancel {
     background: transparent;
     qproperty-flat: true;
 }
-#decline:hover,
-#cancel:hover{
+
+#decline:hover, #cancel:hover{
     background: red;
 }
 
 #accept:hover{
     background: green;
 }
+
+#addFriendFrame, #searchFrame {
+    background-color: rgb(24, 26, 27); 
+    border-radius: 8px;
+}
+
+#addFriendButton, #searchButton {
+    background-color: green;
+}#addFriendButton:hover, #searchButton:hover {
+    background-color: #2f6dd0;
+}
+
 
 Row {
   background: transparent
@@ -28,30 +46,29 @@ Row {
     background-color: #2b2d31;
 }
 
+#userAvatarButton {
+    background: transparent;
+
+}
+
 #disconnectButton{
     background: transparent;
-    qproperty-hover: true;
+
 }        
 
-#GIFButton{
-    qproperty-hover: true;
+#GIFButton, #emotesButton, #sendButton{
+
 }
 #GIFButton:hover{
     background: white;
 }
 
-#emotesButton{
-    qproperty-hover: true;
-}
 
 #emotesButton:hover, #sendButton:hover{
     border-radius: 6px;
     background:  rgba(255, 255, 255, 0.16);
 }
-#sendButton{
-    qproperty-hover: true;
-}
-#userAvatarButton{
+rAvatarButton{
   min-width: 48px; max-width: 48px;
   min-height: 48px; max-height: 48px;
   border-radius: 24px;
@@ -170,7 +187,7 @@ Row {
     background: transparent;
 }
 
-#messageInputLine {
+#messageInputLine, #lastMessage {
     color: rgba(255, 255, 255, 0.86);
     font-weight: 625;
     font-size: 15px;
@@ -205,8 +222,7 @@ Row {
 }
 
 
-
-
+#lastMessage {}
 
 
 

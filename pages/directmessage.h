@@ -40,7 +40,7 @@ public:
     bool eventFilter(QObject *object, QEvent *event) override;
     QString htmlEscaped(const QString &text) const;
     void insertConversationHeader(const QString &recipientName, const QPixmap  &avatarOrig);
-    void appendMessage(QString name, QString text, QPixmap avatar, QString time, bool withAvatar);
+    void appendMessage(QString name, QString text, QVector<Attachement> attachs, QPixmap avatar, QString time, bool withAvatar);
     void adjustInputHeight();
     void insertEmoji(const QString& e);
     void syncInputDocWidth();
@@ -63,6 +63,7 @@ private slots:
 private: signals:
     void dragging(int n);
     void notdragging();
+    void newMessage(Message& senderData, Data& partner);
 private:
     Ui::DirectMessage *ui;
     Manager* m_manager;
@@ -72,8 +73,8 @@ private:
     QTextDocument *doc;
     qreal dpr;
     int height;
-    int receiverID;
-    int conversaionID;
+    Data m_partner;
+    int conversationID;
     int lastMessageSender = -1;
     bool m_agReady = false;
     int  m_minInputH = 0;

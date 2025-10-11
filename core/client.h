@@ -14,14 +14,14 @@ public:
     QString getClientAvatar();
     Status getClientStatus();
     int getClientID();
-    Data getClientData();
+    Data &getClientData();
     QHash<Data, int>& getFriends();
     void setFriends(QHash<Data, int> &friends);
     void setClientName(QString name);
     void setClientStatus(Status stat);
     void setClientAvatar(QString avatar);
     void setClientID(int id);
-    void setClientData(int id, QString name, QString avatar, QHash<Data, int> friends);
+    void setClientData(Data& d);
     ~Client();
 
     void connectToServer(const QString &host, int port);
@@ -36,6 +36,7 @@ signals:
     void updatePendingRequests(int friend_id);
     void updateAcceptRequest(QJsonObject& obj, QString type);
     void updateFriends(int id, bool online);
+    void updateConversations(Message& msg, Data& d);
     void friendsReady(QHash<Data, int> friends);
     void addNewFriendRow(Data d);
     void newMessage(Data d);

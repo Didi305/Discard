@@ -1,4 +1,4 @@
-#include "attachementchip.h"
+
 #include <qobject.h>
 #include <QDebug>
 #include <QSqlDatabase>
@@ -7,8 +7,7 @@
 #include <QSqlError>
 #include <QApplication>
 #include <QFile>
-#include <QJsonObject>*
-
+#include <QJsonObject>
 #include <QCryptographicHash>
 #include <QDateTime>
 #include <QStandardPaths>
@@ -33,25 +32,20 @@ QSqlDatabase& Manager::db(){
     return database;
 }
 bool Manager::init(QJsonObject &DBConfig, QSqlDatabase &dbex){
-    QString path = QCoreApplication::applicationDirPath() + QLatin1String("/config.json");
-    QFile file(path);
+    const QString qrc = ":/config/config.json";
     database = dbex;
-
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qWarning() << "Cannot open" << path << ":" << file.errorString();
+    QFile f(qrc);
+    if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        qWarning() << "open failed:" << qrc << ":" << f.errorString();
         return false;
     }
+    QByteArray bytes = f.readAll();
 
-    const QByteArray data = file.readAll();
-
-    QJsonParseError error;
-    QJsonDocument doc = QJsonDocument::fromJson(data, &error);
-    if(!doc.isObject()){
-        qWarning() << "JSON file doesnt contain an object";
-    }
+    QJsonParseError pe{};
+    QJsonDocument doc = QJsonDocument::fromJson(bytes, &pe);
     DBConfig = doc.object();
     database.setHostName(DBConfig.take("host").toString());
-    database.setPort(DBConfig.take("port").toString().toInt());
+    database.setPort(DBConfig.take("port").toInt());
     database.setDatabaseName(DBConfig.take("database").toString());
     database.setUserName(DBConfig.take("user").toString());
     database.setPassword(DBConfig.take("password").toString());
@@ -426,13 +420,14 @@ int Manager::checkConversation(int user1_ID, int user2_ID){
     }
     if(!query.next()){
         qDebug() << "There is no conversation between: " << user1_ID << " AND " << user2_ID;
-        int conversationID = createConversation(user1_ID, user2_ID);
-        return conversationID;
+        qDebug() << "send first message to create one ^_^";
+        return -1;
     }
     return query.value("conversation_id").toInt();
 }
 
-quint64 Manager::postMessage(QString message, int conversation_ID, int sender_ID){
+quint64 Manager::postMessage(QString message, int conversation_ID, int sender_ID, int receiver_ID){
+    if (conversation_ID == -1) conversation_ID = createConversation(sender_ID, receiver_ID);
     qint64 message_id;
     QSqlQuery query(db());
     QString sql = QStringLiteral(
@@ -451,7 +446,6 @@ quint64 Manager::postMessage(QString message, int conversation_ID, int sender_ID
     if(query.next()){
         message_id = query.value(0).toLongLong();
     }
-    qDebug() << "message_ id: " << message_id;
     return message_id;
 }
 
@@ -476,7 +470,7 @@ StringContainer Manager::fetchMessages(int conversationID){
     StringContainer messages;
     QSqlQuery query(db());
     QString sql = QStringLiteral(
-        "SELECT body, sent_by, sent_at "
+        "SELECT id, body, sent_by, sent_at "
         "FROM message "
         "WHERE sent_in = :c "
         "ORDER BY sent_at ASC"
@@ -487,33 +481,80 @@ StringContainer Manager::fetchMessages(int conversationID){
         qCritical() << "la walo" << query.lastError().text();
     }
     while(query.next()){
-        Message msg = {query.value("body").toString(), query.value("sent_by").toInt(), query.value("sent_at").toString()};
+        QVector<Attachement> attachs = fetchAttachements(query.value("id").toLongLong());
+        Message msg = {query.value("body").toString(), query.value("sent_by").toInt(), conversationID, attachs, query.value("sent_at").toString()};
         messages.push_back(msg);
+        for (auto &m : messages.get<BySeq>()) {
+        }
     }
-
     return messages;
 }
 
-QVector<QString> Manager::fetchAttachements(qint64 message_id){
-    QVector<QString> attachs;
+QVector<Attachement> Manager::fetchAttachements(qint64 message_id){
+    QVector<Attachement> attachs;
     QSqlQuery query(db());
     QString sql = QStringLiteral(
-        "SELECT body, sent_by, sent_at "
-        "FROM message "
-        "WHERE sent_in = :c "
-        "ORDER BY sent_at ASC"
+        "SELECT filename, content_type, data "
+        "FROM attachement "
+        "WHERE message_id = :mid "
+        "ORDER BY uploaded_at ASC"
         );
     query.prepare(sql);
-    query.bindValue(":c", conversationID);
+    query.bindValue(":mid", message_id);
     if(!query.exec()){
-        qCritical() << "la walo" << query.lastError().text();
+        qCritical() << "la walo attach" << query.lastError().text();
     }
     while(query.next()){
-        Message msg = {query.value("body").toString(), query.value("sent_by").toInt(), query.value("sent_at").toString()};
-        messages.push_back(msg);
+        Attachement attach = {query.value("filename").toString(), query.value("data").toString(), query.value("content_type").toString()};
+        attachs.push_back(attach);
     }
 
-    return messages;
+    return attachs;
+}
+
+std::vector<std::unique_ptr<ConversationRow>> Manager::fetchConversations(Data& d){
+    std::vector<std::unique_ptr<ConversationRow>> convs;
+    QSqlQuery query(db());
+    QString sql = QStringLiteral(
+        "SELECT u.id, u.nickname, u.avatar, u.status, lm.sent_by, lm.body, c.conversation_id "
+        "FROM ( "
+        "   SELECT conversation_id, "
+        "       CASE"
+        "           WHEN user_1 = :uid THEN user_2 "
+        "           ELSE user_1 "
+        "       END AS partner "
+        "       FROM conversation "
+        "       WHERE :uid in (user_1, user_2) "
+        "   ) c "
+        "JOIN LATERAL ("
+        "    SELECT m.* "
+        "    FROM message m "
+        "    WHERE m.sent_in = c.conversation_id "
+        "    ORDER BY m.sent_at DESC, m.id DESC "
+        "    LIMIT 1 "
+        ") AS lm ON true "
+        "INNER JOIN users u "
+        "   ON u.id = partner "
+        "ORDER BY lm.sent_at DESC, lm.id DESC "
+        );
+    query.prepare(sql);
+    query.bindValue(":uid", d.user_id);
+
+    if(!query.exec()){
+        qCritical() << "zmel" << query.lastError().text();
+    }
+    while(query.next()){
+        Data partnerData = {query.value("id").toInt(),
+                            query.value("nickname").toString(),
+                            query.value("avatar").toString(),
+                            Utils::statusFromString(query.value("status").toString())
+        };
+        Message lastMessage = {.body = query.value("body").toString(), .senderID = query.value("sent_by").toInt() };
+        auto convRow = std::make_unique<ConversationRow>(query.value("conversation_id").toInt(), partnerData, lastMessage);
+
+        convs.push_back(std::move(convRow));
+    }
+    return convs;
 }
 
 

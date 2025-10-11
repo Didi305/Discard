@@ -5,7 +5,11 @@
 
 Login::Login(QWidget *parent) : QDialog(parent), ui(new Ui::Login), manager(Manager::get()) {
     ui->setupUi(this);
+    setStyleSheet(Utils::readText(":/styles/login_register.qss", "login_register.qss"));
     ui->loginErrorMessage->hide();
+    ui->createAccountButton->setProperty("role", "secondary");
+    QFontMetrics fm(ui->loginButton->font());
+    ui->loginButton->setMinimumHeight(fm.height() + 20);
     connect(ui->loginButton, &QPushButton::clicked, this, &Login::onLoginButtonClicked);
     connect(ui->createAccountButton, &QPushButton::clicked, this, &Login::onCreateAccountButtonClicked);
 }
@@ -30,7 +34,8 @@ void Login::onLoginButtonClicked(){
         client->setClientID(parts.value(2).toInt());
         client->setClientStatus(Utils::statusFromString(parts.value(3)));
         client->setFriends(manager->fetchFriends(client->getClientID(), client->getFriends()));
-        client->setClientData(client->getClientID(), client->getClientName(), client->getClientAvatar(), client->getFriends());
+        Data userData = {.user_id = client->getClientID(), .displayName = client->getClientName(), .avatar = client->getClientAvatar(), .friends = client->getFriends()};
+        client->setClientData(userData);
         QString host = "127.0.0.1";
         int port = 1234;
         client->connectToServer(host, port);

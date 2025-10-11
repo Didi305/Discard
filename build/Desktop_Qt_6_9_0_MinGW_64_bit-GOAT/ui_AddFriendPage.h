@@ -66,7 +66,7 @@ public:
         addFriendFrame->setObjectName("addFriendFrame");
         addFriendFrame->setMinimumSize(QSize(150, 55));
         addFriendFrame->setAutoFillBackground(false);
-        addFriendFrame->setStyleSheet(QString::fromUtf8("background-color: rgb(24, 26, 27)"));
+        addFriendFrame->setStyleSheet(QString::fromUtf8(""));
         addFriendFrame->setFrameShape(QFrame::Shape::NoFrame);
         addFriendFrame->setFrameShadow(QFrame::Shadow::Raised);
         addFriendLayout_6 = new QHBoxLayout(addFriendFrame);
@@ -75,6 +75,7 @@ public:
         addFriendLayout_6->setContentsMargins(20, 9, 12, 9);
         addFriendInput = new QLineEdit(addFriendFrame);
         addFriendInput->setObjectName("addFriendInput");
+        addFriendInput->setStyleSheet(QString::fromUtf8(""));
         addFriendInput->setFrame(false);
 
         addFriendLayout_6->addWidget(addFriendInput);
@@ -87,8 +88,8 @@ public:
         font1.setBold(true);
         addFriendButton->setFont(font1);
         addFriendButton->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        addFriendButton->setStyleSheet(QString::fromUtf8("background-color: green"));
-        addFriendButton->setFlat(false);
+        addFriendButton->setStyleSheet(QString::fromUtf8(""));
+        addFriendButton->setFlat(true);
 
         addFriendLayout_6->addWidget(addFriendButton);
 

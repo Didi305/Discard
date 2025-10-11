@@ -44,6 +44,11 @@ template <> constexpr inline auto DirectMessage::qt_create_metaobjectdata<qt_met
         "",
         "n",
         "notdragging",
+        "newMessage",
+        "Message&",
+        "senderData",
+        "Data&",
+        "partner",
         "update",
         "Data",
         "d",
@@ -61,19 +66,23 @@ template <> constexpr inline auto DirectMessage::qt_create_metaobjectdata<qt_met
         }}),
         // Signal 'notdragging'
         QtMocHelpers::SignalData<void()>(4, 2, QMC::AccessPublic, QMetaType::Void),
+        // Signal 'newMessage'
+        QtMocHelpers::SignalData<void(Message &, Data &)>(5, 2, QMC::AccessPublic, QMetaType::Void, {{
+            { 0x80000000 | 6, 7 }, { 0x80000000 | 8, 9 },
+        }}),
         // Slot 'update'
-        QtMocHelpers::SlotData<void(Data)>(5, 2, QMC::AccessPrivate, QMetaType::Void, {{
-            { 0x80000000 | 6, 7 },
+        QtMocHelpers::SlotData<void(Data)>(10, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { 0x80000000 | 11, 12 },
         }}),
         // Slot 'onAddClicked'
-        QtMocHelpers::SlotData<void()>(8, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(13, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onGifClicked'
-        QtMocHelpers::SlotData<void()>(9, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(14, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onEmojiClicked'
-        QtMocHelpers::SlotData<void()>(10, 2, QMC::AccessPrivate, QMetaType::Void),
+        QtMocHelpers::SlotData<void()>(15, 2, QMC::AccessPrivate, QMetaType::Void),
         // Slot 'onAnchorClicked'
-        QtMocHelpers::SlotData<void(const QUrl &)>(11, 2, QMC::AccessPrivate, QMetaType::Void, {{
-            { QMetaType::QUrl, 12 },
+        QtMocHelpers::SlotData<void(const QUrl &)>(16, 2, QMC::AccessPrivate, QMetaType::Void, {{
+            { QMetaType::QUrl, 17 },
         }}),
     };
     QtMocHelpers::UintData qt_properties {
@@ -100,11 +109,12 @@ void DirectMessage::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
         switch (_id) {
         case 0: _t->dragging((*reinterpret_cast< std::add_pointer_t<int>>(_a[1]))); break;
         case 1: _t->notdragging(); break;
-        case 2: _t->update((*reinterpret_cast< std::add_pointer_t<Data>>(_a[1]))); break;
-        case 3: _t->onAddClicked(); break;
-        case 4: _t->onGifClicked(); break;
-        case 5: _t->onEmojiClicked(); break;
-        case 6: _t->onAnchorClicked((*reinterpret_cast< std::add_pointer_t<QUrl>>(_a[1]))); break;
+        case 2: _t->newMessage((*reinterpret_cast< std::add_pointer_t<Message&>>(_a[1])),(*reinterpret_cast< std::add_pointer_t<Data&>>(_a[2]))); break;
+        case 3: _t->update((*reinterpret_cast< std::add_pointer_t<Data>>(_a[1]))); break;
+        case 4: _t->onAddClicked(); break;
+        case 5: _t->onGifClicked(); break;
+        case 6: _t->onEmojiClicked(); break;
+        case 7: _t->onAnchorClicked((*reinterpret_cast< std::add_pointer_t<QUrl>>(_a[1]))); break;
         default: ;
         }
     }
@@ -112,6 +122,8 @@ void DirectMessage::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
         if (QtMocHelpers::indexOfMethod<void (DirectMessage::*)(int )>(_a, &DirectMessage::dragging, 0))
             return;
         if (QtMocHelpers::indexOfMethod<void (DirectMessage::*)()>(_a, &DirectMessage::notdragging, 1))
+            return;
+        if (QtMocHelpers::indexOfMethod<void (DirectMessage::*)(Message & , Data & )>(_a, &DirectMessage::newMessage, 2))
             return;
     }
 }
@@ -135,14 +147,14 @@ int DirectMessage::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 7)
+        if (_id < 8)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 7;
+        _id -= 8;
     }
     if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 7)
+        if (_id < 8)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 7;
+        _id -= 8;
     }
     return _id;
 }
@@ -157,5 +169,11 @@ void DirectMessage::dragging(int _t1)
 void DirectMessage::notdragging()
 {
     QMetaObject::activate(this, &staticMetaObject, 1, nullptr);
+}
+
+// SIGNAL 2
+void DirectMessage::newMessage(Message & _t1, Data & _t2)
+{
+    QMetaObject::activate<void>(this, &staticMetaObject, 2, nullptr, _t1, _t2);
 }
 QT_WARNING_POP

@@ -80,7 +80,7 @@
         <bool>false</bool>
        </property>
        <property name="styleSheet">
-        <string notr="true">background-color: rgb(24, 26, 27)</string>
+        <string notr="true"/>
        </property>
        <property name="frameShape">
         <enum>QFrame::Shape::NoFrame</enum>
@@ -106,6 +106,9 @@
         </property>
         <item>
          <widget class="QLineEdit" name="addFriendInput">
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
           <property name="frame">
            <bool>false</bool>
           </property>
@@ -129,13 +132,13 @@
            <cursorShape>PointingHandCursor</cursorShape>
           </property>
           <property name="styleSheet">
-           <string notr="true">background-color: green</string>
+           <string notr="true"/>
           </property>
           <property name="text">
            <string>Add Friend</string>
           </property>
           <property name="flat">
-           <bool>false</bool>
+           <bool>true</bool>
           </property>
          </widget>
         </item>

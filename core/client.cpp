@@ -12,7 +12,8 @@ Client::Client(QObject *parent)
     socket = new QTcpSocket(this);
     handlers["message"] = [this](QJsonObject &obj){
         Data d = Utils::buildData(obj);
-        emit newMessage(d);
+        Message msg = d.message;
+        emit newMessage(d); emit updateConversations(msg, d);
     };
     handlers["friends_status"]  = [this](QJsonObject& obj){checkFriendsStatus(obj);};
     handlers["user_status"] = [this](QJsonObject& obj){
@@ -51,7 +52,7 @@ Status Client::getClientStatus(){
     return status;
 }
 
-Data Client::getClientData(){
+Data& Client::getClientData(){
     return d;
 }
 
@@ -74,11 +75,8 @@ void Client::setClientID(int id){
 void Client::setFriends(QHash<Data , int> &friends){
     this->friends = friends;
 }
-void Client::setClientData(int id, QString name, QString avatar, QHash<Data, int> friends){
-    this->d.user_id = id;
-    this->d.avatar = avatar;
-    this->d.displayName = name;
-    this->d.friends = friends;
+void Client::setClientData(Data& d){
+    this->d = d;
 }
 void Client::connectToServer(const QString &host, int port){
     socket->connectToHost(host, port);
@@ -93,6 +91,7 @@ void Client::disconnectFromServer(){
 }
 
 void Client::onConnected(){
+    emit connected();
     QJsonObject root;
     QJsonArray arr;
     root["type"] = "init";

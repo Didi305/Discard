@@ -23,11 +23,11 @@ class Ui_Login
 public:
     QPushButton *loginButton;
     QPushButton *createAccountButton;
-    QLabel *label;
+    QLabel *title;
     QLineEdit *loginUsername;
     QLineEdit *loginPassword;
-    QLabel *label_2;
-    QLabel *label_3;
+    QLabel *username;
+    QLabel *password;
     QLabel *loginErrorMessage;
 
     void setupUi(QDialog *Login)
@@ -35,39 +35,50 @@ public:
         if (Login->objectName().isEmpty())
             Login->setObjectName("Login");
         Login->resize(607, 514);
+        Login->setAutoFillBackground(false);
         loginButton = new QPushButton(Login);
         loginButton->setObjectName("loginButton");
-        loginButton->setGeometry(QRect(200, 300, 101, 24));
+        loginButton->setGeometry(QRect(170, 360, 101, 35));
+        QSizePolicy sizePolicy(QSizePolicy::Policy::Minimum, QSizePolicy::Policy::Preferred);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(loginButton->sizePolicy().hasHeightForWidth());
+        loginButton->setSizePolicy(sizePolicy);
+        loginButton->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
         createAccountButton = new QPushButton(Login);
         createAccountButton->setObjectName("createAccountButton");
-        createAccountButton->setGeometry(QRect(360, 300, 101, 24));
-        label = new QLabel(Login);
-        label->setObjectName("label");
-        label->setGeometry(QRect(270, 100, 121, 51));
+        createAccountButton->setGeometry(QRect(330, 360, 101, 35));
+        createAccountButton->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
+        title = new QLabel(Login);
+        title->setObjectName("title");
+        title->setGeometry(QRect(260, 80, 121, 71));
         QFont font;
         font.setPointSize(26);
-        label->setFont(font);
+        title->setFont(font);
         loginUsername = new QLineEdit(Login);
         loginUsername->setObjectName("loginUsername");
-        loginUsername->setGeometry(QRect(250, 200, 171, 24));
+        loginUsername->setGeometry(QRect(230, 200, 171, 41));
+        loginUsername->setAutoFillBackground(false);
+        loginUsername->setStyleSheet(QString::fromUtf8(""));
         loginPassword = new QLineEdit(Login);
         loginPassword->setObjectName("loginPassword");
-        loginPassword->setGeometry(QRect(250, 240, 171, 24));
+        loginPassword->setGeometry(QRect(230, 250, 171, 41));
+        loginPassword->setAutoFillBackground(false);
         loginPassword->setEchoMode(QLineEdit::EchoMode::Password);
-        label_2 = new QLabel(Login);
-        label_2->setObjectName("label_2");
-        label_2->setGeometry(QRect(150, 190, 91, 31));
+        username = new QLabel(Login);
+        username->setObjectName("username");
+        username->setGeometry(QRect(133, 200, 91, 31));
         QFont font1;
         font1.setPointSize(14);
-        label_2->setFont(font1);
-        label_3 = new QLabel(Login);
-        label_3->setObjectName("label_3");
-        label_3->setGeometry(QRect(150, 230, 91, 31));
-        label_3->setFont(font1);
+        username->setFont(font1);
+        password = new QLabel(Login);
+        password->setObjectName("password");
+        password->setGeometry(QRect(139, 250, 91, 31));
+        password->setFont(font1);
         loginErrorMessage = new QLabel(Login);
         loginErrorMessage->setObjectName("loginErrorMessage");
         loginErrorMessage->setEnabled(false);
-        loginErrorMessage->setGeometry(QRect(250, 170, 211, 16));
+        loginErrorMessage->setGeometry(QRect(230, 170, 211, 16));
         loginErrorMessage->setMouseTracking(true);
         loginErrorMessage->setFrameShape(QFrame::Shape::NoFrame);
         loginErrorMessage->setScaledContents(false);
@@ -82,9 +93,9 @@ public:
         Login->setWindowTitle(QString());
         loginButton->setText(QCoreApplication::translate("Login", "Login", nullptr));
         createAccountButton->setText(QCoreApplication::translate("Login", "Create Account", nullptr));
-        label->setText(QCoreApplication::translate("Login", "Login", nullptr));
-        label_2->setText(QCoreApplication::translate("Login", "Username:", nullptr));
-        label_3->setText(QCoreApplication::translate("Login", "Password:", nullptr));
+        title->setText(QCoreApplication::translate("Login", "Login", nullptr));
+        username->setText(QCoreApplication::translate("Login", "Username:", nullptr));
+        password->setText(QCoreApplication::translate("Login", "Password:", nullptr));
         loginErrorMessage->setText(QCoreApplication::translate("Login", "<html><head/><body><p><span style=\" font-size:10pt; font-weight:700; color:#aa0000;\">Username or password incorrect</span></p></body></html>", nullptr));
     } // retranslateUi
 

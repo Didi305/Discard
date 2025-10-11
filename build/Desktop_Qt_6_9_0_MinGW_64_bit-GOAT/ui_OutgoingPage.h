@@ -65,7 +65,7 @@ public:
         searchFrame->setObjectName("searchFrame");
         searchFrame->setMinimumSize(QSize(150, 55));
         searchFrame->setAutoFillBackground(false);
-        searchFrame->setStyleSheet(QString::fromUtf8("background-color: rgb(24, 26, 27)"));
+        searchFrame->setStyleSheet(QString::fromUtf8(""));
         searchFrame->setFrameShape(QFrame::Shape::NoFrame);
         searchFrame->setFrameShadow(QFrame::Shadow::Raised);
         addFriendLayout_2 = new QHBoxLayout(searchFrame);
@@ -86,8 +86,8 @@ public:
         font1.setBold(true);
         searchButton->setFont(font1);
         searchButton->setCursor(QCursor(Qt::CursorShape::PointingHandCursor));
-        searchButton->setStyleSheet(QString::fromUtf8("background-color: lime;"));
-        searchButton->setFlat(false);
+        searchButton->setStyleSheet(QString::fromUtf8(""));
+        searchButton->setFlat(true);
 
         addFriendLayout_2->addWidget(searchButton);
 
