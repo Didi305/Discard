@@ -1,0 +1,6 @@
+# Tell GitHub Linguist to ignore build files
+*.pro linguist-vendored
+*.pri linguist-vendored
+Makefile linguist-vendored
+*.cmake linguist-vendored
+CMakeLists.txt linguist-vendored
