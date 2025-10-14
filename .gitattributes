@@ -1,11 +1,13 @@
-# Ignore build and project configuration files
-*.pro linguist-vendored
-*.pri linguist-vendored
-Makefile linguist-vendored
-*.cmake linguist-vendored
-CMakeLists.txt linguist-vendored
+# Tell GitHub Linguist to ignore build and config files
+Makefile linguist-detectable=false
+*.pro linguist-detectable=false
+*.pri linguist-detectable=false
+*.cmake linguist-detectable=false
+CMakeLists.txt linguist-detectable=false
 
-# Force detection of C++ for code files
+# Explicitly mark source code as C++
 *.cpp linguist-language=C++
-*.h linguist-language=C++
+*.cc linguist-language=C++
+*.cxx linguist-language=C++
 *.hpp linguist-language=C++
+*.h linguist-language=C++
