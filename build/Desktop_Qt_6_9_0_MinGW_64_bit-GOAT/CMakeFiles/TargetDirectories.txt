@@ -1,5 +1,0 @@
-C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/CMakeFiles/Discard.dir
-C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/CMakeFiles/edit_cache.dir
-C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/CMakeFiles/rebuild_cache.dir
-C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/CMakeFiles/Discard_autogen_timestamp_deps.dir
-C:/Users/giler/OneDrive/Desktop/C++/Discard/build/Desktop_Qt_6_9_0_MinGW_64_bit-GOAT/CMakeFiles/Discard_autogen.dir
