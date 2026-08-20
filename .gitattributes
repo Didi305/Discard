@@ -1,6 +1,16 @@
-# Tell GitHub Linguist to ignore build files
+# Ignore all auto-generated build artifacts
+build/** linguist-vendored
+
+# Ignore project config files
 *.pro linguist-vendored
 *.pri linguist-vendored
-Makefile linguist-vendored
 *.cmake linguist-vendored
 CMakeLists.txt linguist-vendored
+Makefile linguist-vendored
+
+# Force detection of C++ for code files
+*.cpp linguist-language=C++
+*.cc linguist-language=C++
+*.cxx linguist-language=C++
+*.hpp linguist-language=C++
+*.h linguist-language=C++
