@@ -6,26 +6,33 @@
 Client::Client(QObject *parent)
     : QObject(parent)
     , m_manager(Manager::get())
-    , server(new ChatServer)
 {
 
     socket = new QTcpSocket(this);
     handlers["message"] = [this](QJsonObject &obj){
         Data d = Utils::buildData(obj);
+        m_manager->resolveDataMedia(d);
         Message msg = d.message;
         emit newMessage(d); emit updateConversations(msg, d);
     };
     handlers["friends_status"]  = [this](QJsonObject& obj){checkFriendsStatus(obj);};
     handlers["user_status"] = [this](QJsonObject& obj){
-        Data d = {obj["id"].toInt(), obj["name"].toString(), obj["avatar"].toString(), Utils::statusFromString(obj["status"].toString())};
-        friends[d] = obj["bool"].toInt();
-        emit addNewFriendRow(d);
+        // acceptRequest() already stored the request row's complete local Data.
+        Data key{};
+        key.user_id = obj["id"].toInt();
+        auto friendIt = friends.find(key);
+        if (friendIt == friends.end()) return;
+        friendIt.value() = obj["bool"].toInt();
+        emit addNewFriendRow(friendIt.key());
     };
     handlers["friend_update"]  = [this](QJsonObject& obj){emit updateFriends(obj["id"].toInt(), obj["bool"].toBool());};
     handlers["update_pending"] = [this](QJsonObject& obj){emit updatePendingRequests(obj["id"].toInt());};
     handlers["update_accept"]  = [this](QJsonObject& obj){updateAcceptRequests(obj);};
     handlers["add_row"] = [this](QJsonObject& obj){
         Data d = {obj["id"].toInt(), obj["name"].toString(), obj["avatar"].toString(), Utils::statusFromString(obj["status"].toString())};
+        // This is the request sender's client. Reuse the outgoing row's avatar
+        // when loaded, or fetch it if this client has not seen the user yet.
+        d.avatar = m_manager->avatarPathForUser(d.user_id, /*reuseCached=*/true);
         qCritical() << "status of the friend to be added is: " << Utils::stringFromStatus(d.status);
         friends.emplace(d, 1);
         emit addNewFriendRow(d);};
@@ -114,6 +121,7 @@ void Client::onDisconnected(){
 
 void Client::sendMessage(Data &d, QString typ) {
     QJsonObject obj = Utils::buildJson(d);
+    obj["avatar"] = QStringLiteral("db://avatar/%1").arg(getClientID());
     obj["type"] = typ;
     QJsonDocument doc(obj);
     QString jsonString = doc.toJson(QJsonDocument::Compact);
@@ -155,6 +163,7 @@ void Client::checkFriendsStatus(QJsonObject& obj){
 
 void Client::updateAcceptRequests(QJsonObject& obj){
     QString type = obj["type"].toString();
+    obj["avatar"] = m_manager->avatarPathForUser(obj["id"].toInt());
     emit updateAcceptRequest(obj, type);
 }
 

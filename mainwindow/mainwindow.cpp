@@ -101,19 +101,11 @@ void MainWindow::onAvatarButtonClicked()
     if (srcFile.isEmpty())
         return;
     //  Update avatarButton’s icon to the chosen file
-    QString userUploadFolder = QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + "/C++/Discard/uploads/" + client->getClientName() + "/avatar.png";
-    if(QFile::exists(userUploadFolder)){
-        QFile::remove(userUploadFolder);
-    }
-    QFile file(userUploadFolder);
-    if(file.copy(srcFile, userUploadFolder)){
-        qDebug() << "copy done success";
-    }
-    else{
-        qDebug() << "could not copy";
-    }
-    manager->updateUserAvatar(userUploadFolder, client->getClientName());
-    updateAvatar(srcFile);
+    manager->updateUserAvatar(srcFile, client->getClientName());
+    const QString cachedAvatar = manager->avatarPathForUser(client->getClientID());
+    client->setClientAvatar(cachedAvatar);
+    client->getClientData().avatar = cachedAvatar;
+    updateAvatar(cachedAvatar);
 }
 
 void MainWindow::refreshForUser(){

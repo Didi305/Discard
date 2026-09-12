@@ -4,7 +4,14 @@
 #include <QMap>
 #include <QTcpServer>
 #include <functional>
-#include "utils.h"
+#include <QObject>
+#include <QHash>
+#include <QSet>
+#include <QMap>
+#include <QTcpServer>
+#include <QTcpSocket>
+#include <QJsonObject>
+#include <functional>
 class ChatServer : public QObject {
     Q_OBJECT
 public:

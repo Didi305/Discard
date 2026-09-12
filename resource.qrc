@@ -15,6 +15,9 @@
         <file alias="login_register.qss">styles/login_register.qss</file>
     </qresource>
     <qresource prefix="/config">
-        <file alias="config.json">config.json</file>
+        <file alias="config.json">config/config.json</file>
+    </qresource>
+    <qresource prefix="/avatars">
+        <file alias="default.png">uploads/imag.png</file>
     </qresource>
 </RCC>

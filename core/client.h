@@ -3,7 +3,6 @@
 #include <QTcpSocket>
 #include "row.h"
 #include "utils.h"
-#include "chatserver.h"
 class Manager;
 
 class Client : public QObject {
@@ -47,7 +46,6 @@ private slots:
 
 private:
     QTcpSocket *socket;
-    ChatServer* server;
     int id;
     QString name;
     QString avatar;

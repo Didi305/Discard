@@ -193,7 +193,7 @@ static QString makeMediaGridHtml(QTextDocument* doc,
                 if (pm.isNull())
                     pm = mediaUtils::makeSystemIcon(a.path, tile, dpr);
                 else
-                    pm = mediaUtils::addCenteredPlayBadge(pm);     // <— HERE
+                    pm = mediaUtils::addCenteredPlayBadge(pm);     
             } else {
                 pm = mediaUtils::makeImageThumbCrisp(a.path, tile, dpr);
                 if (pm.isNull())

@@ -36,8 +36,8 @@ void Login::onLoginButtonClicked(){
         client->setFriends(manager->fetchFriends(client->getClientID(), client->getFriends()));
         Data userData = {.user_id = client->getClientID(), .displayName = client->getClientName(), .avatar = client->getClientAvatar(), .friends = client->getFriends()};
         client->setClientData(userData);
-        QString host = "127.0.0.1";
-        int port = 1234;
+        QString host = "discard.freedynamicdns.net";
+        int port = 41234;
         client->connectToServer(host, port);
 
         accept();

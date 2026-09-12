@@ -11,6 +11,9 @@
 #include <QCryptographicHash>
 #include <QDateTime>
 #include <QStandardPaths>
+#include <QDir>
+#include <QSaveFile>
+#include <QRegularExpression>
 #include "manager.h"
 
 
@@ -34,6 +37,7 @@ QSqlDatabase& Manager::db(){
 bool Manager::init(QJsonObject &DBConfig, QSqlDatabase &dbex){
     const QString qrc = ":/config/config.json";
     database = dbex;
+    avatarPaths.clear();
     QFile f(qrc);
     if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
         qWarning() << "open failed:" << qrc << ":" << f.errorString();
@@ -50,12 +54,56 @@ bool Manager::init(QJsonObject &DBConfig, QSqlDatabase &dbex){
     database.setUserName(DBConfig.take("user").toString());
     database.setPassword(DBConfig.take("password").toString());
     bool ok = database.open();
-    database.driver()->subscribeToNotification("friendship");
 
     if (!ok) {
         qCritical() << "Cannot open DB:" << database.lastError().text();
+        return false;
     }
-    return ok;
+    return true;
+}
+
+QString Manager::cacheMedia(const QByteArray &bytes, const QString &category,
+                            qint64 id, const QString &fileName) const {
+    if (bytes.isEmpty()) return {};
+
+    QString suffix = QFileInfo(fileName).suffix().toLower();
+    suffix.remove(QRegularExpression(QStringLiteral("[^a-z0-9]")));
+    if (suffix.isEmpty()) suffix = QStringLiteral("bin");
+
+    QDir cacheRoot(QStandardPaths::writableLocation(QStandardPaths::CacheLocation));
+    const QString relativeDirectory = QStringLiteral("media/%1").arg(category);
+    if (!cacheRoot.mkpath(relativeDirectory)) return {};
+
+    const QString path = cacheRoot.filePath(
+        QStringLiteral("%1/%2.%3").arg(relativeDirectory).arg(id).arg(suffix));
+    QFile existing(path);
+    if (existing.exists() && existing.size() == bytes.size() && existing.open(QIODevice::ReadOnly)) {
+        const bool unchanged = existing.readAll() == bytes;
+        existing.close();
+        if (unchanged) return path;
+    }
+
+    QSaveFile output(path);
+    if (!output.open(QIODevice::WriteOnly) || output.write(bytes) != bytes.size()
+        || !output.commit()) {
+        qWarning() << "Could not cache media:" << path << output.errorString();
+        return {};
+    }
+    return path;
+}
+
+QString Manager::avatarPathFromValues(int userId, const QByteArray &bytes,
+                                      const QString &fileName) {
+    const QString defaultPath = QStringLiteral(":/avatars/default.png");
+    const QString localPath = bytes.isEmpty()
+        ? defaultPath
+        : cacheMedia(bytes, QStringLiteral("avatars"), userId, fileName);
+    if (localPath.isEmpty()) {
+        avatarPaths.remove(userId);
+        return defaultPath;
+    }
+    avatarPaths.insert(userId, localPath);
+    return localPath;
 }
 
 
@@ -110,7 +158,7 @@ QString Manager::checkUser(const QString& username, const QString& password){
     if(!password.isEmpty()){
         QByteArray password_hash = (QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Sha256)).toHex();
         QString sql = QStringLiteral(
-            "SELECT avatar, nickname, id, status "
+            "SELECT avatar_data, avatar_filename, nickname, id, status "
             "FROM users "
             "WHERE username = :u AND password_hash = :p "
             );
@@ -122,7 +170,12 @@ QString Manager::checkUser(const QString& username, const QString& password){
             qCritical() << query.lastError().text();
         }
         if(query.first()){
-            return query.value("nickname").toString() + ";" + query.value("avatar").toString() + ";" + query.value("id").toString() + ";" + query.value("status").toString();
+            const int userId = query.value("id").toInt();
+            const QString avatar = avatarPathFromValues(
+                userId,
+                query.value("avatar_data").toByteArray(),
+                query.value("avatar_filename").toString());
+            return query.value("nickname").toString() + ";" + avatar + ";" + query.value("id").toString() + ";" + query.value("status").toString();
         }else{
             qDebug() << "Username or password wrong";
             return "";
@@ -153,22 +206,19 @@ bool Manager::createUser(QString username, QString password, QString nickname){
 
     QSqlQuery query(db());
     static const QString sql = QStringLiteral(
-        "INSERT INTO users (username, password_hash, nickname, created_at, avatar) "
-        "VALUES ( :user, :pass, :nick, :date, :ava )"
-);
+        "INSERT INTO users (username, password_hash, nickname, created_at, avatar, avatar_data, avatar_filename) "
+        "VALUES (:user, :pass, :nick, :date, ':/avatars/default.png', NULL, NULL)"
+    );
 
-    // 2) Prepare the statement
     if (!query.prepare(sql)) {
         qWarning() << "prepare failed:" << query.lastError().text();
+        return false;
     }
-    query.prepare(sql);
 
     query.bindValue(":user", username);
     query.bindValue(":pass", password_hash.toHex());
     query.bindValue(":nick", nickname);
-    query.bindValue(":ava", nickname);
     query.bindValue(":date", QDateTime::currentDateTime());
-    query.bindValue(":ava", QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + "/C++/Discard/uploads/imag.png");
     if(!query.exec()){
         qWarning() << "Insert failed" << query.lastError().text();
         return false;
@@ -179,19 +229,40 @@ bool Manager::createUser(QString username, QString password, QString nickname){
 
 
 void Manager::updateUserAvatar(QString path, QString nickname){
+    QFile avatarFile(path);
+    if (!avatarFile.open(QIODevice::ReadOnly)) {
+        qCritical() << "Could not read avatar" << path << avatarFile.errorString();
+        return;
+    }
     QSqlQuery query(db());
 
     static const QString sql = QStringLiteral(
         "UPDATE users "
-        "SET avatar = :av "
+        "SET avatar = 'db://avatar/' || id::text, avatar_data = :data, avatar_filename = :filename "
         "WHERE nickname = :nick "
         );
     query.prepare(sql);
-    query.bindValue(":av", path);
+    query.bindValue(":data", avatarFile.readAll());
+    query.bindValue(":filename", QFileInfo(path).fileName());
     query.bindValue(":nick", nickname);
     if(!query.exec()){
         qCritical() << "avatar update failed" << query.lastError().text();
     }
+}
+
+QString Manager::avatarPathForUser(int userId, bool reuseCached){
+    if (reuseCached) {
+        const QString localPath = avatarPaths.value(userId);
+        if (!localPath.isEmpty() && QFileInfo::exists(localPath)) return localPath;
+    }
+    QSqlQuery query(db());
+    query.prepare(QStringLiteral(
+        "SELECT avatar_data, avatar_filename FROM users WHERE id = :id"));
+    query.bindValue(":id", userId);
+    if (!query.exec() || !query.next()) return QStringLiteral(":/avatars/default.png");
+    return avatarPathFromValues(userId,
+                                query.value("avatar_data").toByteArray(),
+                                query.value("avatar_filename").toString());
 }
 
 
@@ -253,7 +324,7 @@ std::vector<std::unique_ptr<Row>> Manager::fetchRequests(int id, RequestType typ
 
     QSqlQuery query(db());
     QString sql = QStringLiteral(
-        "SELECT users.id, users.nickname, users.avatar, users.status "
+        "SELECT users.id, users.nickname, users.avatar_data, users.avatar_filename, users.status "
         "FROM users "
         "INNER JOIN friendship ON users.id = friendship.%1_id "
         "WHERE friendship.%2_id = :id AND friendship.status = :s"
@@ -268,7 +339,9 @@ std::vector<std::unique_ptr<Row>> Manager::fetchRequests(int id, RequestType typ
     }
     while(query.next()){
         Data d;
-        d.avatar = query.value("avatar").toString();
+        d.avatar = avatarPathFromValues(
+            query.value("id").toInt(),
+            query.value("avatar_data").toByteArray(), query.value("avatar_filename").toString());
         d.displayName = query.value("nickname").toString();
         d.user_id = query.value("id").toInt();
         d.status = Utils::statusFromString(query.value("status").toString());
@@ -288,7 +361,7 @@ QHash<Data , int>& Manager::fetchFriends(int user_id, QHash<Data , int> &friends
     qDebug() << "user id: "  << user_id;
     QSqlQuery query(db());
     QString sql = QStringLiteral(
-        "SELECT users.id, users.nickname, users.avatar, users.status "
+        "SELECT users.id, users.nickname, users.avatar_data, users.avatar_filename, users.status "
         "FROM users "
         "WHERE users.id IN ( "
         "SELECT friend_id "
@@ -308,10 +381,12 @@ QHash<Data , int>& Manager::fetchFriends(int user_id, QHash<Data , int> &friends
     }
     while(query.next()){
         Data d;
-        d.avatar = query.value("users.avatar").toString();
-        d.displayName = query.value("users.nickname").toString();
-        d.user_id = query.value("users.id").toString().toInt();
-        d.status = Utils::statusFromString(query.value("users.status").toString());
+        d.avatar = avatarPathFromValues(
+            query.value("id").toInt(),
+            query.value("avatar_data").toByteArray(), query.value("avatar_filename").toString());
+        d.displayName = query.value("nickname").toString();
+        d.user_id = query.value("id").toInt();
+        d.status = Utils::statusFromString(query.value("status").toString());
         friends.insert(d, 0);
     }
 
@@ -428,7 +503,7 @@ int Manager::checkConversation(int user1_ID, int user2_ID){
 
 quint64 Manager::postMessage(QString message, int conversation_ID, int sender_ID, int receiver_ID){
     if (conversation_ID == -1) conversation_ID = createConversation(sender_ID, receiver_ID);
-    qint64 message_id;
+    qint64 message_id = 0;
     QSqlQuery query(db());
     QString sql = QStringLiteral(
         "INSERT INTO message (body, sent_by, sent_at, sent_in) "
@@ -449,22 +524,45 @@ quint64 Manager::postMessage(QString message, int conversation_ID, int sender_ID
     return message_id;
 }
 
-void Manager::postAttachement(QFileInfo info, quint64 message_id){
+Attachement Manager::postAttachement(QFileInfo info, quint64 message_id){
+    Attachement stored = {info.fileName(), QString(), info.suffix(),
+                          QString::number(info.size()) + QStringLiteral(" bytes")};
+    QFile input(info.absoluteFilePath());
+    if (!input.open(QIODevice::ReadOnly)) {
+        qCritical() << "Could not read attachment" << info.absoluteFilePath() << input.errorString();
+        return stored;
+    }
+
     QSqlQuery query(db());
     QString sql = QStringLiteral(
-        "INSERT INTO Attachement (message_id, filename, content_type, size_bytes, data) "
-        "VALUES (:id, :n, :type, :size, :d ) "
+        "INSERT INTO attachement (message_id, filename, content_type, size_bytes, data, file_data) "
+        "VALUES (:id, :n, :type, :size, '', :bytes) "
+        "RETURNING id "
         );
     query.prepare(sql);
     query.bindValue(":id", message_id);
     query.bindValue(":n", info.fileName());
     query.bindValue(":type", info.suffix());
     query.bindValue(":size", info.size());
-    query.bindValue(":d", info.absoluteFilePath());
+    query.bindValue(":bytes", input.readAll());
 
     if(!query.exec()){
-        qCritical() << "zmel attach" << query.lastError().text();
+        qCritical() << "Could not store attachment" << query.lastError().text();
+        return stored;
     }
+    if (!query.next()) return stored;
+
+    const qint64 attachmentId = query.value(0).toLongLong();
+    stored.path = QStringLiteral("db://attachment/%1").arg(attachmentId);
+    QSqlQuery update(db());
+    update.prepare(QStringLiteral("UPDATE attachement SET data = :ref WHERE id = :id"));
+    update.bindValue(":ref", stored.path);
+    update.bindValue(":id", attachmentId);
+    if (!update.exec()) {
+        qCritical() << "Could not finalize attachment reference" << update.lastError().text();
+        stored.path.clear();
+    }
+    return stored;
 }
 StringContainer Manager::fetchMessages(int conversationID){
     StringContainer messages;
@@ -473,7 +571,7 @@ StringContainer Manager::fetchMessages(int conversationID){
         "SELECT id, body, sent_by, sent_at "
         "FROM message "
         "WHERE sent_in = :c "
-        "ORDER BY sent_at ASC"
+        "ORDER BY id ASC"
         );
     query.prepare(sql);
     query.bindValue(":c", conversationID);
@@ -482,10 +580,9 @@ StringContainer Manager::fetchMessages(int conversationID){
     }
     while(query.next()){
         QVector<Attachement> attachs = fetchAttachements(query.value("id").toLongLong());
+        
         Message msg = {query.value("body").toString(), query.value("sent_by").toInt(), conversationID, attachs, query.value("sent_at").toString()};
         messages.push_back(msg);
-        for (auto &m : messages.get<BySeq>()) {
-        }
     }
     return messages;
 }
@@ -494,7 +591,7 @@ QVector<Attachement> Manager::fetchAttachements(qint64 message_id){
     QVector<Attachement> attachs;
     QSqlQuery query(db());
     QString sql = QStringLiteral(
-        "SELECT filename, content_type, data "
+        "SELECT id, filename, content_type, size_bytes, file_data "
         "FROM attachement "
         "WHERE message_id = :mid "
         "ORDER BY uploaded_at ASC"
@@ -505,18 +602,51 @@ QVector<Attachement> Manager::fetchAttachements(qint64 message_id){
         qCritical() << "la walo attach" << query.lastError().text();
     }
     while(query.next()){
-        Attachement attach = {query.value("filename").toString(), query.value("data").toString(), query.value("content_type").toString()};
+        const qint64 attachmentId = query.value("id").toLongLong();
+        const QString localPath = cacheMedia(query.value("file_data").toByteArray(),
+                                       QStringLiteral("attachments"), attachmentId,
+                                       query.value("filename").toString());
+        Attachement attach = {
+            query.value("filename").toString(), localPath,
+            query.value("content_type").toString(),
+            QString::number(query.value("size_bytes").toLongLong()) + QStringLiteral(" bytes")
+        };
         attachs.push_back(attach);
     }
 
     return attachs;
 }
 
+QString Manager::attachmentPathForId(qint64 attachmentId){
+    QSqlQuery query(db());
+    query.prepare(QStringLiteral(
+        "SELECT filename, file_data FROM attachement WHERE id = :id"));
+    query.bindValue(":id", attachmentId);
+    if (!query.exec() || !query.next()) return {};
+
+    return cacheMedia(query.value("file_data").toByteArray(),
+                      QStringLiteral("attachments"), attachmentId,
+                      query.value("filename").toString());
+}
+
+void Manager::resolveDataMedia(Data &data){
+    data.avatar = avatarPathForUser(data.user_id);
+    const QString prefix = QStringLiteral("db://attachment/");
+    for (Attachement &attachment : data.message.attachs) {
+        if (!attachment.path.startsWith(prefix)) continue;
+        bool ok = false;
+        const qint64 attachmentId = attachment.path.mid(prefix.size()).toLongLong(&ok);
+        if (!ok) continue;
+        const QString localPath = attachmentPathForId(attachmentId);
+        if (!localPath.isEmpty()) attachment.path = localPath;
+    }
+}
+
 std::vector<std::unique_ptr<ConversationRow>> Manager::fetchConversations(Data& d){
     std::vector<std::unique_ptr<ConversationRow>> convs;
     QSqlQuery query(db());
     QString sql = QStringLiteral(
-        "SELECT u.id, u.nickname, u.avatar, u.status, lm.sent_by, lm.body, c.conversation_id "
+        "SELECT u.id, u.nickname, u.avatar_data, u.avatar_filename, u.status, lm.sent_by, lm.body, c.conversation_id "
         "FROM ( "
         "   SELECT conversation_id, "
         "       CASE"
@@ -530,12 +660,12 @@ std::vector<std::unique_ptr<ConversationRow>> Manager::fetchConversations(Data& 
         "    SELECT m.* "
         "    FROM message m "
         "    WHERE m.sent_in = c.conversation_id "
-        "    ORDER BY m.sent_at DESC, m.id DESC "
+        "    ORDER BY m.id DESC "
         "    LIMIT 1 "
         ") AS lm ON true "
         "INNER JOIN users u "
         "   ON u.id = partner "
-        "ORDER BY lm.sent_at DESC, lm.id DESC "
+        "ORDER BY lm.id DESC "
         );
     query.prepare(sql);
     query.bindValue(":uid", d.user_id);
@@ -546,7 +676,9 @@ std::vector<std::unique_ptr<ConversationRow>> Manager::fetchConversations(Data& 
     while(query.next()){
         Data partnerData = {query.value("id").toInt(),
                             query.value("nickname").toString(),
-                            query.value("avatar").toString(),
+                            avatarPathFromValues(
+                                query.value("id").toInt(),
+                                query.value("avatar_data").toByteArray(), query.value("avatar_filename").toString()),
                             Utils::statusFromString(query.value("status").toString())
         };
         Message lastMessage = {.body = query.value("body").toString(), .senderID = query.value("sent_by").toInt() };

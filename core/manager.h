@@ -38,6 +38,8 @@ public:
     bool checkUsernameAvailibity(QString username);
     bool checkNicknameAvailibity(QString nickname);
     void updateUserAvatar(QString path, QString nickname);
+    QString avatarPathForUser(int userId, bool reuseCached = false);
+    void resolveDataMedia(Data &data);
     void findNickname(QString username);
     /*--------------Friends------------------*/
     QString checkFriendship(QString nickname);
@@ -52,7 +54,7 @@ public:
     int createConversation(int user1_ID, int user2_ID);
     int checkConversation(int user1_ID, int user2_ID);
     quint64 postMessage(QString message, int conversation_ID, int sender_ID, int receiver_ID);
-    void postAttachement(QFileInfo info, quint64 message_id);
+    Attachement postAttachement(QFileInfo info, quint64 message_id);
     StringContainer fetchMessages(int conversationID);
     QVector<Attachement> fetchAttachements(qint64 message_id);
     std::vector<std::unique_ptr<ConversationRow>> fetchConversations(Data& d);
@@ -61,6 +63,12 @@ private:
     ~Manager() = default;
     QSqlDatabase database;
     Client *client;
+    QHash<int, QString> avatarPaths;
+    QString cacheMedia(const QByteArray &bytes, const QString &category,
+                       qint64 id, const QString &fileName) const;
+    QString avatarPathFromValues(int userId, const QByteArray &bytes,
+                                 const QString &fileName);
+    QString attachmentPathForId(qint64 attachmentId);
 };
 
 #endif // DATABASEMANAGER_H

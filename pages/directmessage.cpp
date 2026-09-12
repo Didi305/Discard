@@ -9,14 +9,14 @@ DirectMessage::DirectMessage(QWidget *parent)
     , dpr(devicePixelRatioF())
 {
     ui->setupUi(this);
-    ui->messageView->setOpenLinks(false);           // <-- IMPORTANT
+    ui->messageView->setOpenLinks(false);
     ui->messageView->setOpenExternalLinks(false);
     doc = ui->messageView->document();
     setAcceptDrops(true);
     ui->messageView->viewport()->setAcceptDrops(false);
     ui->messageInputLine->viewport()->setAcceptDrops(false);
     Q_ASSERT(ui->scrollArea->widget() == ui->inputAttachements);
-    if (!ui->inputAttachements->layout()) {                 // ensure it has a layout
+    if (!ui->inputAttachements->layout()) {
         auto row = new QHBoxLayout(ui->inputAttachements);
         row->setContentsMargins(8,8,8,8);
         row->setSpacing(8);
@@ -30,12 +30,12 @@ DirectMessage::DirectMessage(QWidget *parent)
     QString css = Utils::readText(":/styles/messageView.css", "messageView.css");
     ui->messageView->document()->setDefaultStyleSheet(css);
 
-    /* --------------- wrap‑mode so long words break ------------- */
+
     QTextOption opt = doc->defaultTextOption();
     opt.setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
     doc->setDefaultTextOption(opt);
 
-    /* --------------- other wiring (input box etc.) ------------- */
+
     ui->messageInputLine->installEventFilter(this);
     ui->messageInputLine->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
     connect(new QShortcut(QKeySequence(Qt::Key_Return), this),
@@ -51,18 +51,18 @@ DirectMessage::DirectMessage(QWidget *parent)
     auto te = ui->messageInputLine;
 
 
-    // run only after the widget is shown
+
     QTimer::singleShot(0, this, [this]{
         m_agReady = true;
         autosizeInput();
     });
 
-    // fire when the *document size changes* (i.e., reflow/wrap or content edit)
+
     connect(te->document()->documentLayout(),
             &QAbstractTextDocumentLayout::documentSizeChanged,
             this, [this](const QSizeF&){ if (m_agReady) autosizeInput(); });
 
-    // keep textWidth == viewport width so wrapping is accurate
+
     te->viewport()->installEventFilter(this);
     ui->rightButtonsLayout->setAlignment(Qt::AlignTop);
     ui->leftButtonLayout->setAlignment(Qt::AlignTop);
@@ -78,10 +78,10 @@ DirectMessage::~DirectMessage() { delete ui; }
 void DirectMessage::insertConversationHeader(const QString &recipientName,
                                              const QPixmap  &avatarOrig)
 {
-    // 1) Clear the old document.
+
     ui->messageView->clear();
 
-    // 2) Build the HTML for the avatar (img or placeholder div).
+
     QString avatarHtml;
     if (!avatarOrig.isNull()) {
         // round it:
@@ -105,16 +105,17 @@ void DirectMessage::insertConversationHeader(const QString &recipientName,
 </div>
 )").arg(avatarHtml, Utils::toHtml(recipientName));
 
-    // 4) Push it into the view.
+
     ui->messageView->append(headerHtml);
 }
+
 void DirectMessage::appendMessage(QString name, QString text, QVector<Attachement> attachs, QPixmap avatarOrig, QString time, bool withAvatar)
 {
-    // 1 — Make your avatar rounded‑48px as before
+
     const QPixmap avatar = Utils::makeRoundedAvatar(avatarOrig, 48);
     QString avaUrl = Utils::embedAvatar(ui->messageView->document(), avatar);
 
-    // 2 — Build the avatar/placeholder <td> with HTML width/height + valign:
+
     QString avatarCell =  QString("<td >""<img src=\"%1\"""</td>").arg(avaUrl);
 
     if(!withAvatar){
@@ -127,6 +128,7 @@ void DirectMessage::appendMessage(QString name, QString text, QVector<Attachemen
                                    : QString();
     const QString bodyEscaped = Utils::toHtml(text);      // escape first
     const QString bodyHtml    = (!text.isEmpty()) ? Utils::wrapEmojisForHtml(bodyEscaped) : ""; // then wrap
+    std::println("attach paths: ", attachs[0].)
     const QString attHtml = mediaUtils::attachementsHtmlFor(attachs, doc, dpr);
     const QString msgHtml = QString(R"(
 <table class="msg" width="100%%" cellspacing="0" cellpadding="0">
@@ -137,14 +139,11 @@ void DirectMessage::appendMessage(QString name, QString text, QVector<Attachemen
       %5
     </td>
   </tr>
-</table>)")
-                                .arg(avatarCell, Utils::toHtml(name), Utils::toHtml(time), bodyHtml, attHtml);
+</table>)").arg(avatarCell, Utils::toHtml(name), Utils::toHtml(time), bodyHtml, attHtml);
     ui->messageView->append(msgHtml);
 }
 
-/* ------------------------------------------------------------------ */
-/*  Public API                                                        */
-/* ------------------------------------------------------------------ */
+
 void DirectMessage::load(Data partner)
 {
     lastMessageSender = -1;
@@ -154,6 +153,8 @@ void DirectMessage::load(Data partner)
     int ownID   = m_manager->getClient()->getClientID();
     conversationID   = m_manager->checkConversation(ownID, partner.user_id);
     m_partner      = partner;
+    qDebug() << "conv ID opened: " << conversationID;
+    qDebug() << "partner ID opened: " << partner.user_id;
     messages        = m_manager->fetchMessages(conversationID);
     for (auto &m : messages.get<BySeq>()) {
         Data d = (m.senderID == ownID)
@@ -186,7 +187,6 @@ bool DirectMessage::eventFilter(QObject *obj, QEvent *ev)
             QString txt = ui->messageInputLine->toPlainText().trimmed();
             if (txt.isEmpty() && m_pending.empty()) return true;
             ui->messageInputLine->clear();
-            if (m_pending.size() > 0) Utils::deleteChildren(ui->inputAttachements->layout());
 
             Data self = m_manager->getClient()->getClientData();
             self.message = { txt, self.user_id, conversationID, mediaUtils::chipToData(m_pending), QDateTime::currentDateTimeUtc().toString() };
@@ -196,16 +196,24 @@ bool DirectMessage::eventFilter(QObject *obj, QEvent *ev)
             lastMessageSender = self.user_id;
             messages.push_back(self.message);
 
-            // send over network
-            self.user_id = m_partner.user_id;
-            m_manager->getClient()->sendMessage(self, "message");
             auto message_id = m_manager->postMessage(txt, conversationID, m_manager->getClient()->getClientID(), m_partner.user_id);
+            QVector<Attachement> sharedAttachments;
             for (auto *c : m_pending){
-                m_manager->postAttachement(c->info(), message_id);
+                Attachement stored = m_manager->postAttachement(c->info(), message_id);
+                if (!stored.path.isEmpty()) sharedAttachments.push_back(stored);
             }
+
+            // Only portable database references go over the socket. The receiver
+            // resolves them to files in its own local cache.
+            Data outbound = self;
+            outbound.message.attachs = sharedAttachments;
+            outbound.user_id = m_partner.user_id;
+            m_manager->getClient()->sendMessage(outbound, "message");
+
             emit newMessage(self.message, m_partner);
             v->setValue(v->maximum());
             ui->scrollArea->setVisible(false);
+            if (!m_pending.empty()) Utils::deleteChildren(ui->inputAttachements->layout());
             m_pending.clear();
             return true;
         }
@@ -272,11 +280,11 @@ void DirectMessage::onEmojiClicked()
     const QRect scr = QGuiApplication::screenAt(QCursor::pos())
                           ->availableGeometry();
 
-    // align popup’s bottom-left to the button’s top-left (above the button)
+
     const QPoint btnTL = ui->emotesButton->mapToGlobal(QPoint(0, 0));
     QPoint pos = btnTL - QPoint(0, m_emojiPopup->height() + 4);
 
-    // keep it on screen; if there’s no room above, show below
+
     pos.setX(std::clamp(pos.x(), scr.left(),
                         scr.right() - m_emojiPopup->width()));
     if (pos.y() < scr.top())
@@ -296,17 +304,17 @@ void DirectMessage::insertEmoji(const QString& e)
     const QTextCharFormat prevFmt = cur.charFormat();
 
     QTextCharFormat emojiFmt = prevFmt;
-    emojiFmt.setFontPointSize(20);                 // ↑ make it bigger
+    emojiFmt.setFontPointSize(20);
 #if defined(Q_OS_WIN)
-    emojiFmt.setFontFamily("Segoe UI Emoji");      // color emoji font
+    emojiFmt.setFontFamily("Segoe UI Emoji");
 #elif defined(Q_OS_MAC)
     emojiFmt.setFontFamily("Apple Color Emoji");
 #else
     emojiFmt.setFontFamily("Noto Color Emoji");
 #endif
 
-    cur.insertText(e, emojiFmt);                   // insert big emoji
-    cur.setCharFormat(prevFmt);                    // restore for next typing
+    cur.insertText(e, emojiFmt);
+    cur.setCharFormat(prevFmt);
     te->setTextCursor(cur);
     te->setFocus();
 }
@@ -336,8 +344,7 @@ void DirectMessage::dropEvent(QDropEvent* e)
         const QString p = u.toLocalFile();
         if (!p.isEmpty()) addAttachement(p);
     }
-    // TODO (next step): put files into your “pending Attachements” strip
-    // for (const QUrl& u : e->mimeData()->urls()) handleAttachement(u.toLocalFile());
+
 }
 void DirectMessage::dragLeaveEvent(QDragLeaveEvent*)
 {
@@ -355,8 +362,8 @@ void DirectMessage::addAttachement(const QString& path)
     m_pending.push_back(chip);
 
     ui->scrollArea->setVisible(true);
-    ui->inputAttachements->layout()->activate();           // refresh sizeHint
-    updateAttachementsHeight();                        // grow strip as needed
+    ui->inputAttachements->layout()->activate();
+    updateAttachementsHeight();
 }
 
 void DirectMessage::removeAttachement(AttachementChip* chip)
@@ -365,7 +372,7 @@ void DirectMessage::removeAttachement(AttachementChip* chip)
     m_pending.erase(std::remove(m_pending.begin(), m_pending.end(), chip), m_pending.end());
     ui->inputAttachements->layout()->removeWidget(chip);
     chip->deleteLater();
-    if(m_pending.size() == 0) ui->scrollArea->setVisible(false);             // shrink when empty
+    if(m_pending.size() == 0) ui->scrollArea->setVisible(false);
 }
 
 
@@ -384,14 +391,14 @@ void DirectMessage::onAnchorClicked(const QUrl& url)
             // Fallback for att://open/C:/... form
             path = url.path();
 #ifdef Q_OS_WIN
-            if (path.startsWith('/')) path.remove(0, 1);  // remove leading slash before drive letter
+            if (path.startsWith('/')) path.remove(0, 1);
 #endif
         }
         qDebug() << "[anchor] decoded path =" << path;
 
         if (!path.isEmpty()) {
-            auto* lb = new Lightbox;                // HEAP-allocate!
-            lb->openOver(this, path);               // show overlay in *this* window
+            auto* lb = new Lightbox;
+            lb->openOver(this, path);
         }
         return;
     }
@@ -406,7 +413,7 @@ void DirectMessage::updateAttachementsHeight()
 
     int contentH = 0;
     if (auto lay = cont->layout()) {
-        lay->activate();                                  // ensure up-to-date
+        lay->activate();
         contentH = lay->sizeHint().height();
     } else {
         contentH = cont->sizeHint().height();
