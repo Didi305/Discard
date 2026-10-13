@@ -14,8 +14,8 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_AUTORCC ON)
 set(app_icon "${CMAKE_CURRENT_SOURCE_DIR}/app.rc")
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Network Svg Sql)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network Svg Sql)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Network Svg)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Network Svg)
 set(BOOST_ROOT "C:/boost_1_88_0")
 set(BOOST_INCLUDEDIR "${BOOST_ROOT}")
 set(
@@ -82,7 +82,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
     Qt${QT_VERSION_MAJOR}::Network
     Qt${QT_VERSION_MAJOR}::Svg
-    Qt${QT_VERSION_MAJOR}::Sql
+
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -99,72 +99,10 @@ target_include_directories(${PROJECT_NAME}
       ${CMAKE_CURRENT_BINARY_DIR}
 )
 add_subdirectory(server)
-# ============================================================
-# WINDOWS PORTABLE DEPLOYMENT
-# ============================================================
-
 if(WIN32)
-
-    # PostgreSQL installation used by the Qt QPSQL driver.
-    set(POSTGRESQL_BIN_DIR
-        "C:/Program Files/PostgreSQL/17/bin"
-        CACHE PATH
-        "Path to PostgreSQL bin directory"
-    )
-
-    if(NOT EXISTS "${POSTGRESQL_BIN_DIR}/libpq.dll")
-        message(FATAL_ERROR
-            "libpq.dll was not found in: ${POSTGRESQL_BIN_DIR}"
-        )
-    endif()
-
-
-    # --------------------------------------------------------
-    # 1. Install Discard.exe
-    # --------------------------------------------------------
-
-    install(
-        TARGETS Discard
-        RUNTIME DESTINATION .
-    )
-
-
-    # --------------------------------------------------------
-    # 2. Deploy Qt libraries, Qt plugins and MinGW runtime
-    #
-    # This replaces manually running windeployqt.
-    # --------------------------------------------------------
-
-    qt_generate_deploy_app_script(
-        TARGET Discard
-        OUTPUT_SCRIPT discard_qt_deploy_script
-        NO_TRANSLATIONS
-        NO_UNSUPPORTED_PLATFORM_ERROR
-    )
-
-    install(SCRIPT ${discard_qt_deploy_script})
-
-
-    # --------------------------------------------------------
-    # 3. Deploy PostgreSQL client runtime
-    #
-    # qsqlpsql.dll requires libpq.dll, which itself depends on
-    # OpenSSL, libintl and other PostgreSQL runtime DLLs.
-    #
-    # Copy all PostgreSQL DLLs automatically so we don't have
-    # to chase dependency chains manually.
-    # --------------------------------------------------------
-
-    file(
-        GLOB POSTGRESQL_RUNTIME_DLLS
-        CONFIGURE_DEPENDS
-        "${POSTGRESQL_BIN_DIR}/*.dll"
-    )
-
-    install(
-        FILES ${POSTGRESQL_RUNTIME_DLLS}
-        DESTINATION .
-    )
-
+    install(TARGETS Discard RUNTIME DESTINATION .)
+    qt_generate_deploy_app_script(TARGET Discard OUTPUT_SCRIPT discard_deploy
+        NO_TRANSLATIONS NO_UNSUPPORTED_PLATFORM_ERROR)
+    install(SCRIPT ${discard_deploy})
 endif()
 qt_finalize_executable(Discard)

@@ -2,10 +2,17 @@
 #include "ui_login.h"
 #include "register.h"
 #include "manager.h"
+#include <QApplication>
 
 Login::Login(QWidget *parent) : QDialog(parent), ui(new Ui::Login), manager(Manager::get()) {
     ui->setupUi(this);
     setStyleSheet(Utils::readText(":/styles/login_register.qss", "login_register.qss"));
+    ui->loginErrorMessage->setEnabled(true);
+    ui->loginErrorMessage->setTextFormat(Qt::PlainText);
+    ui->loginErrorMessage->setWordWrap(true);
+    ui->loginErrorMessage->setAlignment(Qt::AlignCenter);
+    ui->loginErrorMessage->setGeometry(60, 300, width() - 120, 48);
+    ui->loginErrorMessage->setStyleSheet(QStringLiteral("color: #ffb4b4; font-size: 14px;"));
     ui->loginErrorMessage->hide();
     ui->createAccountButton->setProperty("role", "secondary");
     QFontMetrics fm(ui->loginButton->font());
@@ -19,32 +26,40 @@ Login::~Login(){
 }
 
 
+void Login::showError(const QString &message) {
+    ui->loginErrorMessage->setText(message);
+    ui->loginErrorMessage->show();
+}
+
+bool Login::connectToDatabase() {
+    ui->loginErrorMessage->hide();
+    QApplication::setOverrideCursor(Qt::WaitCursor);
+    const bool connected = manager->connectServer();
+    QApplication::restoreOverrideCursor();
+    if (!connected) {
+        showError(tr("Cannot connect to the server.\nCheck the connection and try again."));
+    }
+    return connected;
+}
+
 void Login::onLoginButtonClicked(){
     auto *client = manager->getClient();
     QString username = ui->loginUsername->text();
     QString password = ui->loginPassword->text();
-    if((manager->checkUser(username, password)).isEmpty()){
-        ui->loginErrorMessage->show();
+    if (username.isEmpty() || password.isEmpty()) {
+        showError(tr("Enter your username and password."));
+        return;
     }
-    else{
-        QString data = manager->checkUser(username, password);
-        QStringList parts = data.split(";");
-        client->setClientName(parts.value(0));
-        client->setClientAvatar(parts.value(1));
-        client->setClientID(parts.value(2).toInt());
-        client->setClientStatus(Utils::statusFromString(parts.value(3)));
-        client->setFriends(manager->fetchFriends(client->getClientID(), client->getFriends()));
-        Data userData = {.user_id = client->getClientID(), .displayName = client->getClientName(), .avatar = client->getClientAvatar(), .friends = client->getFriends()};
-        client->setClientData(userData);
-        QString host = "discard.freedynamicdns.net";
-        int port = 41234;
-        client->connectToServer(host, port);
-
-        accept();
+    if (!connectToDatabase()) return;
+    if (!manager->authenticate(username, password)) {
+        showError(manager->lastError());
+        return;
     }
+    accept();
 }
 
 void Login::onCreateAccountButtonClicked(){
+    if (!connectToDatabase()) return;
     reg = new Register(this);
     reg->show();
 }

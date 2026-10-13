@@ -87,6 +87,8 @@ struct Data
         displayName = other.displayName;
         avatar = other.avatar;
         status = other.status;
+        message = other.message;
+        friends = other.friends;
     }
 };
 

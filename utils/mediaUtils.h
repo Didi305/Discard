@@ -207,6 +207,7 @@ static QString makeMediaGridHtml(QTextDocument* doc,
         QUrl u(QStringLiteral("att://open"));
         QUrlQuery q;
         q.addQueryItem(QStringLiteral("path"), a.path);             // real OS path
+        q.addQueryItem(QStringLiteral("name"), a.name);
         u.setQuery(q);
 
         html += QString(R"(
@@ -216,7 +217,7 @@ static QString makeMediaGridHtml(QTextDocument* doc,
   </a>
 </td>)")
                     .arg(a.isVideo ? "is-video" : (isGif ? "is-gif" : ""))
-                    .arg(u.toString())
+                    .arg(u.toString(QUrl::FullyEncoded).toHtmlEscaped())
                     .arg(imgSrc)
                     .arg(tile.width())
                     .arg(tile.height());
@@ -235,8 +236,13 @@ static QString makeFileListHtml(QTextDocument* doc, QList<Attachement>& files, q
         QPixmap pm = mediaUtils::makeSystemIcon(a.path, iconSz, dpr);
         const QString iconSrc = mediaUtils::registerPixmap(doc, pm, a.path + "|icon32");
 
-        const QString pathFs = QDir::fromNativeSeparators(a.path);
-        const QString href   = "att://open/" + pathFs;
+        QUrl openUrl(QStringLiteral("att://open"));
+        QUrlQuery query;
+        query.addQueryItem(QStringLiteral("path"), a.path);
+        query.addQueryItem(QStringLiteral("name"), a.name);
+        openUrl.setQuery(query);
+        QUrl saveUrl = openUrl;
+        saveUrl.setHost(QStringLiteral("save"));
 
         html += QString(R"(
 <tr><td>
@@ -246,14 +252,16 @@ static QString makeFileListHtml(QTextDocument* doc, QList<Attachement>& files, q
       <td class="fileMeta">
         <a href="%3" class="fileName">%4</a>
         <div class="fileSize">%5</div>
+        <a href="%6">Save as…</a>
       </td>
     </tr>
   </table>
 </td></tr>)")   .arg(iconSz.width())                 // %1 used three times
                     .arg(iconSrc)                        // %2
-                    .arg(href)                           // %3
+                    .arg(openUrl.toString(QUrl::FullyEncoded).toHtmlEscaped()) // %3
                     .arg(Utils::toHtml(a.name))          // %4
-                    .arg(Utils::toHtml(a.size));
+                    .arg(Utils::toHtml(a.size))
+                    .arg(saveUrl.toString(QUrl::FullyEncoded).toHtmlEscaped());
     }
     html += "</table>";
     return html;

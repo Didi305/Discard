@@ -1,3 +1,4 @@
+#include <QStatusBar>
 #include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -56,6 +57,17 @@ MainWindow::MainWindow(QWidget *parent)
     connect(m_DirectMessagePage, &DirectMessage::newMessage, this, &MainWindow::updateConversations);
     connect(manager->getClient(), &Client::updateConversations, this, &MainWindow::updateConversations);
 
+    m_FriendsPage->load(client->getFriends());
+    loadConversations();
+    connect(client, &Client::relationshipsChanged, this, [this] {
+        manager->fetchFriends(client->getClientID(), client->getFriends());
+        m_FriendsPage->load(client->getFriends());
+        m_addFriendPage->load(client->getClientID());
+        m_outgoingPage->setRequests(client->getClientID());
+    });
+    connect(client, &Client::disconnected, this, [this] {
+        statusBar()->showMessage(tr("Disconnected. Sign in again to continue."));
+    });
     const double margin = 26;
     int upHeight = ui->userPanel->height();
     int x = 9;
@@ -101,7 +113,10 @@ void MainWindow::onAvatarButtonClicked()
     if (srcFile.isEmpty())
         return;
     //  Update avatarButton’s icon to the chosen file
-    manager->updateUserAvatar(srcFile, client->getClientName());
+    if (!manager->updateUserAvatar(srcFile, client->getClientName())) {
+        QMessageBox::warning(this, tr("Avatar not updated"), manager->lastError());
+        return;
+    }
     const QString cachedAvatar = manager->avatarPathForUser(client->getClientID());
     client->setClientAvatar(cachedAvatar);
     client->getClientData().avatar = cachedAvatar;

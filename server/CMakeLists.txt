@@ -1,26 +1,10 @@
 cmake_minimum_required(VERSION 3.16)
-
 project(DiscardChatServer LANGUAGES CXX)
-
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 set(CMAKE_AUTOMOC ON)
-
-find_package(Qt6 REQUIRED COMPONENTS Core Network)
-
-add_executable(DiscardChatServer
-    main.cpp
-    ../core/chatserver.cpp
-    ../core/chatserver.h
-    ../core/serverprotocol.h
-)
-
-target_include_directories(DiscardChatServer PRIVATE
-    ../core
-)
-
-target_link_libraries(DiscardChatServer PRIVATE
-    Qt6::Core
-    Qt6::Network
-)
+find_package(Qt6 REQUIRED COMPONENTS Core Network Sql)
+add_executable(DiscardChatServer main.cpp manager.cpp manager.h
+    ../core/chatserver.cpp ../core/chatserver.h ../core/serverprotocol.h)
+target_include_directories(DiscardChatServer PRIVATE ../core .)
+target_link_libraries(DiscardChatServer PRIVATE Qt6::Core Qt6::Network Qt6::Sql)

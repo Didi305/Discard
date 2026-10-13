@@ -19,6 +19,8 @@
 #include <qvideosink.h>
 #include <QAudioOutput>
 #include <QMediaMetaData>
+#include <QScopedValueRollback>
+#include "attachmentactions.h"
 static bool isVideoFile(const QString& p) {
     QMimeDatabase db; return db.mimeTypeForFile(p).name().startsWith("video/");
 }
@@ -72,28 +74,27 @@ Lightbox::Lightbox(QWidget* parent) : QWidget(parent)
     setAttribute(Qt::WA_DeleteOnClose);
     setAttribute(Qt::WA_TranslucentBackground, false);
 
-    // Root layout on *this*
-    auto* outer = new QVBoxLayout(this);
-    outer->setContentsMargins(0,0,0,0);
-    outer->setSpacing(0);
-
-    // Central holder (must expand)
+    // The holder is fitted manually; a root layout must not override its geometry.
     holder = new QWidget(this);
     holder->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    outer->addWidget(holder, /*stretch*/ 1);     // <-- gives it space
 
     // Stack on holder
     stack = new QStackedLayout(holder);
+    stack->setContentsMargins(0,0,0,0);
 
     // Image page
     img = new QLabel;
     img->setScaledContents(false);           // we scale the pixmap ourselves
     img->setAlignment(Qt::AlignCenter);
-    img->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    img->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    img->setMinimumSize(0,0);
     stack->addWidget(img);
 
 #ifdef QT_MULTIMEDIAWIDGETS_LIB
     video  = new QVideoWidget;
+    video->setAspectRatioMode(Qt::KeepAspectRatio);
+    video->setMinimumSize(0,0);
+    video->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     stack->addWidget(video);
 
     player = new QMediaPlayer(this);
@@ -123,6 +124,13 @@ Lightbox::Lightbox(QWidget* parent) : QWidget(parent)
     btnClose = mk(QStyle::SP_TitleBarCloseButton);
     btnPrev  = mk(QStyle::SP_ArrowBack);
     btnNext  = mk(QStyle::SP_ArrowForward);
+    btnDownload = mk(QStyle::SP_DialogSaveButton);
+    btnDownload->setToolTip(tr("Save attachment as…"));
+    btnClose->setToolTip(tr("Close"));
+    btnPrev->setToolTip(tr("Previous"));
+    btnNext->setToolTip(tr("Next"));
+    btnPrev->hide();
+    btnNext->hide();
 
     chrome->raise();
 
@@ -130,16 +138,20 @@ Lightbox::Lightbox(QWidget* parent) : QWidget(parent)
     connect(btnClose, &QToolButton::clicked, this, &QWidget::close);
     connect(btnPrev,  &QToolButton::clicked, this, [this]{ showIndex(index-1); });
     connect(btnNext,  &QToolButton::clicked, this, [this]{ showIndex(index+1); });
+    connect(btnDownload, &QToolButton::clicked, this, [this]{
+        AttachmentActions::saveAs(this, currentPath, currentName);
+    });
 }
 
 
-void Lightbox::openOver(QWidget* host, const QString& path)
+void Lightbox::openOver(QWidget* host, const QString& path, const QString& displayName)
 {
     QWidget* top = host ? host->window() : qApp->activeWindow();
+    if (!top) { deleteLater(); return; }
     m_host = top;                               // track the real window
 
     setParent(top);                             // CHILD, not a tool window
-    setWindowFlags(Qt::FramelessWindowHint);    // <- remove Qt::Tool
+    setWindowFlags(Qt::Widget | Qt::FramelessWindowHint);
     setAttribute(Qt::WA_TranslucentBackground, true);
 
     setGeometry(top->rect());                   // local coords work now
@@ -148,6 +160,7 @@ void Lightbox::openOver(QWidget* host, const QString& path)
 
     top->installEventFilter(this);              // watch the window itself
     loadItem(path);                            // or setVideo()
+    if (!displayName.isEmpty()) currentName = displayName;
     QTimer::singleShot(0, this, &Lightbox::refit);
 }
 
@@ -182,7 +195,10 @@ void Lightbox::showVideo(const QString& path)
 }
 void Lightbox::clearMedia() {
     if (movie) { movie->stop(); img->clear(); delete movie; movie=nullptr; }
-    player->stop();
+    if (player) player->stop();
+    m_srcPx = QPixmap();
+    m_movieNat = QSize();
+    img->clear();
 }
 
 void Lightbox::setImage(const QString& path)
@@ -212,23 +228,19 @@ void Lightbox::setImage(const QString& path)
 }
 void Lightbox::setAnimated(const QString& path)
 {
-    if (!movie) movie = new QMovie(this);
-    movie->stop();
-    movie->setFileName(path);
-    movie->setCacheMode(QMovie::CacheAll);
+    QImageReader reader(path);
+    if (!reader.supportsAnimation()) { setImage(path); return; }
+    m_movieNat = reader.size();
+    movie = new QMovie(path, QByteArray(), this);
     img->setMovie(movie);
     stack->setCurrentWidget(img);
-    movie->start();
-    connect(movie, &QMovie::frameChanged, this, [this](int){
-        const QSize nat = movie->currentImage().isNull() ? QSize(640,480)
-                                                         : movie->currentImage().size();
-        const QRect rct = fitIntoCenter(nat, size(), 0.90);
-        movie->setScaledSize(rct.size());
-        img->setGeometry(rct);
-        contentRect = rct;
+    connect(movie, &QMovie::frameChanged, this, [this](int) {
+        if (!m_movieNat.isValid()) m_movieNat = movie->currentImage().size();
+        refit();
     });
+    movie->start();
+    refit();
 }
-
 void Lightbox::setVideo(const QString& path)
 {
     player->setSource(QUrl::fromLocalFile(path));
@@ -309,6 +321,8 @@ void Lightbox::keyPressEvent(QKeyEvent* e)
 void Lightbox::setItems(const QStringList& files, int startIndex)
 {
     items = files;
+    btnPrev->setVisible(items.size() > 1);
+    btnNext->setVisible(items.size() > 1);
     index = qBound(0, startIndex, files.size() - 1);
 }
 
@@ -323,6 +337,9 @@ void Lightbox::showIndex(int i)
 void Lightbox::loadItem(const QString& path)
 {
     QMimeDatabase db;
+    clearMedia();
+    currentPath = path;
+    currentName = QFileInfo(path).fileName();
     const QString mt = db.mimeTypeForFile(path).name();
 
     if (mt.startsWith("image/")) {
@@ -345,38 +362,38 @@ void Lightbox::loadItem(const QString& path)
 
 void Lightbox::refit()
 {
-    const QRect vp = rect().adjusted(32,32,-32,-32);
-    if (!vp.isValid()) return;
+    if (m_refitting) return;
+    QScopedValueRollback<bool> guard(m_refitting, true);
+    chrome->adjustSize();
+    chrome->move(qMax(8, width() - chrome->width() - 16), 12);
+    chrome->raise();
 
-    // 1) Animated GIF/WEBP
-    if (stack->currentWidget() == img && movie && img->movie() == movie) {
-        const QSize nat = movie->currentImage().size().isValid()
-        ? movie->currentImage().size() : QSize(640,480);
-        const QRect rct = fitIntoCenter(nat, vp.size(), 0.90);
-        movie->setScaledSize(rct.size());
-        img->setGeometry(rct);
-        contentRect = rct;
-        return;
-    }
-
-    // 2) Still image
-    if (stack->currentWidget() == img && !img->pixmap(Qt::ReturnByValue).isNull()) {
-        const QPixmap pm = img->pixmap(Qt::ReturnByValue);
-        const QRect rct = fitIntoCenter(pm.size(), vp.size(), 0.90);
-        img->setGeometry(rct);                   // label just centers; pixmap unchanged
-        contentRect = rct;
-        return;
-    }
-
+    const QRect viewport = rect().adjusted(24, qMax(56, chrome->height() + 24), -24, -24);
+    if (!viewport.isValid()) return;
+    QSize natural;
+    if (stack->currentWidget() == img)
+        natural = movie ? m_movieNat : m_srcPx.deviceIndependentSize().toSize();
 #ifdef QT_MULTIMEDIAWIDGETS_LIB
-    // 3) Video
-    if (stack->currentWidget() == video) {
-        QSize nat = player->metaData().value(QMediaMetaData::Resolution).toSize();
-        if (!nat.isValid()) nat = QSize(1280, 720);   // safe guess until meta-data arrives
-        const QRect rct = fitIntoCenter(nat, vp.size(), 0.90);
-        video->setGeometry(rct);
-        contentRect = rct;
-        return;
+    else if (stack->currentWidget() == video) {
+        natural = player->metaData().value(QMediaMetaData::Resolution).toSize();
+        if (!natural.isValid()) natural = QSize(1280,720);
     }
 #endif
+    QRect fitted = natural.isValid() ? fitIntoCenter(natural, viewport.size(), 1.0) : QRect(QPoint(), viewport.size());
+    fitted.translate(viewport.topLeft());
+    holder->setGeometry(fitted);
+    stack->setGeometry(holder->rect());
+    contentRect = fitted;
+
+    if (stack->currentWidget() == img) {
+        if (movie) {
+            if (movie->scaledSize() != fitted.size()) movie->setScaledSize(fitted.size());
+        } else if (!m_srcPx.isNull()) {
+            const qreal dpr = devicePixelRatioF();
+            QPixmap scaled = m_srcPx.scaled((QSizeF(fitted.size()) * dpr).toSize(),
+                Qt::KeepAspectRatio, Qt::SmoothTransformation);
+            scaled.setDevicePixelRatio(dpr);
+            img->setPixmap(scaled);
+        }
+    }
 }

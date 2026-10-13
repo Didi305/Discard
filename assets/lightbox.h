@@ -10,7 +10,7 @@ class Lightbox : public QWidget {
     Q_OBJECT
 public:
     explicit Lightbox(QWidget* parent=nullptr);
-    void openOver(QWidget* anchor, const QString& path);
+    void openOver(QWidget* anchor, const QString& path, const QString& displayName = {});
     void setItems(const QStringList& files, int startIndex = 0);    // images or videos
 
 protected:
@@ -59,6 +59,8 @@ private:
     QPixmap  m_srcPx;         // ORIGINAL, never mutated
     bool     m_refitting = false;
     QStringList   items;
+    QString currentPath;
+    QString currentName;
     int           index = 0;
     QSize lastVideoSize;
     QAudioOutput* audio{};

@@ -1,59 +1,51 @@
-#ifndef CLIENT_H
-#define CLIENT_H
+#pragma once
 #include <QTcpSocket>
+#include <QJsonObject>
 #include "row.h"
 #include "utils.h"
 class Manager;
-
 class Client : public QObject {
     Q_OBJECT
 public:
-    Client(QObject *parent = nullptr);
-    QString getClientName();
-    QString getClientAvatar();
-    Status getClientStatus();
-    int getClientID();
-    Data &getClientData();
-    QHash<Data, int>& getFriends();
-    void setFriends(QHash<Data, int> &friends);
-    void setClientName(QString name);
-    void setClientStatus(Status stat);
-    void setClientAvatar(QString avatar);
-    void setClientID(int id);
-    void setClientData(Data& d);
-    ~Client();
-
-    void connectToServer(const QString &host, int port);
+    explicit Client(QObject *parent=nullptr);
+    ~Client() override = default;
+    QString getClientName(); QString getClientAvatar(); Status getClientStatus();
+    int getClientID(); Data &getClientData(); QHash<Data,int> &getFriends();
+    void setFriends(QHash<Data,int>&); void setClientName(QString);
+    void setClientStatus(Status); void setClientAvatar(QString); void setClientID(int);
+    void setClientData(Data&);
+    void setEndpoint(const QString &host,int port);
+    bool ensureConnected();
+    QJsonObject request(const QString &operation,const QJsonObject &args={});
     void disconnectFromServer();
-    void sendMessage(Data &d, QString typ);
-    void checkFriendsStatus(QJsonObject& obj);
-    void updateAcceptRequests(QJsonObject& obj);
+    QString errorString() const { return lastError; }
 signals:
-    void connected();
-    void disconnected();
-    void messageReceived(QString &data);
+    void connected(); void disconnected();
     void updatePendingRequests(int friend_id);
-    void updateAcceptRequest(QJsonObject& obj, QString type);
-    void updateFriends(int id, bool online);
-    void updateConversations(Message& msg, Data& d);
-    void friendsReady(QHash<Data, int> friends);
+    void updateAcceptRequest(QJsonObject &obj,QString type);
+    void updateFriends(int id,bool online);
+    void updateConversations(Message &msg,Data &d);
+    void friendsReady(QHash<Data,int> friends);
     void addNewFriendRow(Data d);
     void newMessage(Data d);
-private slots:
-    void onConnected();
-    void onDisconnected();
-    void onReadyRead();
-
+    void relationshipsChanged();
+    void serverError(QString message);
 private:
     QTcpSocket *socket;
-    int id;
-    QString name;
-    QString avatar;
-    Manager* m_manager;
-    QHash<Data, int> friends;
-    Data d;
-    Status status;
-    QHash<QString, std::function<void(QJsonObject&)>> handlers;
+    Manager *m_manager;
+    int id=0;
+    QString name,avatar;
+    Status status=Status::ONLINE;
+    Data d{};
+    QHash<Data,int> friends;
+    QString host="127.0.0.1";
+    int port=41234;
+    QByteArray receiveBuffer;
+    QHash<QString,QJsonObject> responses;
+    QList<QJsonObject> events;
+    quint64 nextRequest=0;
+    bool requesting=false,dispatching=false;
+    QString lastError;
+    void onReadyRead();
+    void dispatchEvents();
 };
-
-#endif // CLIENT_H

@@ -21,6 +21,8 @@ private slots:
     void onCreateAccountButtonClicked();            // closes dialog
 
 private:
+    bool connectToDatabase();
+    void showError(const QString &message);
     Ui::Login *ui           {nullptr};       // generated from login.ui
     Register  *reg {nullptr};
     Manager *manager {nullptr};

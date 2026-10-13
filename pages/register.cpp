@@ -1,7 +1,7 @@
 #include "register.h"
 #include "ui_register.h"
 #include "manager.h"
-#include <QErrorMessage>
+#include <QMessageBox>
 #include <QDir>
 #include <QFile>
 Register::Register(QWidget *parent)
@@ -50,31 +50,17 @@ void Register::onNicknameEditingFinished(){
     }
 }
 void Register::onRegisterButtonClicked() {
-    bool validCreation = false;
-    QErrorMessage error;
-    QString username = ui->registerUsername->text();
-    QString nickname = ui->registerNickname->text();
-    QString password = ui->registerPassword->text();
-    QString password_confirmation = ui->registerPasswordConfirmation->text();
-    if(password != password_confirmation){
+    if (ui->registerPassword->text() != ui->registerPasswordConfirmation->text()) {
         ui->passwordNotMatchingError->show();
         ui->passwordNotMatchingError_2->show();
+        return;
     }
-    validCreation = true;
-    if(validCreation){
-        if (manager->createUser(username, password, nickname)) {
-            QString userFolderPath = QCoreApplication::applicationDirPath() + "/../../uploads/" + nickname;
-            QDir dir;
-            if (dir.mkpath(userFolderPath)) {
-                qDebug() << "Folder created successfully.";
-            } else {
-                qDebug() << "Failed to create folder.";
-            }
-            reject();
-        }
+    if (manager->createUser(ui->registerUsername->text(), ui->registerPassword->text(), ui->registerNickname->text())) {
+        accept();
+    } else {
+        QMessageBox::warning(this, tr("Registration failed"), manager->lastError());
     }
 }
-
 void Register::onCancelButtonClicked() {
     reject();
 }

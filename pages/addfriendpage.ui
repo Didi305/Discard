@@ -61,7 +61,7 @@
         </font>
        </property>
        <property name="text">
-        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add a Friend&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Just do it you friendless dog&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Add a Friend&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;Enter a friend's name to send a request.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
        <property name="scaledContents">
         <bool>false</bool>

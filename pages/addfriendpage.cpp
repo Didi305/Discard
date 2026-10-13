@@ -30,11 +30,12 @@ void AddFriendPage::load(int userID) {
         PendingRow* pRow = new PendingRow(uptr.release()->data());
         ui->listLayout->addWidget(pRow);
         connect(pRow, &PendingRow::accepted, this, [this, pRow](Data d){
-            m_manager->acceptRequest(d);
+            if (!m_manager->acceptRequest(d)) return;
+
             pRow->deleteLater();
         });
         connect(pRow, &PendingRow::declined, this, [this, pRow](Data d){
-            m_manager->declineRequest(d.user_id);
+            if (!m_manager->declineRequest(d.user_id)) return;
             pRow->deleteLater();
         });
     }
@@ -48,11 +49,12 @@ void AddFriendPage::update(QJsonObject& obj, QString type) {
         PendingRow* pRow = new PendingRow(d);
         ui->listLayout->addWidget(pRow);
         connect(pRow, &PendingRow::accepted, this, [this, pRow](Data d){
-            m_manager->acceptRequest(d);
+            if (!m_manager->acceptRequest(d)) return;
+
             pRow->deleteLater();
         });
         connect(pRow, &PendingRow::declined, this, [this, pRow](Data d){
-            m_manager->declineRequest(d.user_id);
+            if (!m_manager->declineRequest(d.user_id)) return;
             pRow->deleteLater();
         });
     }

@@ -29,7 +29,7 @@ void OutgoingPage::setRequests(int userID) {
         ui->listLayout->addWidget(oRow);
         connect(oRow, &OutgoingRow::canceled, this,
                 [this, oRow](Data d) {
-                    m_manager->cancelRequest(d.user_id);
+                    if (!m_manager->cancelRequest(d.user_id)) return;
                     oRow->deleteLater();
                 });
     }
@@ -40,7 +40,7 @@ void OutgoingPage::update(int friend_id) {
     QLayoutItem *child;
     for (int i = 0; i < ui->listLayout->count(); ++i) {
         child = ui->listLayout->itemAt(i);
-        PendingRow *row = qobject_cast<PendingRow*>(child->widget());  //
+        OutgoingRow *row = qobject_cast<OutgoingRow*>(child->widget());  //
         if (!row) continue;
         int rowID = row->data().user_id;
         if(rowID == friend_id) delete child->widget();

@@ -1,3 +1,5 @@
+#include <QMessageBox>
+#include "attachmentactions.h"
 #include "directmessage.h"
 #include "ui_directmessage.h"
 #include <QDesktopServices>
@@ -128,7 +130,6 @@ void DirectMessage::appendMessage(QString name, QString text, QVector<Attachemen
                                    : QString();
     const QString bodyEscaped = Utils::toHtml(text);      // escape first
     const QString bodyHtml    = (!text.isEmpty()) ? Utils::wrapEmojisForHtml(bodyEscaped) : ""; // then wrap
-    std::println("attach paths: ", attachs[0].)
     const QString attHtml = mediaUtils::attachementsHtmlFor(attachs, doc, dpr);
     const QString msgHtml = QString(R"(
 <table class="msg" width="100%%" cellspacing="0" cellpadding="0">
@@ -169,6 +170,8 @@ void DirectMessage::load(Data partner)
 
 void DirectMessage::update(Data d)
 {
+    if (d.user_id != m_partner.user_id) return;
+    conversationID = d.message.sentIn;
     appendMessage(d.displayName, d.message.body, d.message.attachs, d.avatar, d.message.sentAt, lastMessageSender != d.user_id);
     lastMessageSender = d.user_id;
     messages.push_back(d.message);
@@ -186,30 +189,22 @@ bool DirectMessage::eventFilter(QObject *obj, QEvent *ev)
 
             QString txt = ui->messageInputLine->toPlainText().trimmed();
             if (txt.isEmpty() && m_pending.empty()) return true;
+
+
+            Data self{};
+            if (!m_manager->sendChatMessage(txt, conversationID, m_partner.user_id,
+                                            mediaUtils::chipToData(m_pending), self)) {
+                QMessageBox::warning(this, tr("Message not sent"),
+                    tr("Could not send the message. Check the connection and keep attachments below 8 MiB in total.")
+                    + "\n" + m_manager->lastError());
+                return true;
+            }
+            conversationID = self.message.sentIn;
             ui->messageInputLine->clear();
-
-            Data self = m_manager->getClient()->getClientData();
-            self.message = { txt, self.user_id, conversationID, mediaUtils::chipToData(m_pending), QDateTime::currentDateTimeUtc().toString() };
-            m_manager->getClient()->setClientData(self);
-
-            appendMessage(self.displayName, self.message.body, self.message.attachs, self.avatar, self.message.sentAt, lastMessageSender != self.user_id);
+            appendMessage(self.displayName, self.message.body, self.message.attachs, self.avatar,
+                          self.message.sentAt, lastMessageSender != self.user_id);
             lastMessageSender = self.user_id;
             messages.push_back(self.message);
-
-            auto message_id = m_manager->postMessage(txt, conversationID, m_manager->getClient()->getClientID(), m_partner.user_id);
-            QVector<Attachement> sharedAttachments;
-            for (auto *c : m_pending){
-                Attachement stored = m_manager->postAttachement(c->info(), message_id);
-                if (!stored.path.isEmpty()) sharedAttachments.push_back(stored);
-            }
-
-            // Only portable database references go over the socket. The receiver
-            // resolves them to files in its own local cache.
-            Data outbound = self;
-            outbound.message.attachs = sharedAttachments;
-            outbound.user_id = m_partner.user_id;
-            m_manager->getClient()->sendMessage(outbound, "message");
-
             emit newMessage(self.message, m_partner);
             v->setValue(v->maximum());
             ui->scrollArea->setVisible(false);
@@ -306,11 +301,11 @@ void DirectMessage::insertEmoji(const QString& e)
     QTextCharFormat emojiFmt = prevFmt;
     emojiFmt.setFontPointSize(20);
 #if defined(Q_OS_WIN)
-    emojiFmt.setFontFamily("Segoe UI Emoji");
+    emojiFmt.setFontFamilies({QStringLiteral("Segoe UI Emoji")});
 #elif defined(Q_OS_MAC)
-    emojiFmt.setFontFamily("Apple Color Emoji");
+    emojiFmt.setFontFamilies({QStringLiteral("Apple Color Emoji")});
 #else
-    emojiFmt.setFontFamily("Noto Color Emoji");
+    emojiFmt.setFontFamilies({QStringLiteral("Noto Color Emoji")});
 #endif
 
     cur.insertText(e, emojiFmt);
@@ -380,13 +375,15 @@ void DirectMessage::onAnchorClicked(const QUrl& url)
 {
     qDebug() << "[anchor] url =" << url;
     ui->messageView->clearFocus();
-    if (url.scheme() == "att" && url.host() == "open") {
+    if (url.scheme() == "att" && (url.host() == "open" || url.host() == "save")) {
         QString path;
+        QString displayName;
 
         // Prefer query ?path=...
         if (url.hasQuery()) {
             QUrlQuery q(url);
-            path = QUrl::fromPercentEncoding(q.queryItemValue("path").toUtf8());
+            path = q.queryItemValue("path", QUrl::FullyDecoded);
+            displayName = q.queryItemValue("name", QUrl::FullyDecoded);
         } else {
             // Fallback for att://open/C:/... form
             path = url.path();
@@ -396,9 +393,22 @@ void DirectMessage::onAnchorClicked(const QUrl& url)
         }
         qDebug() << "[anchor] decoded path =" << path;
 
-        if (!path.isEmpty()) {
-            auto* lb = new Lightbox;
-            lb->openOver(this, path);
+        if (path.isEmpty() || !QFileInfo(path).isFile() || !QFileInfo(path).isReadable()) {
+            QMessageBox::warning(this, tr("Attachment unavailable"),
+                tr("The attachment is not available locally. Reopen the conversation to fetch it again."));
+            return;
+        }
+        if (url.host() == "save") {
+            AttachmentActions::saveAs(this, path, displayName);
+        } else {
+            const QString mime = QMimeDatabase().mimeTypeForFile(path).name();
+            if (mime.startsWith("image/") || mime.startsWith("video/")) {
+                auto* lb = new Lightbox;
+                lb->openOver(this, path, displayName);
+            } else if (!QDesktopServices::openUrl(QUrl::fromLocalFile(path))) {
+                QMessageBox::warning(this, tr("Cannot open attachment"),
+                    tr("No application could open this file. Use Save as to save a copy."));
+            }
         }
         return;
     }
