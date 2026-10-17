@@ -1,12 +1,10 @@
 #include "manager.h"
 #include "utils/attachmentpayload.h"
 #include "utils/errormessages.h"
-#include "utils/inputlimits.h"
 #include "utils/mediacache.h"
 #include <QFile>
 #include <QFileInfo>
 #include <QJsonArray>
-#include <QStringList>
 #include <QTimer>
 
 Manager::Manager(QObject *parent)
@@ -20,6 +18,7 @@ Manager *Manager::get() {
 
 void Manager::setClient(Client *client) {
     this->client = client;
+    accountAuthentication.setClient(client);
 }
 
 Client *Manager::getClient() {
@@ -57,12 +56,9 @@ QJsonObject Manager::call(const QString &operation, const QJsonObject &arguments
 }
 
 bool Manager::checkUsernameLength(const QString &username) {
-    requestError.clear();
-    if (username.size() > InputLimits::MaxUsernameLength) {
-        requestError = ErrorMessages::message({}, "username_too_long", {});
-        return false;
-    }
-    return true;
+    const bool valid = accountAuthentication.checkUsernameLength(username);
+    requestError = accountAuthentication.lastError();
+    return valid;
 }
 
 QString
@@ -90,64 +86,39 @@ Data Manager::profile(const QJsonObject &userObject) {
 }
 
 bool Manager::authenticate(const QString &username, const QString &password) {
-    awaitingSecondFactor = false;
-    if (!checkUsernameLength(username)) {
+    const auto result = accountAuthentication.authenticate(username, password);
+    requestError = accountAuthentication.lastError();
+    if (result.status != AccountAuthentication::SignInStatus::Authenticated) {
         return false;
     }
-    const auto reply = call("login", {{"username", username}, {"password", password}});
-    if (!reply["ok"].toBool()) {
-        return false;
-    }
-    const auto result = reply["result"].toObject();
-    if (result["mfa_required"].toBool()) {
-        awaitingSecondFactor = true;
-        return false;
-    }
-    return finishAuthentication(result);
+    return finishAuthentication(result.user);
 }
 
 bool Manager::secondFactorRequired() const {
-    return awaitingSecondFactor;
+    return accountAuthentication.secondFactorRequired();
 }
 
 bool Manager::verifySecondFactor(const QString &code) {
-    if (!awaitingSecondFactor) {
-        requestError = tr("Start sign-in again with your username and password.");
+    const auto result = accountAuthentication.verifySecondFactor(code);
+    requestError = accountAuthentication.lastError();
+    if (result.status != AccountAuthentication::SignInStatus::Authenticated) {
         return false;
     }
-    const auto reply = call("login_verify", {{"code", code.trimmed()}});
-    if (!reply["ok"].toBool()) {
-        return false;
-    }
-    return finishAuthentication(reply["result"].toObject());
+    return finishAuthentication(result.user);
 }
 
 void Manager::cancelAuthentication() {
-    awaitingSecondFactor = false;
-    if (client) {
-        client->disconnectFromServer();
-    }
+    accountAuthentication.cancelAuthentication();
 }
 
 QJsonObject Manager::securityRequest(const QString &operation, const QJsonObject &arguments) {
-    static const QStringList allowedOperations = {
-        "mfa_status", "mfa_setup_begin", "mfa_setup_confirm", "mfa_setup_cancel", "mfa_disable"};
-    if (!allowedOperations.contains(operation)) {
-        requestError = tr("Unknown account security operation.");
-        return {};
-    }
-    return call(operation, arguments);
+    const auto reply = accountAuthentication.securityRequest(operation, arguments);
+    requestError = accountAuthentication.lastError();
+    return reply;
 }
 
-bool Manager::finishAuthentication(const QJsonObject &result) {
-    const auto userObject = result["user"].toObject();
-    const int userId = userObject["id"].toInt();
-    if (userId <= 0) {
-        requestError = tr("The server returned an incomplete sign-in response.");
-        return false;
-    }
+bool Manager::finishAuthentication(const QJsonObject &userObject) {
     // Protected profile/media requests happen only after both factors are accepted.
-    awaitingSecondFactor = false;
     avatarPaths.clear();
     auto profileData = profile(userObject);
     client->setClientID(profileData.user_id);
@@ -164,25 +135,21 @@ bool Manager::finishAuthentication(const QJsonObject &result) {
 }
 
 bool Manager::createUser(QString username, QString password, QString nickname) {
-    if (!checkUsernameLength(username)) {
-        return false;
-    }
-    const auto reply =
-        call("register", {{"username", username}, {"password", password}, {"nickname", nickname}});
-    return reply["ok"].toBool();
+    const bool created = accountAuthentication.createUser(username, password, nickname);
+    requestError = accountAuthentication.lastError();
+    return created;
 }
 
 bool Manager::checkUsernameAvailibity(QString username) {
-    if (!checkUsernameLength(username)) {
-        return false;
-    }
-    const auto reply = call("available", {{"field", "username"}, {"value", username}});
-    return reply["ok"].toBool() && reply["result"].toObject()["available"].toBool();
+    const bool available = accountAuthentication.checkUsernameAvailability(username);
+    requestError = accountAuthentication.lastError();
+    return available;
 }
 
 bool Manager::checkNicknameAvailibity(QString nickname) {
-    const auto reply = call("available", {{"field", "nickname"}, {"value", nickname}});
-    return reply["ok"].toBool() && reply["result"].toObject()["available"].toBool();
+    const bool available = accountAuthentication.checkNicknameAvailability(nickname);
+    requestError = accountAuthentication.lastError();
+    return available;
 }
 
 bool Manager::updateUserAvatar(QString path, QString nickname) {

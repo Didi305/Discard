@@ -1,4 +1,5 @@
 #pragma once
+#include "accountauthentication.h"
 #include "client.h"
 #include "utils.h"
 #include "utils/conversationsummary.h"
@@ -45,11 +46,11 @@ public:
 
 private:
     Client *client = nullptr;
+    AccountAuthentication accountAuthentication;
     QHash<int, QString> avatarPaths;
-    bool awaitingSecondFactor = false;
     QString requestError;
     QJsonObject call(const QString &operation, const QJsonObject &arguments = {});
-    bool finishAuthentication(const QJsonObject &result);
+    bool finishAuthentication(const QJsonObject &userObject);
     Data profile(const QJsonObject &userObject);
     QString
     avatarPathFromValues(int userId, const QByteArray &avatarBytes, const QString &filename);
