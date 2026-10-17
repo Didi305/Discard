@@ -99,3 +99,116 @@ QPushButton[role="secondary"]:pressed {
     background-color: #35393f;
 }
 
+/* Authenticator settings use compact sections with a shared visual hierarchy. */
+#twoFactorSettingsDialog QLabel {
+    background: transparent;
+    color: #dce2ee;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+#twoFactorSettingsDialog QLabel[role="dialogHeading"] {
+    color: #f4f6fa;
+    font-size: 25px;
+    font-weight: 650;
+}
+
+#twoFactorSettingsDialog QLabel[role="stepHeading"] {
+    color: #f0f3fa;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+#twoFactorSettingsDialog QLabel[role="hint"] {
+    color: #a8b3c6;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+#twoFactorSettingsDialog #setupStepNumber {
+    border-radius: 14px;
+    background-color: #2a3c5a;
+    color: #afceff;
+    font-size: 14px;
+    font-weight: 650;
+}
+
+#twoFactorSettingsDialog QLineEdit {
+    background-color: #293244;
+    border: 2px solid #465570;
+    border-radius: 10px;
+    color: #f6f8ff;
+    padding: 10px 12px;
+    font-size: 15px;
+}
+
+#twoFactorSettingsDialog QLineEdit:focus {
+    background-color: #303e58;
+    border-color: #91b4ff;
+}
+
+#twoFactorSettingsDialog #totpSetupKey {
+    font-family: Consolas, "Cascadia Code", monospace;
+    font-size: 13px;
+}
+
+#twoFactorSettingsDialog #totpSetupCode {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 2px;
+}
+
+#twoFactorSettingsDialog #twoFactorAccountStatus {
+    background-color: #262e3c;
+    border: 1px solid #3c4b63;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 15px;
+}
+
+#twoFactorSettingsDialog #twoFactorError {
+    color: #ffadb9;
+    font-size: 13px;
+}
+
+#twoFactorSettingsDialog QPushButton {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#twoFactorSettingsDialog QPushButton[role="primary"] {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    color: white;
+}
+
+#twoFactorSettingsDialog QPushButton[role="primary"]:hover {
+    background-color: #4c8ef7;
+    border-color: #6a9fff;
+}
+
+#twoFactorSettingsDialog QPushButton[role="primary"]:disabled {
+    background-color: #2a477e;
+    border-color: #2a477e;
+    color: #a9bfdc;
+}
+
+#twoFactorSettingsDialog QPushButton[role="danger"] {
+    background-color: #653347;
+    border-color: #92516a;
+    color: #ffe5ed;
+}
+
+#twoFactorSettingsDialog QPushButton[role="danger"]:hover {
+    background-color: #7b3e55;
+}
+
+#twoFactorSettingsDialog #recoveryCodes {
+    background-color: #252e3e;
+    border: 1px solid #465570;
+    border-radius: 10px;
+    color: #f0f5ff;
+    font-family: Consolas, "Cascadia Code", monospace;
+    font-size: 14px;
+    padding: 12px;
+}

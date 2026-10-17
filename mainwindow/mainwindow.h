@@ -49,6 +49,7 @@ public:
 private slots:
     void onConnectionSuccess();
     void onAvatarButtonClicked();
+    void onAccountSecurityClicked();
     void onDisconnectClicked();
     void onItemDragging(int n);
     void onItemNotDragged();

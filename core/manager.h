@@ -13,8 +13,13 @@ public:
     void setClient(Client *client);
     Client *getClient();
     bool authenticate(const QString &username, const QString &password);
+    bool secondFactorRequired() const;
+    bool verifySecondFactor(const QString &code);
+    void cancelAuthentication();
+    QJsonObject securityRequest(const QString &operation, const QJsonObject &arguments = {});
     bool connectServer();
     QString lastError() const;
+    bool checkUsernameLength(const QString &username);
     bool createUser(QString username, QString password, QString nickname);
     bool checkUsernameAvailibity(QString username);
     bool checkNicknameAvailibity(QString nickname);
@@ -41,8 +46,10 @@ public:
 private:
     Client *client = nullptr;
     QHash<int, QString> avatarPaths;
+    bool awaitingSecondFactor = false;
     QString requestError;
     QJsonObject call(const QString &operation, const QJsonObject &arguments = {});
+    bool finishAuthentication(const QJsonObject &result);
     Data profile(const QJsonObject &userObject);
     QString
     avatarPathFromValues(int userId, const QByteArray &avatarBytes, const QString &filename);

@@ -16,6 +16,12 @@ public:
     bool init(const QString &configPath, QString &error);
     QJsonObject dispatch(int actorId, const QString &operation, const QJsonObject &arguments);
     QList<int> friendIds(int actorId);
+    int verifyLoginPassword(const QJsonObject &arguments);
+    bool mfaEnabled(int userId);
+    QJsonObject finishLogin(int userId);
+    QJsonObject verifyLoginFactor(int userId, const QJsonObject &arguments);
+    QJsonObject beginMfaSetup(int actorId, const QJsonObject &arguments);
+    QJsonObject confirmMfaSetup(int actorId, const QString &secret, const QJsonObject &arguments);
 signals:
     void notifyUser(int userId, QJsonObject event);
 
@@ -30,7 +36,10 @@ private:
     int conversation(int actorId, int peerId, bool create);
     QJsonArray attachments(int messageId);
     QJsonObject message(QSqlQuery &row);
-    QJsonObject login(const QJsonObject &arguments);
+    void verifyActorPassword(int actorId, const QJsonObject &arguments);
+    bool consumeMfaCode(int userId, const QString &code, bool disable = false);
+    QJsonObject mfaStatus(int actorId);
+    QJsonObject disableMfa(int actorId, const QJsonObject &arguments);
     QJsonObject registerUser(const QJsonObject &arguments);
     QJsonObject sendMessage(int actorId, const QJsonObject &arguments);
     QJsonObject

@@ -2,6 +2,7 @@
 #include "ui_login.h"
 #include "register.h"
 #include "manager.h"
+#include "twofactor.h"
 #include <QApplication>
 
 Login::Login(QWidget *parent) : QDialog(parent), ui(new Ui::Login), manager(Manager::get()) {
@@ -43,15 +44,26 @@ bool Login::connectToDatabase() {
 }
 
 void Login::onLoginButtonClicked(){
-    auto *client = manager->getClient();
     QString username = ui->loginUsername->text();
     QString password = ui->loginPassword->text();
     if (username.isEmpty() || password.isEmpty()) {
         showError(tr("Enter your username and password."));
         return;
     }
+    if (!manager->checkUsernameLength(username)) {
+        showError(manager->lastError());
+        return;
+    }
     if (!connectToDatabase()) return;
     if (!manager->authenticate(username, password)) {
+        if (manager->secondFactorRequired()) {
+            ui->loginPassword->clear();
+            SecondFactorDialog secondFactor(manager, this);
+            if (secondFactor.exec() == QDialog::Accepted) {
+                accept();
+            }
+            return;
+        }
         showError(manager->lastError());
         return;
     }

@@ -1,8 +1,10 @@
 #include "chatserver.h"
 #include "../server/manager.h"
+#include "../utils/inputlimits.h"
 #include "serverprotocol.h"
 #include <QJsonArray>
 #include <QJsonParseError>
+#include <QTimer>
 #include <stdexcept>
 
 namespace {
@@ -13,6 +15,24 @@ ChatServer::ChatServer(Manager &serverManager, QObject *parent)
     : QObject(parent),
       manager(serverManager) {
     clock.start();
+
+    auto *expiryTimer = new QTimer(this);
+    connect(expiryTimer, &QTimer::timeout, this, [this] {
+        const qint64 elapsedMilliseconds = clock.elapsed();
+        for (auto &session : sessions) {
+            if (session.pendingUserId > 0 && elapsedMilliseconds >= session.loginExpires) {
+                session.pendingUserId = 0;
+                session.loginExpires = 0;
+                session.factorAttempts = 0;
+            }
+            if (!session.pendingTotpKey.isEmpty() && elapsedMilliseconds >= session.setupExpires) {
+                session.pendingTotpKey.clear();
+                session.setupExpires = 0;
+                session.setupAttempts = 0;
+            }
+        }
+    });
+    expiryTimer->start(1000);
 
     connect(&manager, &Manager::notifyUser, this, &ChatServer::notify);
     connect(&server, &QTcpServer::newConnection, this, [this] {
@@ -121,6 +141,121 @@ void ChatServer::read(QTcpSocket *socket) {
     }
 }
 
+void ChatServer::limitPasswordAttempts(const QString &identity) {
+    const qint64 elapsedMilliseconds = clock.elapsed();
+    for (auto windowIterator = passwordWindows.begin(); windowIterator != passwordWindows.end();) {
+        if (elapsedMilliseconds - windowIterator->started >= 60000) {
+            windowIterator = passwordWindows.erase(windowIterator);
+        } else {
+            ++windowIterator;
+        }
+    }
+
+    // Bound the map as well as individual usernames, so random account names
+    // cannot grow server memory without limit.
+    if (!passwordWindows.contains(identity) && passwordWindows.size() >= 1024) {
+        throw std::runtime_error("rate_limited");
+    }
+
+    auto &passwordWindow = passwordWindows[identity];
+    if (passwordWindow.attempts == 0) {
+        passwordWindow.started = elapsedMilliseconds;
+    }
+    ++passwordWindow.attempts;
+    if (passwordWindow.attempts > 30) {
+        throw std::runtime_error("rate_limited");
+    }
+}
+
+QJsonObject ChatServer::startLogin(Session &session, const QJsonObject &arguments) {
+    session.pendingUserId = 0;
+    session.loginExpires = 0;
+    session.factorAttempts = 0;
+
+    const auto usernameValue = arguments.value("username");
+    const QString username = usernameValue.toString();
+    if (!usernameValue.isString() || username.size() > InputLimits::MaxUsernameLength ||
+        username.trimmed().isEmpty() || username.contains(QChar::Null)) {
+        throw std::runtime_error("invalid_request");
+    }
+
+    limitPasswordAttempts("username:" + username);
+    const int userId = manager.verifyLoginPassword(arguments);
+    if (manager.mfaEnabled(userId)) {
+        session.pendingUserId = userId;
+        session.loginExpires = clock.elapsed() + 120000;
+        return {{"mfa_required", true}};
+    }
+
+    const auto result = manager.finishLogin(userId);
+    session.userId = userId;
+    return result;
+}
+
+QJsonObject ChatServer::verifyLoginCode(Session &session, const QJsonObject &arguments) {
+    if (session.pendingUserId == 0 || clock.elapsed() >= session.loginExpires) {
+        session.pendingUserId = 0;
+        session.loginExpires = 0;
+        session.factorAttempts = 0;
+        throw std::runtime_error("authentication_expired");
+    }
+
+    ++session.factorAttempts;
+    QJsonObject result;
+    try {
+        result = manager.verifyLoginFactor(session.pendingUserId, arguments);
+    } catch (...) {
+        if (session.factorAttempts >= 5) {
+            session.pendingUserId = 0;
+            session.loginExpires = 0;
+            session.factorAttempts = 0;
+        }
+        throw;
+    }
+
+    session.userId = session.pendingUserId;
+    session.pendingUserId = 0;
+    session.loginExpires = 0;
+    session.factorAttempts = 0;
+    return result;
+}
+
+QJsonObject ChatServer::beginTotpSetup(Session &session, const QJsonObject &arguments) {
+    limitPasswordAttempts("user:" + QString::number(session.userId));
+    const auto result = manager.beginMfaSetup(session.userId, arguments);
+    session.pendingTotpKey = result["secret"].toString();
+    session.setupExpires = clock.elapsed() + 300000;
+    session.setupAttempts = 0;
+    return result;
+}
+
+QJsonObject ChatServer::confirmTotpSetup(Session &session, const QJsonObject &arguments) {
+    if (session.pendingTotpKey.isEmpty() || clock.elapsed() >= session.setupExpires) {
+        session.pendingTotpKey.clear();
+        session.setupExpires = 0;
+        session.setupAttempts = 0;
+        throw std::runtime_error("mfa_setup_expired");
+    }
+
+    ++session.setupAttempts;
+    QJsonObject result;
+    try {
+        result = manager.confirmMfaSetup(session.userId, session.pendingTotpKey, arguments);
+    } catch (...) {
+        if (session.setupAttempts >= 5) {
+            session.pendingTotpKey.clear();
+            session.setupExpires = 0;
+            session.setupAttempts = 0;
+        }
+        throw;
+    }
+
+    session.pendingTotpKey.clear();
+    session.setupExpires = 0;
+    session.setupAttempts = 0;
+    return result;
+}
+
 void ChatServer::dispatch(QTcpSocket *socket, const QJsonObject &request) {
     const auto requestId = request["request_id"].toString();
     QJsonObject reply{{"type", "response"}, {"request_id", requestId}, {"ok", false}};
@@ -131,8 +266,17 @@ void ChatServer::dispatch(QTcpSocket *socket, const QJsonObject &request) {
 
         const auto operation = request["type"].toString();
         const auto arguments = request["args"].toObject();
+        // These checks precede special authentication operations too. No
+        // request may pick its own actor or pending second-factor identity.
+        for (const auto &key : {"user_id", "sender_id", "messageSender", "actor_id"}) {
+            if (arguments.contains(key)) {
+                throw std::runtime_error("invalid_request");
+            }
+        }
+
         auto &session = sessions[socket];
-        if (operation == "login" || operation == "register" || operation == "available") {
+        if (operation == "login" || operation == "register" || operation == "available" ||
+            operation == "login_verify") {
             if (session.userId > 0) {
                 throw std::runtime_error("already_authenticated");
             }
@@ -148,15 +292,37 @@ void ChatServer::dispatch(QTcpSocket *socket, const QJsonObject &request) {
             throw std::runtime_error("authentication_required");
         }
 
-        auto result = manager.dispatch(session.userId, operation, arguments);
+        QJsonObject result;
+        bool completedLogin = false;
         if (operation == "login") {
-            session.userId = result["user"].toObject()["id"].toInt();
+            result = startLogin(session, arguments);
+            completedLogin = session.userId > 0;
+        } else if (operation == "login_verify") {
+            result = verifyLoginCode(session, arguments);
+            completedLogin = true;
+        } else if (operation == "mfa_setup_begin") {
+            result = beginTotpSetup(session, arguments);
+        } else if (operation == "mfa_setup_confirm") {
+            result = confirmTotpSetup(session, arguments);
+        } else if (operation == "mfa_setup_cancel") {
+            session.pendingTotpKey.clear();
+            session.setupExpires = 0;
+            session.setupAttempts = 0;
+        } else {
+            if (operation == "mfa_disable") {
+                limitPasswordAttempts("user:" + QString::number(session.userId));
+            }
+            result = manager.dispatch(session.userId, operation, arguments);
+        }
+
+        if (completedLogin) {
+            const int userId = session.userId;
             send(socket,
                  {{"type", "response"},
                   {"request_id", requestId},
                   {"ok", true},
                   {"result", result}});
-            presence(session.userId, true);
+            presence(userId, true);
             return;
         }
         if (operation == "friends") {

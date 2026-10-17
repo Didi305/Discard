@@ -1,5 +1,6 @@
 #include <QStatusBar>
 #include "mainwindow.h"
+#include "twofactor.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -29,6 +30,13 @@ MainWindow::MainWindow(QWidget *parent)
     ui->userAvatarButton->setIcon(QIcon(Utils::makeRoundedAvatar(client->getClientAvatar(), 48)));
     QIcon icon(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + "/C++/Discard/resources/icons/exit.svg");
     ui->disconnectButton->setIcon(icon);
+
+    auto *securityButton = new QPushButton(tr("Two-factor Authentication"), this);
+    securityButton->setObjectName("accountSecurityButton");
+    securityButton->setMinimumHeight(40);
+    securityButton->setCursor(Qt::PointingHandCursor);
+    ui->verticalLayout_2->addWidget(securityButton);
+    connect(securityButton, &QPushButton::clicked, this, &MainWindow::onAccountSecurityClicked);
 
 
     connect(ui->userAvatarButton, &QPushButton::clicked, this, &MainWindow::onAvatarButtonClicked);
@@ -122,6 +130,11 @@ void MainWindow::onAvatarButtonClicked()
     updateAvatar(cachedAvatar);
 }
 
+void MainWindow::onAccountSecurityClicked() {
+    AccountSecurityDialog security(manager, this);
+    security.exec();
+}
+
 void MainWindow::refreshForUser(){
     updateAvatar(client->getClientAvatar());
     ui->userNameLabel->setText(client->getClientName());
@@ -212,5 +225,3 @@ void MainWindow::onItemNotDragged()
 {
     m_banner->hideBanner();
 }
-
-

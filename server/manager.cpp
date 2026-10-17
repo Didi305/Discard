@@ -1,4 +1,6 @@
 #include "manager.h"
+#include "../utils/inputlimits.h"
+#include "totp.h"
 #include <QCryptographicHash>
 #include <QDateTime>
 #include <QFile>
@@ -49,6 +51,14 @@ QString attachmentFileName(const QJsonObject &object) {
     return fileName;
 }
 
+QString factorCode(const QJsonObject &object) {
+    const auto value = object.value("code");
+    if (!value.isString() || value.toString().size() > 128 ||
+        value.toString().contains(QChar::Null)) {
+        return {};
+    }
+    return value.toString();
+}
 } // namespace
 
 Manager::Manager(QObject *parent)
@@ -104,6 +114,15 @@ bool Manager::init(const QString &configPath, QString &error) {
         query("SET search_path = pg_catalog, public");
     } catch (...) {
         error = "Could not initialize database session.";
+        return false;
+    }
+    try {
+        query(
+            "SELECT user_id,secret,last_counter,failed_attempts,locked_until FROM public.user_mfa LIMIT 0");
+        query("SELECT user_id,code_hash FROM public.mfa_recovery_code LIMIT 0");
+    } catch (...) {
+        error =
+            "MFA schema is missing or inaccessible. Apply server/mfa-migration.sql to chatdb as PostgreSQL administrator before restarting.";
         return false;
     }
     return true;
@@ -214,8 +233,8 @@ QJsonObject Manager::message(QSqlQuery &queryResult) {
             {"attachs", attachments(queryResult.value(0).toInt())}};
 }
 
-QJsonObject Manager::login(const QJsonObject &arguments) {
-    const auto username = text(arguments, "username", 128);
+int Manager::verifyLoginPassword(const QJsonObject &arguments) {
+    const auto username = text(arguments, "username", InputLimits::MaxUsernameLength);
     const auto password = text(arguments, "password", 1024);
     // Preserve the M1 password format for this migration; password hardening is separate.
     auto hash = QString::fromLatin1(
@@ -223,11 +242,148 @@ QJsonObject Manager::login(const QJsonObject &arguments) {
     auto queryResult =
         query("SELECT id FROM public.users WHERE username=? AND password_hash=?", {username, hash});
     require(queryResult.next(), "invalid_credentials");
-    return {{"user", profile(queryResult.value(0).toInt())}};
+    return queryResult.value(0).toInt();
+}
+
+void Manager::verifyActorPassword(int actorId, const QJsonObject &arguments) {
+    require(actorId > 0, "authentication_required");
+    const auto password = text(arguments, "password", 1024);
+    const auto hash = QString::fromLatin1(
+        QCryptographicHash::hash(password.toUtf8(), QCryptographicHash::Sha256).toHex());
+    auto queryResult =
+        query("SELECT 1 FROM public.users WHERE id=? AND password_hash=?", {actorId, hash});
+    require(queryResult.next(), "invalid_credentials");
+}
+
+bool Manager::mfaEnabled(int userId) {
+    auto queryResult = query("SELECT 1 FROM public.user_mfa WHERE user_id=?", {userId});
+    return queryResult.next();
+}
+
+QJsonObject Manager::finishLogin(int userId) {
+    return {{"user", profile(userId)}};
+}
+
+bool Manager::consumeMfaCode(int userId, const QString &code, bool disable) {
+    require(database.transaction(), "database_error");
+    bool accepted = false;
+    bool locked = false;
+    try {
+        // Lock the account's factor state so counter updates and recovery-code use
+        // remain single-use even when two sockets submit the same code together.
+        auto queryResult = query("SELECT secret,last_counter,failed_attempts,"
+                                 "COALESCE(locked_until > CURRENT_TIMESTAMP,false),"
+                                 "locked_until IS NOT NULL AND locked_until <= CURRENT_TIMESTAMP "
+                                 "FROM public.user_mfa WHERE user_id=? FOR UPDATE",
+                                 {userId});
+        const bool factorExists = queryResult.next();
+        locked = factorExists && queryResult.value(3).toBool();
+        if (factorExists && !locked) {
+            const auto secret = queryResult.value(0).toString();
+            const qint64 previous = queryResult.value(1).toLongLong();
+            const int failures = queryResult.value(4).toBool() ? 0 : queryResult.value(2).toInt();
+            const qint64 counter = Totp::matchingCounter(
+                secret, code, QDateTime::currentDateTimeUtc().toSecsSinceEpoch());
+            if (counter >= 0 && counter > previous) {
+                accepted = true;
+                query(
+                    "UPDATE public.user_mfa SET last_counter=?,failed_attempts=0,locked_until=NULL WHERE user_id=?",
+                    {counter, userId});
+            } else {
+                auto recovered = query(
+                    "DELETE FROM public.mfa_recovery_code WHERE user_id=? AND code_hash=? RETURNING code_hash",
+                    {userId, Totp::recoveryHash(code)});
+                accepted = recovered.next();
+                if (accepted) {
+                    query(
+                        "UPDATE public.user_mfa SET failed_attempts=0,locked_until=NULL WHERE user_id=?",
+                        {userId});
+                }
+            }
+            if (accepted && disable) {
+                query("DELETE FROM public.user_mfa WHERE user_id=?", {userId});
+            } else if (!accepted) {
+                const int nextFailures = failures + 1;
+                locked = nextFailures >= 5;
+                query(
+                    "UPDATE public.user_mfa SET failed_attempts=?,"
+                    "locked_until=CASE WHEN ? >= 5 THEN CURRENT_TIMESTAMP + INTERVAL '5 minutes' ELSE NULL END "
+                    "WHERE user_id=?",
+                    {nextFailures, nextFailures, userId});
+            }
+        }
+        // Commit failed-attempt counters too; throwing before this point would
+        // roll them back and allow reconnecting to bypass the account limit.
+        require(database.commit(), "database_error");
+    } catch (...) {
+        database.rollback();
+        throw;
+    }
+    // Report the cooldown only after its durable state has been committed.
+    require(!locked, "mfa_locked");
+    return accepted;
+}
+
+QJsonObject Manager::verifyLoginFactor(int userId, const QJsonObject &arguments) {
+    require(consumeMfaCode(userId, factorCode(arguments)), "invalid_mfa_code");
+    return finishLogin(userId);
+}
+
+QJsonObject Manager::beginMfaSetup(int actorId, const QJsonObject &arguments) {
+    verifyActorPassword(actorId, arguments);
+    require(!mfaEnabled(actorId), "mfa_already_enabled");
+    auto queryResult = query("SELECT username FROM public.users WHERE id=?", {actorId});
+    require(queryResult.next(), "not_found");
+    const auto secret = Totp::newSecret();
+    return {{"secret", secret},
+            {"uri", Totp::provisioningUri(secret, queryResult.value(0).toString())}};
+}
+
+QJsonObject
+Manager::confirmMfaSetup(int actorId, const QString &secret, const QJsonObject &arguments) {
+    require(actorId > 0, "authentication_required");
+    const qint64 counter = Totp::matchingCounter(
+        secret, factorCode(arguments), QDateTime::currentDateTimeUtc().toSecsSinceEpoch());
+    require(counter >= 0, "invalid_mfa_code");
+    require(database.transaction(), "database_error");
+    QJsonArray codes;
+    try {
+        auto queryResult =
+            query("INSERT INTO public.user_mfa(user_id,secret,last_counter) VALUES (?,?,?) "
+                  "ON CONFLICT (user_id) DO NOTHING RETURNING user_id",
+                  {actorId, secret, counter});
+        require(queryResult.next(), "mfa_already_enabled");
+        for (int i = 0; i < 10; ++i) {
+            const auto code = Totp::recoveryCode();
+            query("INSERT INTO public.mfa_recovery_code(user_id,code_hash) VALUES (?,?)",
+                  {actorId, Totp::recoveryHash(code)});
+            codes.append(code);
+        }
+        require(database.commit(), "database_error");
+    } catch (...) {
+        database.rollback();
+        throw;
+    }
+    return {{"enabled", true}, {"recovery_codes", codes}};
+}
+
+QJsonObject Manager::mfaStatus(int actorId) {
+    auto queryResult =
+        query("SELECT count(*) FROM public.mfa_recovery_code WHERE user_id=?", {actorId});
+    require(queryResult.next(), "database_error");
+    return {{"enabled", mfaEnabled(actorId)},
+            {"recovery_codes_remaining", queryResult.value(0).toInt()}};
+}
+
+QJsonObject Manager::disableMfa(int actorId, const QJsonObject &arguments) {
+    verifyActorPassword(actorId, arguments);
+    require(mfaEnabled(actorId), "mfa_not_enabled");
+    require(consumeMfaCode(actorId, factorCode(arguments), true), "invalid_mfa_code");
+    return {{"enabled", false}, {"recovery_codes_remaining", 0}};
 }
 
 QJsonObject Manager::registerUser(const QJsonObject &arguments) {
-    const auto username = text(arguments, "username", 128).trimmed();
+    const auto username = text(arguments, "username", InputLimits::MaxUsernameLength).trimmed();
     const auto nickname = text(arguments, "nickname", 128).trimmed();
     const auto password = text(arguments, "password", 1024);
     require(!username.contains(';') && !nickname.contains(';'), "invalid_request");
@@ -348,20 +504,24 @@ QJsonObject Manager::dispatch(int actorId, const QString &operation, const QJson
     for (const auto &key : {"user_id", "sender_id", "messageSender", "actor_id"}) {
         require(!arguments.contains(key), "invalid_request");
     }
-    if (operation == "login") {
-        return login(arguments);
-    }
     if (operation == "register") {
         return registerUser(arguments);
     }
     if (operation == "available") {
         const auto field = text(arguments, "field", 16);
         require(field == "username" || field == "nickname", "invalid_request");
+        const int maximumLength = field == "username" ? InputLimits::MaxUsernameLength : 128;
         auto queryResult = query("SELECT 1 FROM public.users WHERE " + field + "=?",
-                                 {text(arguments, "value", 128)});
+                                 {text(arguments, "value", maximumLength)});
         return {{"available", !queryResult.next()}};
     }
     require(actorId > 0, "authentication_required");
+    if (operation == "mfa_status") {
+        return mfaStatus(actorId);
+    }
+    if (operation == "mfa_disable") {
+        return disableMfa(actorId, arguments);
+    }
     if (operation == "friends") {
         QJsonArray rows;
         for (int peerId : friendIds(actorId)) {
