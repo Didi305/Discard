@@ -14,3 +14,7 @@ Makefile linguist-vendored
 *.cxx linguist-language=C++
 *.hpp linguist-language=C++
 *.h linguist-language=C++
+
+# Exclude stylesheets from GitHub language statistics
+*.css linguist-detectable=false
+*.qss linguist-detectable=false
