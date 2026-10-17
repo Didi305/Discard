@@ -68,6 +68,8 @@ find_package(Qt6 REQUIRED COMPONENTS Widgets)
         main.cpp
         styles/dark.qss
         resource.qrc
+        third_party/qrcodegen/qrcodegen.cpp
+        third_party/qrcodegen/qrcodegen.hpp
         ${CPP_SOURCES}
         ${HEADERS}
         ${UI_FILES}
@@ -102,6 +104,7 @@ target_include_directories(${PROJECT_NAME}
 add_subdirectory(server)
 if(WIN32)
     install(TARGETS Discard RUNTIME DESTINATION .)
+    install(FILES third_party/qrcodegen/LICENSE DESTINATION . RENAME LICENSE-qrcodegen.txt)
     qt_generate_deploy_app_script(TARGET Discard OUTPUT_SCRIPT discard_deploy
         NO_TRANSLATIONS NO_UNSUPPORTED_PLATFORM_ERROR)
     install(SCRIPT ${discard_deploy})

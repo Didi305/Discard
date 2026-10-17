@@ -38,6 +38,10 @@ private:
     QLabel *error;
     QPushButton *setupButton;
     QPushButton *disableButton;
+    QLabel *setupQr;
+    QLabel *setupInstructions;
+    QPushButton *manualKeyToggle;
+    QWidget *manualKeyPanel;
     QLineEdit *setupKey;
     QLineEdit *setupCode;
     QLineEdit *disablePassword;
@@ -52,6 +56,7 @@ private:
     QWidget *createDisablePage();
     void refreshStatus();
     void beginSetup();
+    void clearSetupDisplay();
     void confirmSetup();
     void cancelSetup();
     void disableMfa();

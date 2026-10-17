@@ -1,5 +1,6 @@
 #include "twofactor.h"
 #include "manager.h"
+#include "utils/authenticatorqr.h"
 #include <QApplication>
 #include <QCheckBox>
 #include <QClipboard>
@@ -16,9 +17,11 @@
 #include <QRegularExpression>
 #include <QRegularExpressionValidator>
 #include <QSaveFile>
+#include <QSignalBlocker>
 #include <QStackedWidget>
 #include <QTimer>
 #include <QVBoxLayout>
+#include <QtMath>
 
 namespace {
 // Each page gets its own natural height instead of inheriting the tallest page.
@@ -239,37 +242,69 @@ QWidget *AccountSecurityDialog::createSetupPage() {
     auto *page = new QWidget(pages);
     auto *content = pageLayout(page);
     addHeading(content, tr("Set up your authenticator"),
-               tr("Add this account to your phone, then verify a code to finish."));
+               tr("Scan with your phone, then enter a code to finish."));
 
-    auto *accountStep = addSetupStep(content, 1, tr("Add an account"),
-        tr("Open your authenticator app and choose Add account, then Enter a setup key."));
-    addText(accountStep,
+    auto *accountStep = addSetupStep(content, 1, tr("Add your account"), {});
+    setupInstructions = addText(accountStep,
+        tr("In your authenticator app, choose Add account, then Scan a QR code."));
+    setupInstructions->setProperty("role", "hint");
+
+    setupQr = new QLabel(page);
+    setupQr->setObjectName("authenticatorQr");
+    setupQr->setAlignment(Qt::AlignCenter);
+    setupQr->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    setupQr->setAccessibleName(tr("Scan this QR code with your authenticator app"));
+    accountStep->addWidget(setupQr, 0, Qt::AlignHCenter);
+
+    manualKeyToggle = new QPushButton(tr("Can't scan? Enter key manually"), page);
+    manualKeyToggle->setObjectName("manualKeyToggle");
+    manualKeyToggle->setCheckable(true);
+    manualKeyToggle->setAutoDefault(false);
+    manualKeyToggle->setCursor(Qt::PointingHandCursor);
+    accountStep->addWidget(manualKeyToggle);
+
+    manualKeyPanel = new QWidget(page);
+    auto *manualDetails = pageLayout(manualKeyPanel);
+    manualDetails->setSpacing(10);
+    addText(manualDetails,
             tr("Account: Discard (%1)\nType: Time based (TOTP)")
                 .arg(manager->getClient()->getClientName()))->setProperty("role", "hint");
-
-    auto *keyStep = addSetupStep(content, 2, tr("Add the setup key"),
-        tr("Copy or type this key into your app. Keep it private."));
     auto *keyRow = new QHBoxLayout;
     keyRow->setSpacing(8);
-    setupKey = new QLineEdit(page);
+    setupKey = new QLineEdit(manualKeyPanel);
     setupKey->setObjectName("totpSetupKey");
     setupKey->setReadOnly(true);
     setupKey->setFocusPolicy(Qt::ClickFocus);
     setupKey->setMinimumHeight(44);
     setupKey->setAccessibleName(tr("Private authenticator setup key"));
     keyRow->addWidget(setupKey, 1);
-    auto *copyKey = new QPushButton(tr("Copy"), page);
+    auto *copyKey = new QPushButton(tr("Copy"), manualKeyPanel);
     copyKey->setProperty("role", "secondary");
     copyKey->setAutoDefault(false);
     copyKey->setMinimumHeight(44);
     copyKey->setCursor(Qt::PointingHandCursor);
     keyRow->addWidget(copyKey);
-    keyStep->addLayout(keyRow);
+    manualDetails->addLayout(keyRow);
+    addText(manualDetails, tr("Keep this setup key private."))->setProperty("role", "hint");
+    accountStep->addWidget(manualKeyPanel);
+    manualKeyPanel->hide();
     connect(copyKey, &QPushButton::clicked, this, [this] {
         QApplication::clipboard()->setText(setupKey->text());
     });
+    connect(manualKeyToggle, &QPushButton::toggled, this, [this](bool manualEntry) {
+        manualKeyPanel->setVisible(manualEntry);
+        setupQr->setVisible(!manualEntry && !setupQr->pixmap().isNull());
+        manualKeyToggle->setText(manualEntry
+            ? tr("Scan a QR code instead") : tr("Can't scan? Enter key manually"));
+        setupInstructions->setText(manualEntry
+            ? tr("Choose Enter a setup key in your app, then use the details below.")
+            : tr("In your authenticator app, choose Add account, then Scan a QR code."));
+        pages->updateGeometry();
+        layout()->invalidate();
+        adjustSize();
+    });
 
-    auto *codeStep = addSetupStep(content, 3, tr("Verify your authenticator"),
+    auto *codeStep = addSetupStep(content, 2, tr("Verify your authenticator"),
         tr("Enter the current six-digit code shown in your app."));
     setupCode = new QLineEdit(page);
     setupCode->setObjectName("totpSetupCode");
@@ -283,6 +318,7 @@ QWidget *AccountSecurityDialog::createSetupPage() {
     setupCode->setValidator(new QRegularExpressionValidator(
         QRegularExpression("[0-9]{0,6}"), setupCode));
     codeStep->addWidget(setupCode, 0, Qt::AlignLeft);
+    QWidget::setTabOrder(manualKeyToggle, copyKey);
     QWidget::setTabOrder(copyKey, setupCode);
 
     const auto actions = addActionRow(content, tr("Enable 2FA"), tr("Cancel setup"));
@@ -400,10 +436,34 @@ void AccountSecurityDialog::beginSetup() {
     }
     setupPending=true;
     error->hide();setupCode->clear();
-    setupKey->clear();
+    clearSetupDisplay();
     setupKey->setText(result["secret"].toString());
+    const auto qr = AuthenticatorQr::render(result["uri"].toString(), devicePixelRatioF());
+    if (!qr.isNull()) {
+        setupQr->setPixmap(qr);
+        const auto displaySize = qr.deviceIndependentSize();
+        setupQr->setFixedSize(qCeil(displaySize.width()), qCeil(displaySize.height()));
+        setupQr->show();
+    } else {
+        manualKeyToggle->setChecked(true);
+        manualKeyToggle->setEnabled(false);
+        manualKeyToggle->setText(tr("QR unavailable. Enter the key manually."));
+    }
     pages->setCurrentIndex(1);
     setupCode->setFocus();
+}
+
+void AccountSecurityDialog::clearSetupDisplay() {
+    setupKey->clear();
+    setupQr->clear();
+    setupQr->hide();
+    manualKeyPanel->hide();
+    const QSignalBlocker blockToggle(manualKeyToggle);
+    manualKeyToggle->setChecked(false);
+    manualKeyToggle->setEnabled(true);
+    manualKeyToggle->setText(tr("Can't scan? Enter key manually"));
+    setupInstructions->setText(
+        tr("In your authenticator app, choose Add account, then Scan a QR code."));
 }
 
 void AccountSecurityDialog::confirmSetup() {
@@ -412,7 +472,7 @@ void AccountSecurityDialog::confirmSetup() {
     setupCode->clear();
     if(!reply["ok"].toBool()){showError();return;}
     setupPending=false;
-    setupKey->clear();error->hide();
+    clearSetupDisplay();error->hide();
     for(const auto &value:reply["result"].toObject()["recovery_codes"].toArray())recoveryCodes.append(value.toString());
     recoveryDisplay->setPlainText(recoveryCodes.join('\n'));
     codesSaved->setChecked(false);
@@ -421,7 +481,7 @@ void AccountSecurityDialog::confirmSetup() {
 
 void AccountSecurityDialog::cancelSetup() {
     if(setupPending)manager->securityRequest("mfa_setup_cancel");
-    setupPending=false;setupKey->clear();setupCode->clear();error->hide();
+    setupPending=false;clearSetupDisplay();setupCode->clear();error->hide();
     refreshStatus();
 }
 
@@ -459,7 +519,7 @@ void AccountSecurityDialog::reject() {
         error->show();return;
     }
     if(setupPending)manager->securityRequest("mfa_setup_cancel");
-    setupKey->clear();setupCode->clear();disablePassword->clear();disableCode->clear();
+    clearSetupDisplay();setupCode->clear();disablePassword->clear();disableCode->clear();
     recoveryDisplay->clear();recoveryCodes.clear();
     QDialog::reject();
 }

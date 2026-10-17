@@ -152,6 +152,37 @@ QPushButton[role="secondary"]:pressed {
     font-size: 13px;
 }
 
+#twoFactorSettingsDialog #authenticatorQr {
+    background-color: white;
+    border: none;
+    padding: 0;
+}
+
+#twoFactorSettingsDialog #manualKeyToggle {
+    background: transparent;
+    border: none;
+    color: #a9caff;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: left;
+    padding: 4px 0;
+    min-width: 0;
+}
+
+#twoFactorSettingsDialog #manualKeyToggle:hover {
+    color: #d4e4ff;
+    text-decoration: underline;
+}
+
+#twoFactorSettingsDialog #manualKeyToggle:focus {
+    color: white;
+    text-decoration: underline;
+}
+
+#twoFactorSettingsDialog #manualKeyToggle:disabled {
+    color: #a8b3c6;
+}
+
 #twoFactorSettingsDialog #totpSetupCode {
     font-size: 20px;
     font-weight: 600;

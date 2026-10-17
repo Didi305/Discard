@@ -66,6 +66,14 @@ Copy-Item -LiteralPath '.\build\vscode-release\Discard.exe' -Destination 'C:\Use
 as an exact filename. `-Force` replaces the older executable. Keep the existing
 Qt DLLs beside it; this change adds no client runtime dependency.
 
+Copy the bundled QR encoder's license beside the executable too:
+
+```powershell
+Copy-Item -LiteralPath '.\third_party\qrcodegen\LICENSE' -Destination 'C:\Users\giler\Desktop\docs\m2-setup-20261009\Discard-M2-Windows\LICENSE-qrcodegen.txt' -Force
+```
+
+This includes the license notice for the QR encoder compiled into Discard.
+
 ## 4. Transfer the server update to the VM
 
 Still in **Windows PowerShell**, upload the prepared archive:
@@ -177,16 +185,18 @@ Alice's current **Discard password**, not an Ubuntu or PostgreSQL password.
 This password confirmation prevents an unattended logged-in client from adding
 a factor without knowledge of the account password.
 
-Discard shows a **setup key**. In your authenticator app:
+Discard shows a **QR code**, generated locally inside the client. On your phone:
 
-1. Choose **Add account** and **Enter a setup key** (wording may vary by app).
-2. Set the name to **Discard - Alice** so you can identify the account.
-3. Enter the exact setup key from Discard.
-4. Choose **Time based / TOTP**, then add the account.
+1. Open your authenticator app and choose **Add account**.
+2. Choose **Scan a QR code** (wording may vary by app).
+3. Scan the QR code displayed by Discard. The app imports the account and setup key.
 
-The key lets your phone and server calculate matching codes. Keep it private;
-someone with the key can reproduce the authenticator. Do not include it in
-evidence screenshots.
+If scanning is unavailable, choose **Can't scan? Enter key manually** in Discard.
+In the phone app choose **Enter a setup key**, enter the displayed key, give the
+account a recognizable name such as **Discard - Alice**, and select **Time based / TOTP**.
+
+The QR code contains the same private key as manual setup. Keep both out of
+evidence screenshots; the key lets the phone and server calculate matching codes.
 
 Enter the phone's current six-digit code into Discard and click **Enable 2FA**.
 This proves the phone has the correct key before the server enables the factor.
