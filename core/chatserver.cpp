@@ -1,124 +1,343 @@
 #include "chatserver.h"
-#include "qtcpsocket.h"
-#include <qjsonarray.h>
-#include <qjsondocument.h>
-#include <qjsonobject.h>
-ChatServer::ChatServer(QObject *parent)
-    : QObject(parent)
-{
-    tcpServer = new QTcpServer(this);
-    handlers["friend_request"] = [this](QJsonObject &obj, QTcpSocket* socket){ updateRequest(obj, socket);};
-    handlers["init"] = [this](QJsonObject &obj, QTcpSocket* socket){ init(obj, socket);};
-    handlers["user_status"] = [this](QJsonObject &obj, QTcpSocket* socket){ checkUserStatus(obj, socket);};
-    handlers["message"] = [this](QJsonObject &obj, QTcpSocket *socket){sendMessage(obj, socket);};
-    connect(tcpServer, &QTcpServer::newConnection, this, &ChatServer::onNewConnection);
-    tcpServer->listen(QHostAddress::Any, 1234);
-}
-ChatServer::~ChatServer() {
-    delete tcpServer;
+#include "../server/manager.h"
+#include "../utils/inputlimits.h"
+#include "serverprotocol.h"
+#include <QJsonArray>
+#include <QJsonParseError>
+#include <QTimer>
+#include <stdexcept>
+
+namespace {
+constexpr qsizetype MaxFrame = 16 * 1024 * 1024;
 }
 
+ChatServer::ChatServer(Manager &serverManager, QObject *parent)
+    : QObject(parent),
+      manager(serverManager) {
+    clock.start();
 
-
-    void ChatServer::onNewConnection() {
-        while(tcpServer->hasPendingConnections()){
-            QTcpSocket *clientSocket = tcpServer->nextPendingConnection();
-            connect(clientSocket, &QTcpSocket::readyRead, this, &ChatServer::readClient);
-            connect(clientSocket, &QTcpSocket::disconnected, this, &ChatServer::clientDisconnected);
-            clients.insert(clientSocket, 0);
-            qDebug() << "New User just connected: " << clientSocket;
-            qDebug() << "Users already connected: " << clients;
+    auto *expiryTimer = new QTimer(this);
+    connect(expiryTimer, &QTimer::timeout, this, [this] {
+        const qint64 elapsedMilliseconds = clock.elapsed();
+        for (auto &session : sessions) {
+            if (session.pendingUserId > 0 && elapsedMilliseconds >= session.loginExpires) {
+                session.pendingUserId = 0;
+                session.loginExpires = 0;
+                session.factorAttempts = 0;
+            }
+            if (!session.pendingTotpKey.isEmpty() && elapsedMilliseconds >= session.setupExpires) {
+                session.pendingTotpKey.clear();
+                session.setupExpires = 0;
+                session.setupAttempts = 0;
+            }
         }
-    };
-    void ChatServer::clientDisconnected(){
-        QTcpSocket* clientSocket = qobject_cast<QTcpSocket*>(sender());
-        for(auto it = clients.constBegin(); it != clients.constEnd(); ++it){
-            it.key()->write(Utils::updateStatus(clients[clientSocket], false));
-        }
-        qDebug() << "Client disconnected: " << clientSocket;
-        int client_ID = clients[clientSocket];
-        clients.remove(clientSocket);
-        clientsR.remove(client_ID);
-        clientSocket->deleteLater();
-    };
+    });
+    expiryTimer->start(1000);
 
+    connect(&manager, &Manager::notifyUser, this, &ChatServer::notify);
+    connect(&server, &QTcpServer::newConnection, this, [this] {
+        while (server.hasPendingConnections()) {
+            auto *socket = server.nextPendingConnection();
+            if (sessions.size() >= 64) {
+                socket->disconnectFromHost();
+                socket->deleteLater();
+                continue;
+            }
 
-
-    void ChatServer::readClient(){
-
-        QTcpSocket* clientSocket = qobject_cast<QTcpSocket*>(sender());
-        while(clientSocket->canReadLine()){
-            QByteArray data = clientSocket->readLine().trimmed();
-            QJsonObject obj = Utils::parseJson(data);
-            qDebug() << "message li ja l server: " << obj["messageBody"].toString();
-            QString dataType = obj["type"].toString();
-            if(updateFriendshipTypes.contains(dataType)) dataType = "friend_request";
-            for(auto it = handlers.constBegin(); it != handlers.constEnd(); ++it){
-                if(it.key() == dataType){
-                    it.value()(obj, clientSocket);
+            socket->setReadBufferSize(MaxFrame + 1);
+            sessions.insert(socket, {});
+            connect(socket, &QTcpSocket::readyRead, this, [this, socket] {
+                read(socket);
+            });
+            connect(socket, &QTcpSocket::disconnected, this, [this, socket] {
+                const int userId = sessions.value(socket).userId;
+                sessions.remove(socket);
+                if (userId > 0 && !online(userId)) {
+                    presence(userId, false);
                 }
+                socket->deleteLater();
+            });
+        }
+    });
+}
+
+bool ChatServer::listen(const QHostAddress &address, quint16 port) {
+    return server.listen(address, port);
+}
+
+bool ChatServer::online(int userId) const {
+    for (const auto &session : sessions) {
+        if (session.userId == userId) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void ChatServer::send(QTcpSocket *socket, const QJsonObject &jsonObject) {
+    const auto frame = ServerProtocol::jsonObjectToData(jsonObject);
+    if (frame.size() > MaxFrame || socket->bytesToWrite() + frame.size() > 2 * MaxFrame) {
+        socket->abort();
+        return;
+    }
+    socket->write(frame);
+}
+
+void ChatServer::notify(int userId, const QJsonObject &event) {
+    const auto sockets = sessions.keys();
+    for (auto *socket : sockets) {
+        if (sessions.value(socket).userId == userId) {
+            send(socket, event);
+        }
+    }
+}
+
+void ChatServer::presence(int userId, bool isOnline) {
+    try {
+        const auto friendUserIds = manager.friendIds(userId);
+        const QJsonObject event{
+            {"type", "friend_update"},
+            {"id", userId},
+            {"bool", isOnline},
+        };
+
+        for (int friendUserId : friendUserIds) {
+            notify(friendUserId, event);
+        }
+    } catch (...) {
+        // Database errors must not escape a Qt signal handler.
+    }
+}
+
+void ChatServer::read(QTcpSocket *socket) {
+    if (!sessions.contains(socket)) {
+        return;
+    }
+
+    sessions[socket].buffer += socket->readAll();
+    while (sessions.contains(socket)) {
+        auto &buffer = sessions[socket].buffer;
+        const auto newlineIndex = buffer.indexOf('\n');
+        if (newlineIndex < 0) {
+            if (buffer.size() > MaxFrame) {
+                socket->abort();
+            }
+            return;
+        }
+        if (newlineIndex > MaxFrame) {
+            socket->abort();
+            return;
+        }
+
+        const auto jsonLine = buffer.left(newlineIndex);
+        buffer.remove(0, newlineIndex + 1);
+        QJsonParseError parseError;
+        const auto jsonDocument = QJsonDocument::fromJson(jsonLine, &parseError);
+        if (parseError.error != QJsonParseError::NoError || !jsonDocument.isObject()) {
+            socket->abort();
+            return;
+        }
+        dispatch(socket, jsonDocument.object());
+    }
+}
+
+void ChatServer::limitPasswordAttempts(const QString &identity) {
+    const qint64 elapsedMilliseconds = clock.elapsed();
+    for (auto windowIterator = passwordWindows.begin(); windowIterator != passwordWindows.end();) {
+        if (elapsedMilliseconds - windowIterator->started >= 60000) {
+            windowIterator = passwordWindows.erase(windowIterator);
+        } else {
+            ++windowIterator;
+        }
+    }
+
+    // Bound the map as well as individual usernames, so random account names
+    // cannot grow server memory without limit.
+    if (!passwordWindows.contains(identity) && passwordWindows.size() >= 1024) {
+        throw std::runtime_error("rate_limited");
+    }
+
+    auto &passwordWindow = passwordWindows[identity];
+    if (passwordWindow.attempts == 0) {
+        passwordWindow.started = elapsedMilliseconds;
+    }
+    ++passwordWindow.attempts;
+    if (passwordWindow.attempts > 30) {
+        throw std::runtime_error("rate_limited");
+    }
+}
+
+QJsonObject ChatServer::startLogin(Session &session, const QJsonObject &arguments) {
+    session.pendingUserId = 0;
+    session.loginExpires = 0;
+    session.factorAttempts = 0;
+
+    const auto usernameValue = arguments.value("username");
+    const QString username = usernameValue.toString();
+    if (!usernameValue.isString() || username.size() > InputLimits::MaxUsernameLength ||
+        username.trimmed().isEmpty() || username.contains(QChar::Null)) {
+        throw std::runtime_error("invalid_request");
+    }
+
+    limitPasswordAttempts("username:" + username);
+    const int userId = manager.verifyLoginPassword(arguments);
+    if (manager.mfaEnabled(userId)) {
+        session.pendingUserId = userId;
+        session.loginExpires = clock.elapsed() + 120000;
+        return {{"mfa_required", true}};
+    }
+
+    const auto result = manager.finishLogin(userId);
+    session.userId = userId;
+    return result;
+}
+
+QJsonObject ChatServer::verifyLoginCode(Session &session, const QJsonObject &arguments) {
+    if (session.pendingUserId == 0 || clock.elapsed() >= session.loginExpires) {
+        session.pendingUserId = 0;
+        session.loginExpires = 0;
+        session.factorAttempts = 0;
+        throw std::runtime_error("authentication_expired");
+    }
+
+    ++session.factorAttempts;
+    QJsonObject result;
+    try {
+        result = manager.verifyLoginFactor(session.pendingUserId, arguments);
+    } catch (...) {
+        if (session.factorAttempts >= 5) {
+            session.pendingUserId = 0;
+            session.loginExpires = 0;
+            session.factorAttempts = 0;
+        }
+        throw;
+    }
+
+    session.userId = session.pendingUserId;
+    session.pendingUserId = 0;
+    session.loginExpires = 0;
+    session.factorAttempts = 0;
+    return result;
+}
+
+QJsonObject ChatServer::beginTotpSetup(Session &session, const QJsonObject &arguments) {
+    limitPasswordAttempts("user:" + QString::number(session.userId));
+    const auto result = manager.beginMfaSetup(session.userId, arguments);
+    session.pendingTotpKey = result["secret"].toString();
+    session.setupExpires = clock.elapsed() + 300000;
+    session.setupAttempts = 0;
+    return result;
+}
+
+QJsonObject ChatServer::confirmTotpSetup(Session &session, const QJsonObject &arguments) {
+    if (session.pendingTotpKey.isEmpty() || clock.elapsed() >= session.setupExpires) {
+        session.pendingTotpKey.clear();
+        session.setupExpires = 0;
+        session.setupAttempts = 0;
+        throw std::runtime_error("mfa_setup_expired");
+    }
+
+    ++session.setupAttempts;
+    QJsonObject result;
+    try {
+        result = manager.confirmMfaSetup(session.userId, session.pendingTotpKey, arguments);
+    } catch (...) {
+        if (session.setupAttempts >= 5) {
+            session.pendingTotpKey.clear();
+            session.setupExpires = 0;
+            session.setupAttempts = 0;
+        }
+        throw;
+    }
+
+    session.pendingTotpKey.clear();
+    session.setupExpires = 0;
+    session.setupAttempts = 0;
+    return result;
+}
+
+void ChatServer::dispatch(QTcpSocket *socket, const QJsonObject &request) {
+    const auto requestId = request["request_id"].toString();
+    QJsonObject reply{{"type", "response"}, {"request_id", requestId}, {"ok", false}};
+    try {
+        if (requestId.isEmpty() || requestId.size() > 64 || !request["args"].isObject()) {
+            throw std::runtime_error("invalid_request");
+        }
+
+        const auto operation = request["type"].toString();
+        const auto arguments = request["args"].toObject();
+        // These checks precede special authentication operations too. No
+        // request may pick its own actor or pending second-factor identity.
+        for (const auto &key : {"user_id", "sender_id", "messageSender", "actor_id"}) {
+            if (arguments.contains(key)) {
+                throw std::runtime_error("invalid_request");
             }
         }
-    };
 
-
-    void ChatServer::init(QJsonObject &obj, QTcpSocket* socket){
-        for(auto it = clients.constBegin(); it != clients.constEnd(); ++it){
-            auto payload = Utils::updateStatus(obj["user_id"].toInt(), true);
-            it.key()->write(payload);
-        }
-        clients[socket] = obj["user_id"].toInt();
-        clientsR.insert(obj["user_id"].toInt(), socket);
-        QJsonArray status;
-        for(auto fID : obj["friends"].toArray()){
-            if(clientsR.contains(fID.toInt())){
-                status.append(1);
+        auto &session = sessions[socket];
+        if (operation == "login" || operation == "register" || operation == "available" ||
+            operation == "login_verify") {
+            if (session.userId > 0) {
+                throw std::runtime_error("already_authenticated");
             }
-            else {
-                status.append(0);
+            if (clock.elapsed() - session.authWindow > 60000) {
+                session.authAttempts = 0;
+                session.authWindow = clock.elapsed();
             }
+            ++session.authAttempts;
+            if (session.authAttempts > 30) {
+                throw std::runtime_error("rate_limited");
+            }
+        } else if (session.userId == 0) {
+            throw std::runtime_error("authentication_required");
         }
-        QJsonObject reply;
-        reply["type"]  = "friends_status";
-        reply["friends"] = status;
-        QJsonDocument doc(reply);
-        QByteArray jsonString = doc.toJson(QJsonDocument::Compact);
-        jsonString.append('\n');
-        socket->write(jsonString);
-    }
 
-    void ChatServer::updateRequest(QJsonObject &obj, QTcpSocket* socket){
-        int receiver_id = obj["id"].toInt();
-        QString type = obj["type"].toString();
-        QTcpSocket* foundKey = nullptr;
-        if(clientsR.contains(receiver_id)){
-            foundKey = clientsR[receiver_id];
+        QJsonObject result;
+        bool completedLogin = false;
+        if (operation == "login") {
+            result = startLogin(session, arguments);
+            completedLogin = session.userId > 0;
+        } else if (operation == "login_verify") {
+            result = verifyLoginCode(session, arguments);
+            completedLogin = true;
+        } else if (operation == "mfa_setup_begin") {
+            result = beginTotpSetup(session, arguments);
+        } else if (operation == "mfa_setup_confirm") {
+            result = confirmTotpSetup(session, arguments);
+        } else if (operation == "mfa_setup_cancel") {
+            session.pendingTotpKey.clear();
+            session.setupExpires = 0;
+            session.setupAttempts = 0;
+        } else {
+            if (operation == "mfa_disable") {
+                limitPasswordAttempts("user:" + QString::number(session.userId));
+            }
+            result = manager.dispatch(session.userId, operation, arguments);
         }
-        if (foundKey != nullptr) {
-            obj["id"] = clients[socket];
-            QJsonDocument doc(obj);
-            QString jsonString = doc.toJson(QJsonDocument::Compact);
-            jsonString.append('\n');
-            foundKey->write(jsonString.toUtf8());
+
+        if (completedLogin) {
+            const int userId = session.userId;
+            send(socket,
+                 {{"type", "response"},
+                  {"request_id", requestId},
+                  {"ok", true},
+                  {"result", result}});
+            presence(userId, true);
+            return;
         }
+        if (operation == "friends") {
+            auto users = result["users"].toArray();
+            for (int userIndex = 0; userIndex < users.size(); ++userIndex) {
+                auto user = users[userIndex].toObject();
+                user["online"] = online(user["id"].toInt());
+                users[userIndex] = user;
+            }
+            result["users"] = users;
+        }
+        reply["ok"] = true;
+        reply["result"] = result;
+    } catch (const std::exception &error) {
+        reply["error"] = QString::fromLatin1(error.what());
     }
-
-    void ChatServer::checkUserStatus(QJsonObject &obj, QTcpSocket* socket){
-        int requestID = obj["id"].toInt();
-        if(clientsR.contains(requestID)) obj["bool"] = 1;
-        QJsonDocument doc(obj);
-        QString jsonString = doc.toJson(QJsonDocument::Compact);
-        jsonString.append('\n');
-        socket->write(jsonString.toUtf8());
-    }
-
-    void ChatServer::sendMessage(QJsonObject &obj, QTcpSocket* socket){
-        int receiverID = obj["id"].toInt();
-        if (!clientsR[receiverID]) return;
-        obj["id"] = clients[socket];
-        clientsR[receiverID]->write(Utils::jsonObjectToData(obj));
-    }
-
-
-
-
+    send(socket, reply);
+}

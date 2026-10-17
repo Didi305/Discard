@@ -1,6 +1,7 @@
 #include "outgoingpage.h"
 #include "ui_outgoingpage.h"
 #include "row.h"
+#include "outgoingrow.h"
 OutgoingPage::OutgoingPage(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::OutgoingPage)
@@ -22,14 +23,13 @@ void OutgoingPage::setRequests(int userID) {
         delete child->widget();
         delete child;
     }
-    m_outgoingRows = m_manager->fetchOutgoingRequests(userID);
-    // 2) Add each widget to your layout
-    for (auto& uptr : m_outgoingRows) {
-        OutgoingRow* oRow = new OutgoingRow(uptr.release()->data());
+    // The layout's parent widget takes ownership of each displayed row.
+    for (const auto& data : m_manager->fetchOutgoingRequests(userID)) {
+        OutgoingRow* oRow = new OutgoingRow(data);
         ui->listLayout->addWidget(oRow);
         connect(oRow, &OutgoingRow::canceled, this,
                 [this, oRow](Data d) {
-                    m_manager->cancelRequest(d.user_id);
+                    if (!m_manager->cancelRequest(d.user_id)) return;
                     oRow->deleteLater();
                 });
     }
@@ -40,7 +40,7 @@ void OutgoingPage::update(int friend_id) {
     QLayoutItem *child;
     for (int i = 0; i < ui->listLayout->count(); ++i) {
         child = ui->listLayout->itemAt(i);
-        PendingRow *row = qobject_cast<PendingRow*>(child->widget());  //
+        OutgoingRow *row = qobject_cast<OutgoingRow*>(child->widget());  //
         if (!row) continue;
         int rowID = row->data().user_id;
         if(rowID == friend_id) delete child->widget();

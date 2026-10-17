@@ -93,6 +93,7 @@ rAvatarButton{
 
 #options QPushButton{
     background: transparent;
+    border: none;
     text-align: left;
     padding-left: 8px;
     color: silver;
@@ -104,6 +105,38 @@ rAvatarButton{
     background-color: rgba(255, 255, 255, 0.08);
     color: white;
     border-radius: 8px;
+}
+
+#twoFactorTitle {
+    background: transparent;
+    color: silver;
+    font-size: 16px;
+    font-weight: 625;
+}
+
+#twoFactorButton:hover #twoFactorTitle {
+    color: white;
+}
+
+#twoFactorStatus {
+    border: none;
+    border-radius: 12px;
+    background-color: #30343c;
+    color: #b3bbc7;
+    font-size: 11px;
+    font-weight: 650;
+    letter-spacing: 0.5px;
+    padding: 0;
+}
+
+#twoFactorStatus[state="enabled"] {
+    background-color: #173b30;
+    color: #70ffc5;
+}
+
+#twoFactorStatus[state="disabled"] {
+    background-color: #3d2430;
+    color: #ff7b98;
 }
 
 #topBar {

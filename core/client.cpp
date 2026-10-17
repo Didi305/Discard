@@ -1,162 +1,232 @@
 #include "client.h"
 #include "manager.h"
-#include <QJsonObject>
+#include <QElapsedTimer>
 #include <QJsonArray>
+#include <QTimer>
+
+namespace {
+constexpr qsizetype MaxFrameBytes = 16 * 1024 * 1024;
+constexpr int ConnectionTimeoutMs = 5000;
+constexpr int ResponseTimeoutMs = 10000;
+constexpr qsizetype MaxQueuedEvents = 1000;
+} // namespace
 
 Client::Client(QObject *parent)
-    : QObject(parent)
-    , m_manager(Manager::get())
-    , server(new ChatServer)
-{
-
-    socket = new QTcpSocket(this);
-    handlers["message"] = [this](QJsonObject &obj){
-        Data d = Utils::buildData(obj);
-        Message msg = d.message;
-        emit newMessage(d); emit updateConversations(msg, d);
-    };
-    handlers["friends_status"]  = [this](QJsonObject& obj){checkFriendsStatus(obj);};
-    handlers["user_status"] = [this](QJsonObject& obj){
-        Data d = {obj["id"].toInt(), obj["name"].toString(), obj["avatar"].toString(), Utils::statusFromString(obj["status"].toString())};
-        friends[d] = obj["bool"].toInt();
-        emit addNewFriendRow(d);
-    };
-    handlers["friend_update"]  = [this](QJsonObject& obj){emit updateFriends(obj["id"].toInt(), obj["bool"].toBool());};
-    handlers["update_pending"] = [this](QJsonObject& obj){emit updatePendingRequests(obj["id"].toInt());};
-    handlers["update_accept"]  = [this](QJsonObject& obj){updateAcceptRequests(obj);};
-    handlers["add_row"] = [this](QJsonObject& obj){
-        Data d = {obj["id"].toInt(), obj["name"].toString(), obj["avatar"].toString(), Utils::statusFromString(obj["status"].toString())};
-        qCritical() << "status of the friend to be added is: " << Utils::stringFromStatus(d.status);
-        friends.emplace(d, 1);
-        emit addNewFriendRow(d);};
-
-    connect(socket, &QTcpSocket::connected, this, &Client::onConnected);
-    connect(socket, &QTcpSocket::disconnected, this, &Client::onDisconnected);
+    : QObject(parent),
+      socket(new QTcpSocket(this)),
+      m_manager(Manager::get()) {
     connect(socket, &QTcpSocket::readyRead, this, &Client::onReadyRead);
-}
-Client::~Client() {
-    delete socket;
+    connect(socket, &QTcpSocket::connected, this, &Client::connected);
+    connect(socket, &QTcpSocket::disconnected, this, [this] {
+        id = 0;
+        friends.clear();
+        receiveBuffer.clear();
+        events.clear();
+        emit disconnected();
+    });
 }
 
-QString Client::getClientName(){
+QString Client::getClientName() {
     return name;
 }
-QString Client::getClientAvatar(){
+
+QString Client::getClientAvatar() {
     return avatar;
 }
-int Client::getClientID(){
-    return id;
-}
 
-Status Client::getClientStatus(){
+Status Client::getClientStatus() {
     return status;
 }
 
-Data& Client::getClientData(){
-    return d;
+int Client::getClientID() {
+    return id;
 }
 
-QHash<Data, int>& Client::getFriends(){
+Data &Client::getClientData() {
+    return clientData;
+}
+
+QHash<Data, int> &Client::getFriends() {
     return friends;
 }
-void Client::setClientName(QString name){
-    this->name = name;
-}
-void Client::setClientAvatar(QString avatar){
-    this->avatar = avatar;
+
+void Client::setFriends(QHash<Data, int> &updatedFriends) {
+    friends = updatedFriends;
 }
 
-void Client::setClientStatus(Status stat){
-    this->status = stat;
+void Client::setClientName(QString displayName) {
+    name = displayName;
 }
-void Client::setClientID(int id){
-    this->id = id;
+
+void Client::setClientAvatar(QString avatarPath) {
+    avatar = avatarPath;
 }
-void Client::setFriends(QHash<Data , int> &friends){
-    this->friends = friends;
+
+void Client::setClientStatus(Status userStatus) {
+    status = userStatus;
 }
-void Client::setClientData(Data& d){
-    this->d = d;
+
+void Client::setClientID(int userId) {
+    id = userId;
 }
-void Client::connectToServer(const QString &host, int port){
-    socket->connectToHost(host, port);
-    if(socket->state() == QAbstractSocket::ConnectedState){
-        socket->write("shitype");
+
+void Client::setClientData(Data &userData) {
+    clientData = userData;
+}
+
+void Client::setEndpoint(const QString &hostname, int serverPort) {
+    host = hostname;
+    port = serverPort;
+}
+
+QString Client::serverEndpoint() const {
+    return host.trimmed().toLower() + ":" + QString::number(port);
+}
+
+bool Client::ensureConnected() {
+    if (socket->state() == QAbstractSocket::ConnectedState) {
+        return true;
     }
+
+    socket->abort();
+    socket->connectToHost(host, quint16(port));
+    if (socket->waitForConnected(ConnectionTimeoutMs)) {
+        return true;
+    }
+
+    lastError = "Cannot connect to ChatServer.";
+    return false;
 }
 
-void Client::disconnectFromServer(){
+void Client::disconnectFromServer() {
+    socket->abort();
+    id = 0;
     friends.clear();
-    socket->disconnectFromHost();
+    responses.clear();
+    events.clear();
 }
 
-void Client::onConnected(){
-    emit connected();
-    QJsonObject root;
-    QJsonArray arr;
-    root["type"] = "init";
-    root["user_id"] = getClientID();
-    auto amigos = friends.keys();
-    for(auto &f : amigos){
-        arr.append(f.user_id);
+QJsonObject Client::request(const QString &operation, const QJsonObject &arguments) {
+    if (requesting) {
+        lastError = "A request is already in progress.";
+        return {};
     }
-    root["friends"] = arr;
-    QJsonDocument doc(root);
-    QString jsonString = doc.toJson(QJsonDocument::Compact);
-    jsonString.append('\n');
-    qDebug() << "Connected to server";
-    socket->write(jsonString.toUtf8());
+    if (!ensureConnected()) {
+        return {};
+    }
+
+    requesting = true;
+    ++requestCounter;
+    const QString requestId = QString::number(requestCounter);
+    const QJsonObject requestObject{
+        {"type", operation},
+        {"request_id", requestId},
+        {"args", arguments},
+    };
+    const QByteArray payload = QJsonDocument(requestObject).toJson(QJsonDocument::Compact) + '\n';
+    if (payload.size() > MaxFrameBytes) {
+        requesting = false;
+        lastError = "Request is too large.";
+        return {};
+    }
+
+    socket->write(payload);
+    socket->flush();
+
+    QElapsedTimer elapsed;
+    elapsed.start();
+    while (!responses.contains(requestId) && socket->state() == QAbstractSocket::ConnectedState &&
+           elapsed.elapsed() < ResponseTimeoutMs) {
+        socket->waitForReadyRead(int(ResponseTimeoutMs - elapsed.elapsed()));
+    }
+    requesting = false;
+
+    if (!responses.contains(requestId)) {
+        socket->abort();
+        lastError = "Server did not reply. Reconnect and check whether the operation completed.";
+        return {};
+    }
+
+    const QJsonObject response = responses.take(requestId);
+    if (!response["ok"].toBool()) {
+        lastError = response["error"].toString("Request failed.");
+        return response;
+    }
+
+    lastError.clear();
+    // Process notifications that were queued while this request was waiting.
+    QTimer::singleShot(0, this, &Client::dispatchEvents);
+    return response;
 }
 
-void Client::onDisconnected(){
-    emit disconnected();
-}
+void Client::onReadyRead() {
+    receiveBuffer += socket->readAll();
+    while (true) {
+        const qsizetype newlinePosition = receiveBuffer.indexOf('\n');
+        if (newlinePosition < 0) {
+            if (receiveBuffer.size() > MaxFrameBytes) {
+                socket->abort();
+            }
+            break;
+        }
+        if (newlinePosition > MaxFrameBytes) {
+            socket->abort();
+            break;
+        }
 
-void Client::sendMessage(Data &d, QString typ) {
-    QJsonObject obj = Utils::buildJson(d);
-    obj["type"] = typ;
-    QJsonDocument doc(obj);
-    QString jsonString = doc.toJson(QJsonDocument::Compact);
-    jsonString.append('\n');
-    socket->write(jsonString.toUtf8());
+        const QByteArray line = receiveBuffer.left(newlinePosition);
+        receiveBuffer.remove(0, newlinePosition + 1);
 
-}
+        QJsonParseError parseError;
+        const QJsonDocument document = QJsonDocument::fromJson(line, &parseError);
+        if (parseError.error != QJsonParseError::NoError || !document.isObject()) {
+            socket->abort();
+            break;
+        }
 
-void Client::onReadyRead(){
-    QByteArray buffer;
-    buffer.append(socket->readAll());
-    while(true){
-        int index = buffer.indexOf('\n');
-        if(index < 0) break;
-        QByteArray msg = buffer.left(index);
-        buffer.remove(0, index+1);
-        QJsonObject obj = Utils::parseJson(msg);
-        QString whatwedoing = obj["type"].toString();
-        if(whatwedoing == "add_request") whatwedoing = "update_accept";
-        auto f = handlers.value(whatwedoing, nullptr);
-        if(f) f(obj);
+        const QJsonObject receivedObject = document.object();
+        if (receivedObject["type"] == "response") {
+            const QString responseId = receivedObject["request_id"].toString();
+            if (requesting && responseId == QString::number(requestCounter)) {
+                responses.insert(responseId, receivedObject);
+            }
+        } else {
+            events.append(receivedObject);
+            if (events.size() > MaxQueuedEvents) {
+                socket->abort();
+                break;
+            }
         }
     }
 
-
-
-void Client::checkFriendsStatus(QJsonObject& obj){
-    auto& friends = getFriends();
-    auto friendsStatus = obj["friends"].toArray();
-    int i = 0;
-    for(auto it = friends.begin(); it != friends.end(); ++it){
-        int friendStatus = friendsStatus.at(i).toInt();
-        it.value() = friendStatus;
-        i++;
+    if (!requesting) {
+        QTimer::singleShot(0, this, &Client::dispatchEvents);
     }
-    setFriends(friends);
-    emit friendsReady(friends);
 }
 
-void Client::updateAcceptRequests(QJsonObject& obj){
-    QString type = obj["type"].toString();
-    emit updateAcceptRequest(obj, type);
+void Client::dispatchEvents() {
+    if (requesting || dispatching) {
+        return;
+    }
+
+    dispatching = true;
+    while (!events.isEmpty() && !requesting && id > 0) {
+        const QJsonObject event = events.takeFirst();
+        const QString eventType = event["type"].toString();
+
+        if (eventType == "message") {
+            Data messageData = Utils::buildData(event);
+            m_manager->resolveDataMedia(messageData);
+            Message message = messageData.message;
+            emit newMessage(messageData);
+            emit updateConversations(message, messageData);
+        } else if (eventType == "friend_update") {
+            const int friendUserId = event["id"].toInt();
+            const bool isOnline = event["bool"].toBool();
+            emit updateFriends(friendUserId, isOnline);
+        } else if (eventType == "relationships_changed") {
+            emit relationshipsChanged();
+        }
+    }
+    dispatching = false;
 }
-
-
-

@@ -1,5 +1,6 @@
 #include "addfriendpage.h"
 #include "ui_addfriendpage.h"
+#include "pendingrow.h"
 AddFriendPage::AddFriendPage(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::AddFriendPage)
@@ -24,17 +25,17 @@ void AddFriendPage::load(int userID) {
         delete child->widget();
         delete child;
     }
-    m_pendingRows = m_manager->fetchPendingRequests(userID);
-    // 2) Add each widget to your layout
-    for (auto& uptr : m_pendingRows) {
-        PendingRow* pRow = new PendingRow(uptr.release()->data());
+    // The layout's parent widget takes ownership of each displayed row.
+    for (const auto& data : m_manager->fetchPendingRequests(userID)) {
+        PendingRow* pRow = new PendingRow(data);
         ui->listLayout->addWidget(pRow);
         connect(pRow, &PendingRow::accepted, this, [this, pRow](Data d){
-            m_manager->acceptRequest(d);
+            if (!m_manager->acceptRequest(d)) return;
+
             pRow->deleteLater();
         });
         connect(pRow, &PendingRow::declined, this, [this, pRow](Data d){
-            m_manager->declineRequest(d.user_id);
+            if (!m_manager->declineRequest(d.user_id)) return;
             pRow->deleteLater();
         });
     }
@@ -48,11 +49,12 @@ void AddFriendPage::update(QJsonObject& obj, QString type) {
         PendingRow* pRow = new PendingRow(d);
         ui->listLayout->addWidget(pRow);
         connect(pRow, &PendingRow::accepted, this, [this, pRow](Data d){
-            m_manager->acceptRequest(d);
+            if (!m_manager->acceptRequest(d)) return;
+
             pRow->deleteLater();
         });
         connect(pRow, &PendingRow::declined, this, [this, pRow](Data d){
-            m_manager->declineRequest(d.user_id);
+            if (!m_manager->declineRequest(d.user_id)) return;
             pRow->deleteLater();
         });
     }

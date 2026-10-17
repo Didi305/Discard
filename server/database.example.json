@@ -1,0 +1,7 @@
+{
+  "host": "127.0.0.1",
+  "port": 5432,
+  "database": "chatdb",
+  "user": "discard_server",
+  "password": "REPLACE_ON_SERVER_ONLY"
+}

@@ -10,6 +10,7 @@
 #include "friends.h"
 #include "dragbanner.h"
 #include "manager.h"
+#include "conversationrow.h"
 #include "ui_MainWindow.h"
 #include "outgoingpage.h"
 #include "addfriendpage.h"
@@ -48,11 +49,19 @@ public:
 private slots:
     void onConnectionSuccess();
     void onAvatarButtonClicked();
+    void onAccountSecurityClicked();
     void onDisconnectClicked();
     void onItemDragging(int n);
     void onItemNotDragged();
     void updateConversations(Message& lastMessage, Data& partner);
 private:
+    enum class TwoFactorState { Unknown, Disabled, Enabled };
+    void updateTwoFactorIndicator(TwoFactorState state);
+    TwoFactorState refreshTwoFactorStatus();
+    void scheduleTwoFactorReminder();
+    void showTwoFactorReminder(int userId);
+    void openTwoFactorSettings(bool startSetup = false);
+
     Ui::MainWindow   *ui;
     AddFriendPage    *m_addFriendPage;
     OutgoingPage     *m_outgoingPage;
@@ -61,8 +70,11 @@ private:
     Manager          *manager;
     Client           *client;
     QPushButton      *avatarButton;
+    QPushButton      *twoFactorButton;
+    QLabel           *twoFactorStatusLabel;
     QLabel           *nameLabel;
     DragBanner       * m_banner = nullptr;
-    std::vector<std::unique_ptr<ConversationRow>> conversations;
+    bool twoFactorDialogOpen = false;
+    quint64 reminderGeneration = 0;
 };
 #endif // MAINWINDOW_H

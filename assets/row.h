@@ -7,7 +7,6 @@
 #include <qboxlayout.h>
 #include "utils.h"
 const int S = 32;
-enum class RequestType{ Pending, Outgoing};
 class Manager;
 class Row : public QFrame
 {

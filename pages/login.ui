@@ -2,170 +2,141 @@
 <ui version="4.0">
  <class>Login</class>
  <widget class="QDialog" name="Login">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>607</width>
-    <height>514</height>
-   </rect>
-  </property>
-  <property name="windowTitle">
-   <string/>
-  </property>
-  <property name="autoFillBackground">
-   <bool>false</bool>
-  </property>
-  <widget class="QPushButton" name="loginButton">
-   <property name="geometry">
-    <rect>
-     <x>170</x>
-     <y>360</y>
-     <width>101</width>
-     <height>35</height>
-    </rect>
-   </property>
-   <property name="sizePolicy">
-    <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-     <horstretch>0</horstretch>
-     <verstretch>0</verstretch>
-    </sizepolicy>
-   </property>
-   <property name="cursor">
-    <cursorShape>PointingHandCursor</cursorShape>
-   </property>
-   <property name="text">
-    <string>Login</string>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="createAccountButton">
-   <property name="geometry">
-    <rect>
-     <x>330</x>
-     <y>360</y>
-     <width>101</width>
-     <height>35</height>
-    </rect>
-   </property>
-   <property name="cursor">
-    <cursorShape>PointingHandCursor</cursorShape>
-   </property>
-   <property name="text">
-    <string>Create Account</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="title">
-   <property name="geometry">
-    <rect>
-     <x>260</x>
-     <y>80</y>
-     <width>121</width>
-     <height>71</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>26</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Login</string>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="loginUsername">
-   <property name="geometry">
-    <rect>
-     <x>230</x>
-     <y>200</y>
-     <width>171</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="styleSheet">
-    <string notr="true"/>
-   </property>
-  </widget>
-  <widget class="QLineEdit" name="loginPassword">
-   <property name="geometry">
-    <rect>
-     <x>230</x>
-     <y>250</y>
-     <width>171</width>
-     <height>41</height>
-    </rect>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-   <property name="echoMode">
-    <enum>QLineEdit::EchoMode::Password</enum>
-   </property>
-  </widget>
-  <widget class="QLabel" name="username">
-   <property name="geometry">
-    <rect>
-     <x>133</x>
-     <y>200</y>
-     <width>91</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>14</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Username:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="password">
-   <property name="geometry">
-    <rect>
-     <x>139</x>
-     <y>250</y>
-     <width>91</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>14</pointsize>
-    </font>
-   </property>
-   <property name="text">
-    <string>Password:</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="loginErrorMessage">
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
-   <property name="geometry">
-    <rect>
-     <x>230</x>
-     <y>170</y>
-     <width>211</width>
-     <height>16</height>
-    </rect>
-   </property>
-   <property name="mouseTracking">
-    <bool>true</bool>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::Shape::NoFrame</enum>
-   </property>
-   <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:700; color:#aa0000;&quot;&gt;Username or password incorrect&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-   </property>
-   <property name="scaledContents">
-    <bool>false</bool>
-   </property>
-  </widget>
+  <property name="geometry"><rect><x>0</x><y>0</y><width>600</width><height>500</height></rect></property>
+  <property name="minimumSize"><size><width>600</width><height>0</height></size></property>
+  <property name="windowTitle"><string>Sign in</string></property>
+  <layout class="QVBoxLayout" name="dialogLayout">
+   <property name="spacing"><number>0</number></property>
+   <property name="sizeConstraint"><enum>QLayout::SetFixedSize</enum></property>
+   <property name="leftMargin"><number>40</number></property>
+   <property name="topMargin"><number>40</number></property>
+   <property name="rightMargin"><number>40</number></property>
+   <property name="bottomMargin"><number>40</number></property>
+   <item>
+    <layout class="QVBoxLayout" name="headingLayout">
+     <property name="spacing"><number>8</number></property>
+     <item>
+      <widget class="QLabel" name="title">
+       <property name="text"><string>Sign in</string></property>
+       <property name="alignment"><set>Qt::AlignCenter</set></property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="formSubtitle">
+       <property name="maximumSize"><size><width>520</width><height>16777215</height></size></property>
+       <property name="text"><string>Welcome back to Discard</string></property>
+       <property name="alignment"><set>Qt::AlignCenter</set></property>
+       <property name="wordWrap"><bool>true</bool></property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="headingGap">
+     <property name="orientation"><enum>Qt::Vertical</enum></property>
+     <property name="sizeType"><enum>QSizePolicy::Fixed</enum></property>
+     <property name="sizeHint" stdset="0"><size><width>0</width><height>28</height></size></property>
+    </spacer>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="fieldsLayout">
+     <property name="spacing"><number>18</number></property>
+    <item>
+     <layout class="QVBoxLayout" name="loginUsernameLayout">
+      <property name="spacing"><number>8</number></property>
+      <item>
+       <widget class="QLabel" name="username">
+        <property name="text"><string>Username</string></property>
+        <property name="buddy"><cstring>loginUsername</cstring></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="loginUsername">
+        <property name="placeholderText"><string>Enter your username</string></property>
+        <property name="minimumSize"><size><width>520</width><height>48</height></size></property>
+        <property name="accessibleName"><string>Username</string></property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QVBoxLayout" name="loginPasswordLayout">
+      <property name="spacing"><number>8</number></property>
+      <item>
+       <widget class="QLabel" name="password">
+        <property name="text"><string>Password</string></property>
+        <property name="buddy"><cstring>loginPassword</cstring></property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="loginPassword">
+        <property name="placeholderText"><string>Enter your password</string></property>
+        <property name="minimumSize"><size><width>520</width><height>48</height></size></property>
+        <property name="accessibleName"><string>Password</string></property>
+        <property name="echoMode"><enum>QLineEdit::Password</enum></property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="feedbackGap">
+     <property name="orientation"><enum>Qt::Vertical</enum></property>
+     <property name="sizeType"><enum>QSizePolicy::Fixed</enum></property>
+     <property name="sizeHint" stdset="0"><size><width>0</width><height>14</height></size></property>
+    </spacer>
+   </item>
+   <item>
+    <widget class="QLabel" name="loginErrorMessage">
+     <property name="maximumSize"><size><width>520</width><height>16777215</height></size></property>
+     <property name="minimumSize"><size><width>0</width><height>40</height></size></property>
+     <property name="text"><string/></property>
+     <property name="textFormat"><enum>Qt::PlainText</enum></property>
+     <property name="wordWrap"><bool>true</bool></property>
+     <property name="alignment"><set>Qt::AlignLeft|Qt::AlignVCenter</set></property>
+    </widget>
+   </item>
+   <item>
+    <spacer name="actionsGap">
+     <property name="orientation"><enum>Qt::Vertical</enum></property>
+     <property name="sizeType"><enum>QSizePolicy::Fixed</enum></property>
+     <property name="sizeHint" stdset="0"><size><width>0</width><height>14</height></size></property>
+    </spacer>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="actionsLayout" stretch="1,1">
+     <property name="spacing"><number>12</number></property>
+    <item>
+     <widget class="QPushButton" name="loginButton">
+      <property name="sizePolicy"><sizepolicy hsizetype="Expanding" vsizetype="Fixed"><horstretch>0</horstretch><verstretch>0</verstretch></sizepolicy></property>
+      <property name="minimumSize"><size><width>0</width><height>48</height></size></property>
+      <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+      <property name="text"><string>Sign in</string></property>
+      <property name="autoDefault"><bool>true</bool></property>
+      <property name="default"><bool>true</bool></property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="createAccountButton">
+      <property name="sizePolicy"><sizepolicy hsizetype="Expanding" vsizetype="Fixed"><horstretch>0</horstretch><verstretch>0</verstretch></sizepolicy></property>
+      <property name="minimumSize"><size><width>0</width><height>48</height></size></property>
+      <property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property>
+      <property name="text"><string>Create account</string></property>
+      <property name="autoDefault"><bool>true</bool></property>
+      <property name="default"><bool>false</bool></property>
+     </widget>
+    </item>
+    </layout>
+   </item>
+  </layout>
  </widget>
+ <tabstops>
+  <tabstop>loginUsername</tabstop>
+  <tabstop>loginPassword</tabstop>
+  <tabstop>loginButton</tabstop>
+  <tabstop>createAccountButton</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

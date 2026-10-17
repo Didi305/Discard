@@ -1,4 +1,5 @@
 #include "friends.h"
+#include "friendrow.h"
 #include "ui_friends.h"
 #include <QElapsedTimer>
 Friends::Friends(QWidget *parent)
@@ -14,7 +15,14 @@ Friends::Friends(QWidget *parent)
     connect(m_manager->getClient(), &Client::updateFriends, this, &Friends::update);
     connect(m_manager->getClient(), &Client::addNewFriendRow, this, [this](Data d){
         FriendRow* newRow = new FriendRow(d);
-        ui->onlineFriends->addWidget(newRow);
+        connect(newRow, &FriendRow::clicked, this, [this](Data friendData){
+            emit friendClicked(friendData);
+        });
+        if (m_manager->getClient()->getFriends().value(d, 0)) {
+            ui->onlineFriends->addWidget(newRow);
+        } else {
+            ui->offlineFriends->addWidget(newRow);
+        }
     });
 }
 

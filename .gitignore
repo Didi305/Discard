@@ -1,4 +1,9 @@
 build/
+discard-test/
+docs/
 *.user
 .qtcreator/
-config.json
+config/
+.vscode/
+*.code-workspace
+CMakeUserPresets.json

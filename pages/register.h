@@ -2,7 +2,8 @@
 #define REGISTER_DIALOG_H
 
 #include <QDialog>
-#include "manager.h"// if you need it for immediate sign-in
+#include "manager.h"
+class QLineEdit;
 QT_BEGIN_NAMESPACE
 namespace Ui { class Register; }
 QT_END_NAMESPACE
@@ -14,13 +15,13 @@ class Register : public QDialog
 public:
     explicit Register(QWidget *parent = nullptr);
     ~Register();
+    QString registeredUsername() const;
 private slots:
-    void onUsernameEditingFinished();
-    void onNicknameEditingFinished();
     void onRegisterButtonClicked();
-    void onCancelButtonClicked();
 
 private:
+    void showError(const QString &message, QLineEdit *field = nullptr);
+    void clearError();
     Ui::Register *ui        {nullptr};
     Manager *manager {nullptr};
 };

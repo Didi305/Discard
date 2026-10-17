@@ -1,83 +1,96 @@
 #include "register.h"
 #include "ui_register.h"
-#include "manager.h"
-#include <QErrorMessage>
-#include <QDir>
-#include <QFile>
+#include <QLineEdit>
+#include <QStyle>
+#include <QPalette>
+
 Register::Register(QWidget *parent)
-    : QDialog(parent)
-    , ui(new Ui::Register)
-    , manager(Manager::get())
-{
+    : QDialog(parent),
+      ui(new Ui::Register),
+      manager(Manager::get()) {
     ui->setupUi(this);
     setStyleSheet(Utils::readText(":/styles/login_register.qss", "login_register.qss"));
     ui->cancelButton->setProperty("role", "secondary");
-    ui->usernameUnavailableError->hide();
-    ui->nicknameUnavailableError->hide();
-    ui->passwordNotMatchingError->hide();
-    ui->passwordNotMatchingError_2->hide();
-    connect(ui->registerUsername, &QLineEdit::editingFinished, this, &Register::onUsernameEditingFinished);
-    connect(ui->registerNickname, &QLineEdit::editingFinished, this, &Register::onNicknameEditingFinished);
-    connect(ui->registerButton, &QPushButton::clicked, this, &::Register::onRegisterButtonClicked);
-    connect(ui->cancelButton, &QPushButton::clicked, this, &Register::onCancelButtonClicked);
+    ui->registerUsername->setFocus();
+
+    connect(ui->registerButton, &QPushButton::clicked, this, &Register::onRegisterButtonClicked);
+    connect(ui->cancelButton, &QPushButton::clicked, this, &QDialog::reject);
+    for (auto *field : {ui->registerUsername, ui->registerNickname,
+                        ui->registerPassword, ui->registerPasswordConfirmation}) {
+        const auto icon = field->echoMode() == QLineEdit::Password
+            ? QStringLiteral(":/icons/input-lock.svg") : QStringLiteral(":/icons/input-user.svg");
+        field->addAction(QIcon(icon), QLineEdit::LeadingPosition);
+        auto colors = field->palette();
+        colors.setColor(QPalette::PlaceholderText, QColor("#a9b6cf"));
+        field->setPalette(colors);
+        connect(field, &QLineEdit::textEdited, this, &Register::clearError);
+    }
 }
 
-Register::~Register()
-{
+Register::~Register() {
     delete ui;
 }
 
-void Register::onUsernameEditingFinished(){
-    QString username = ui->registerUsername->text();
-    if(!(manager->checkUsernameAvailibity(username))){
-        ui->usernameUnavailableError->show();
-        ui->registerUsername->setStyleSheet(QString("QLineEdit { border: 1px solid red }"));
-    }
-    else{
-        ui->usernameUnavailableError->hide();
-        ui->registerUsername->setStyleSheet(QString("QLineEdit { border: 1px solid green }"));
-    }
+QString Register::registeredUsername() const {
+    return ui->registerUsername->text().trimmed();
 }
-void Register::onNicknameEditingFinished(){
-    QString username = ui->registerNickname->text();
-    if(!(manager->checkNicknameAvailibity(username))){
-        ui->nicknameUnavailableError->show();
-        ui->registerNickname->setStyleSheet(QString("QLineEdit { border: 1px solid red }"));
-    }
-    else{
-        ui->nicknameUnavailableError->hide();
-        ui->registerNickname->setStyleSheet(QString("QLineEdit { border: 1px solid green }"));
-    }
-}
-void Register::onRegisterButtonClicked() {
-    bool validCreation = false;
-    QErrorMessage error;
-    QString username = ui->registerUsername->text();
-    QString nickname = ui->registerNickname->text();
-    QString password = ui->registerPassword->text();
-    QString password_confirmation = ui->registerPasswordConfirmation->text();
-    if(password != password_confirmation){
-        ui->passwordNotMatchingError->show();
-        ui->passwordNotMatchingError_2->show();
-    }
-    validCreation = true;
-    if(validCreation){
-        if (manager->createUser(username, password, nickname)) {
-            QString userFolderPath = QCoreApplication::applicationDirPath() + "/../../uploads/" + nickname;
-            QDir dir;
-            if (dir.mkpath(userFolderPath)) {
-                qDebug() << "Folder created successfully.";
-            } else {
-                qDebug() << "Failed to create folder.";
-            }
-            reject();
+
+void Register::clearError() {
+    ui->registerErrorMessage->clear();
+    for (auto *field : {ui->registerUsername, ui->registerNickname,
+                        ui->registerPassword, ui->registerPasswordConfirmation}) {
+        if (field->property("invalid").toBool()) {
+            field->setProperty("invalid", false);
+            field->style()->unpolish(field);
+            field->style()->polish(field);
+            field->update();
         }
     }
 }
 
-void Register::onCancelButtonClicked() {
-    reject();
+void Register::showError(const QString &message, QLineEdit *field) {
+    ui->registerErrorMessage->setText(message);
+    if (field) {
+        field->setProperty("invalid", true);
+        field->style()->unpolish(field);
+        field->style()->polish(field);
+        field->update();
+        field->setFocus();
+    }
 }
 
+void Register::onRegisterButtonClicked() {
+    clearError();
+    const QString username = ui->registerUsername->text();
+    const QString nickname = ui->registerNickname->text().trimmed();
+    const QString password = ui->registerPassword->text();
 
+    if (username.trimmed().isEmpty()) {
+        showError(tr("Enter a username."), ui->registerUsername);
+        return;
+    }
+    if (!manager->checkUsernameLength(username)) {
+        showError(manager->lastError(), ui->registerUsername);
+        return;
+    }
+    if (nickname.isEmpty()) {
+        showError(tr("Enter a nickname."), ui->registerNickname);
+        return;
+    }
+    if (password.isEmpty()) {
+        showError(tr("Enter a password."), ui->registerPassword);
+        return;
+    }
+    if (password != ui->registerPasswordConfirmation->text()) {
+        showError(tr("The passwords do not match."), ui->registerPasswordConfirmation);
+        return;
+    }
 
+    // The registration request checks availability atomically on the server.
+    // Moving between fields stays local and never waits for a network reply.
+    if (!manager->createUser(username, password, nickname)) {
+        showError(manager->lastError());
+        return;
+    }
+    accept();
+}

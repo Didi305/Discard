@@ -70,6 +70,8 @@ enum class Status {
     ONLINE, HIDDEN, DO_NOT_DISTURB
 };
 
+enum class RequestType { Pending, Outgoing };
+
 
 struct Data
 {
@@ -87,6 +89,8 @@ struct Data
         displayName = other.displayName;
         avatar = other.avatar;
         status = other.status;
+        message = other.message;
+        friends = other.friends;
     }
 };
 

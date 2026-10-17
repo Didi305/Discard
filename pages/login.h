@@ -17,12 +17,14 @@ public:
     ~Login();
 
 private slots:
-    void onLoginButtonClicked();             // called when user presses “Login”
-    void onCreateAccountButtonClicked();            // closes dialog
+    void onLoginButtonClicked();
+    void onCreateAccountButtonClicked();
 
 private:
-    Ui::Login *ui           {nullptr};       // generated from login.ui
-    Register  *reg {nullptr};
+    bool connectToServer();
+    void showError(const QString &message);
+    void showMessage(const QString &message, bool success);
+    Ui::Login *ui {nullptr};
     Manager *manager {nullptr};
 };
 

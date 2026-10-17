@@ -1,66 +1,58 @@
-#ifndef DATABASEMANAGER_H
-#define DATABASEMANAGER_H
-#include <qobject.h>
-#include <QFileInfo>
-#include "attachementchip.h"
-#include "conversationrow.h"
-#include "row.h"
-#include <vector>
-#include "utils.h"
-#include <qsqldatabase.h>
+#pragma once
+#include "accountauthentication.h"
 #include "client.h"
-#include "pendingrow.h"
-#include "outgoingrow.h"
-#include "friendrow.h"
-struct DBConfig{
-    QString host;
-    int port;
-    QString database;
-    QString user;
-    QString password;
-};
-enum class requestType {
-    amigo,
-    user
-};
+#include "utils.h"
+#include "utils/conversationsummary.h"
+#include <QObject>
+#include <vector>
+// Client facade: server requests and application data. Pages create UI rows.
 class Manager : public QObject {
     Q_OBJECT
 public:
-    Manager(QObject *parent = nullptr);
-    static Manager* get();
+    explicit Manager(QObject *parent = nullptr);
+    static Manager *get();
     void setClient(Client *client);
-    Client* getClient();
-    QSqlDatabase& db();
-    /*---------------General-----------------*/
-    bool init(QJsonObject &DBConfig, QSqlDatabase &db);
+    Client *getClient();
+    bool authenticate(const QString &username, const QString &password);
+    bool secondFactorRequired() const;
+    bool verifySecondFactor(const QString &code);
+    void cancelAuthentication();
+    QJsonObject securityRequest(const QString &operation, const QJsonObject &arguments = {});
+    bool connectServer();
+    QString lastError() const;
+    bool checkUsernameLength(const QString &username);
     bool createUser(QString username, QString password, QString nickname);
-    QString checkUser(const QString& username, const QString& password = QString());
     bool checkUsernameAvailibity(QString username);
     bool checkNicknameAvailibity(QString nickname);
-    void updateUserAvatar(QString path, QString nickname);
-    void findNickname(QString username);
-    /*--------------Friends------------------*/
+    bool updateUserAvatar(QString path, QString nickname);
+    QString avatarPathForUser(int userId, bool reuseCached = false);
+    void resolveDataMedia(Data &data);
     QString checkFriendship(QString nickname);
-    std::vector<std::unique_ptr<Row>> fetchRequests(int id, RequestType type);
-    QHash<Data , int>& fetchFriends(int user_id, QHash<Data , int>& friends);
-    std::vector<std::unique_ptr<Row>> fetchPendingRequests(int userId);
-    std::vector<std::unique_ptr<Row>> fetchOutgoingRequests(int userId);
-    void acceptRequest(Data d);
-    void declineRequest(int user_id);
-    void cancelRequest(int user_id);
-    /*---------------DM's--------------------*/
-    int createConversation(int user1_ID, int user2_ID);
-    int checkConversation(int user1_ID, int user2_ID);
-    quint64 postMessage(QString message, int conversation_ID, int sender_ID, int receiver_ID);
-    void postAttachement(QFileInfo info, quint64 message_id);
-    StringContainer fetchMessages(int conversationID);
-    QVector<Attachement> fetchAttachements(qint64 message_id);
-    std::vector<std::unique_ptr<ConversationRow>> fetchConversations(Data& d);
-private:
-    Manager() = default;
-    ~Manager() = default;
-    QSqlDatabase database;
-    Client *client;
-};
+    std::vector<Data> fetchRequests(int userId, RequestType requestType);
+    QHash<Data, int> &fetchFriends(int userId, QHash<Data, int> &friends);
+    std::vector<Data> fetchPendingRequests(int userId);
+    std::vector<Data> fetchOutgoingRequests(int userId);
+    bool acceptRequest(Data requester);
+    bool declineRequest(int peerId);
+    bool cancelRequest(int peerId);
+    int checkConversation(int ownUserId, int peerId);
+    bool sendChatMessage(const QString &body,
+                         int conversationId,
+                         int peerId,
+                         const QVector<Attachement> &files,
+                         Data &sentData);
+    StringContainer fetchMessages(int conversationId);
+    std::vector<ConversationSummary> fetchConversations();
 
-#endif // DATABASEMANAGER_H
+private:
+    Client *client = nullptr;
+    AccountAuthentication accountAuthentication;
+    QHash<int, QString> avatarPaths;
+    QString requestError;
+    QJsonObject call(const QString &operation, const QJsonObject &arguments = {});
+    bool finishAuthentication(const QJsonObject &userObject);
+    Data profile(const QJsonObject &userObject);
+    QString
+    avatarPathFromValues(int userId, const QByteArray &avatarBytes, const QString &filename);
+    QString attachmentPathForId(qint64 attachmentId);
+};
