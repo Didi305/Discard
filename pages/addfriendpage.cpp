@@ -1,5 +1,6 @@
 #include "addfriendpage.h"
 #include "ui_addfriendpage.h"
+#include "pendingrow.h"
 AddFriendPage::AddFriendPage(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::AddFriendPage)
@@ -24,10 +25,9 @@ void AddFriendPage::load(int userID) {
         delete child->widget();
         delete child;
     }
-    m_pendingRows = m_manager->fetchPendingRequests(userID);
-    // 2) Add each widget to your layout
-    for (auto& uptr : m_pendingRows) {
-        PendingRow* pRow = new PendingRow(uptr.release()->data());
+    // The layout's parent widget takes ownership of each displayed row.
+    for (const auto& data : m_manager->fetchPendingRequests(userID)) {
+        PendingRow* pRow = new PendingRow(data);
         ui->listLayout->addWidget(pRow);
         connect(pRow, &PendingRow::accepted, this, [this, pRow](Data d){
             if (!m_manager->acceptRequest(d)) return;

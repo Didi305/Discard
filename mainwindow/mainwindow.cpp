@@ -6,7 +6,6 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
     , manager(Manager::get())
     , client(manager->getClient())
-    , conversations(manager->fetchConversations(client->getClientData()))
     , m_addFriendPage(new AddFriendPage(this))
     , m_outgoingPage(new OutgoingPage(this))
     , m_FriendsPage(new Friends(this))
@@ -156,11 +155,12 @@ void MainWindow::loadConversations(){
         delete child->widget();
         delete child;
     }
-    conversations = manager->fetchConversations(client->getClientData());
+    const auto summaries = manager->fetchConversations();
     qDebug() << "tried loading convs";
-    qDebug() << "convs: " << conversations.size();
-    for (auto& conv : conversations){
-        ConversationRow* row = new ConversationRow(conv->getConvID(), conv->data(), conv->getlastMessage());
+    qDebug() << "convs: " << summaries.size();
+    for (const auto& summary : summaries){
+        ConversationRow* row = new ConversationRow(
+            summary.conversationId, summary.peer, summary.lastMessage);
         connect(row, &ConversationRow::clicked, this, [this](Data d){
             ui->verticalLayoutMid->setCurrentIndex(1);
             m_DirectMessagePage->load(d);

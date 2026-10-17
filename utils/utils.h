@@ -70,6 +70,8 @@ enum class Status {
     ONLINE, HIDDEN, DO_NOT_DISTURB
 };
 
+enum class RequestType { Pending, Outgoing };
+
 
 struct Data
 {

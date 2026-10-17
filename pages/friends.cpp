@@ -1,4 +1,5 @@
 #include "friends.h"
+#include "friendrow.h"
 #include "ui_friends.h"
 #include <QElapsedTimer>
 Friends::Friends(QWidget *parent)

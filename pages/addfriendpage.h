@@ -26,7 +26,6 @@ private slots:
 private:
     Ui::AddFriendPage *ui;
     Manager *m_manager;
-    std::vector<std::unique_ptr<Row>>  m_pendingRows;
 };
 
 #endif // ADDFRIENDPAGE_H

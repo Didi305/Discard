@@ -1,6 +1,7 @@
 #include "outgoingpage.h"
 #include "ui_outgoingpage.h"
 #include "row.h"
+#include "outgoingrow.h"
 OutgoingPage::OutgoingPage(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::OutgoingPage)
@@ -22,10 +23,9 @@ void OutgoingPage::setRequests(int userID) {
         delete child->widget();
         delete child;
     }
-    m_outgoingRows = m_manager->fetchOutgoingRequests(userID);
-    // 2) Add each widget to your layout
-    for (auto& uptr : m_outgoingRows) {
-        OutgoingRow* oRow = new OutgoingRow(uptr.release()->data());
+    // The layout's parent widget takes ownership of each displayed row.
+    for (const auto& data : m_manager->fetchOutgoingRequests(userID)) {
+        OutgoingRow* oRow = new OutgoingRow(data);
         ui->listLayout->addWidget(oRow);
         connect(oRow, &OutgoingRow::canceled, this,
                 [this, oRow](Data d) {

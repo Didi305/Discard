@@ -28,6 +28,7 @@ file(GLOB_RECURSE CPP_SOURCES
     "${CMAKE_SOURCE_DIR}/mainwindow/*.cpp"
     "${CMAKE_SOURCE_DIR}/pages/*.cpp"
     "${CMAKE_SOURCE_DIR}/assets/*.cpp"
+    "${CMAKE_SOURCE_DIR}/utils/*.cpp"
 )
 
 file(GLOB_RECURSE HEADERS

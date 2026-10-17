@@ -25,6 +25,5 @@ public slots:
 private:
     Ui::OutgoingPage *ui;
     Manager *m_manager {nullptr};
-    std::vector<std::unique_ptr<Row>>  m_outgoingRows;
 };
 #endif // OUTGOINGPAGE_H
