@@ -9,10 +9,12 @@ add_executable(DiscardChatServer main.cpp manager.cpp manager.h totp.cpp totp.h
 target_include_directories(DiscardChatServer PRIVATE ../core .)
 target_link_libraries(DiscardChatServer PRIVATE Qt6::Core Qt6::Network Qt6::Sql)
 
-# Optional offline algorithm checks; the user runs these before VM deployment.
+# Optional offline algorithm checks retained only in local working copies.
 option(DISCARD_MFA_CHECKS "Build the RFC 6238 TOTP verification executable" OFF)
-if(DISCARD_MFA_CHECKS)
+if(DISCARD_MFA_CHECKS AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/tests/totp_vectors.cpp")
     add_executable(DiscardTotpChecks tests/totp_vectors.cpp totp.cpp)
     target_include_directories(DiscardTotpChecks PRIVATE .)
     target_link_libraries(DiscardTotpChecks PRIVATE Qt6::Core)
+elseif(DISCARD_MFA_CHECKS)
+    message(STATUS "Local TOTP test source is unavailable; skipping DiscardTotpChecks.")
 endif()

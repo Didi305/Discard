@@ -33,7 +33,7 @@ sudo systemctl start discard-db-backup.service
 `sudo` authorizes the system service action. `systemctl start` runs the existing
 backup job immediately. It uses the backup script you already installed.
 
-## 3. Run the offline algorithm check and update the Windows client
+## 3. Update the Windows client and optionally run the local algorithm check
 
 In **Windows PowerShell**, enter the existing source directory:
 
@@ -44,15 +44,26 @@ Set-Location 'C:\Users\giler\Desktop\C++\Discard'
 `Set-Location` changes PowerShell's working directory, so the relative paths
 below refer to this project.
 
-Run the prepared checker with the Qt and compiler runtime folders on its PATH:
+The offline checker is optional. Its source, `server/tests/totp_vectors.cpp`,
+is retained locally but is not tracked in Git, so a fresh clone does not include
+it. Skip the checker instructions if that local file is absent; it is not needed
+to build or run Discard or ChatServer.
+
+If you retained the local tests, configure and build the checker with the Qt and
+compiler runtime folders on your PATH:
 
 ```powershell
 $env:PATH = 'C:\Qt\6.9.2\mingw_64\bin;C:\Qt\Tools\mingw1310_64\bin;' + $env:PATH
+& 'C:\Qt\Tools\CMake_64\bin\cmake.exe' -S . -B '.\build\vscode-release' -DDISCARD_MFA_CHECKS=ON
+& 'C:\Qt\Tools\CMake_64\bin\cmake.exe' --build '.\build\vscode-release' --target DiscardTotpChecks --parallel 2
 & '.\build\vscode-release\server\DiscardTotpChecks.exe'
 ```
 
-The PATH change applies only to this PowerShell session. `&` launches the checker.
-It compares the algorithm against the published RFC 6238 examples, including
+The PATH change applies only to this PowerShell session. `&` launches each
+program. The first CMake command enables the optional checker in the existing
+build; the second builds only `DiscardTotpChecks`, using up to two jobs at once.
+Run the executable only after a successful build. It compares the algorithm
+against the published RFC 6238 examples, including
 leading zeros, malformed input, and code expiry. Expect **TOTP checks passed**.
 This checks the algorithm locally; it does not connect to or change the VM.
 
@@ -133,24 +144,32 @@ In **Ubuntu**, configure the existing server build:
 
 ```bash
 cd ~/Discard/server
-cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DDISCARD_MFA_CHECKS=ON
-cmake --build build --parallel 2
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DDISCARD_MFA_CHECKS=OFF
+cmake --build build --target DiscardChatServer --parallel 2
 ```
 
 `cd` enters the server source directory. `cmake -S .` uses that source;
 `-B build` uses the existing build folder; `Release` selects the optimized build;
-`DISCARD_MFA_CHECKS=ON` includes the offline checker. The second command compiles
-it and ChatServer, using up to two jobs at once. Continue only after a successful
-build.
+`DISCARD_MFA_CHECKS=OFF` leaves the optional local checker out of the build.
+The second command compiles ChatServer, using up to two jobs at once. This normal
+server build does not require any files from `server/tests`. Continue only after
+a successful build.
 
-Run the checker on Ubuntu too:
+If you also retained or transferred `server/tests/totp_vectors.cpp` locally on
+the VM, you can optionally configure, build, and run the checker on Ubuntu too:
 
 ```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DDISCARD_MFA_CHECKS=ON
+cmake --build build --target DiscardTotpChecks --parallel 2
 ./build/DiscardTotpChecks
 ```
 
-This confirms the algorithm also works in the VM build. Expect **TOTP checks
-passed**. It does not read or write the database.
+`DISCARD_MFA_CHECKS=ON` requests the checker, and `--target DiscardTotpChecks`
+builds that executable specifically. Run it only after a successful build.
+Expect **TOTP checks passed**; it does not read or write the database. Skip these
+optional commands on a fresh clone, which does not include the local test
+source. If the source is absent, CMake skips the checker even when its option is
+on; the checker target is therefore unavailable, while ChatServer still builds.
 
 Check the VM clock:
 
