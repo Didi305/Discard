@@ -1,6 +1,19 @@
 #include <QStatusBar>
+#include <QCryptographicHash>
+#include <QSettings>
+#include <QTimer>
 #include "mainwindow.h"
 #include "twofactor.h"
+
+namespace {
+QString twoFactorReminderKey(const Client *client, int userId) {
+    const auto serverHash = QCryptographicHash::hash(client->serverEndpoint().toUtf8(),
+                                                    QCryptographicHash::Sha256).toHex();
+    return QStringLiteral("twoFactorReminder/%1/%2/hidden")
+        .arg(QString::fromLatin1(serverHash))
+        .arg(userId);
+}
+}
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -31,12 +44,37 @@ MainWindow::MainWindow(QWidget *parent)
     QIcon icon(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation) + "/C++/Discard/resources/icons/exit.svg");
     ui->disconnectButton->setIcon(icon);
 
-    auto *securityButton = new QPushButton(tr("Two-factor Authentication"), this);
-    securityButton->setObjectName("accountSecurityButton");
-    securityButton->setMinimumHeight(40);
-    securityButton->setCursor(Qt::PointingHandCursor);
-    ui->verticalLayout_2->addWidget(securityButton);
-    connect(securityButton, &QPushButton::clicked, this, &MainWindow::onAccountSecurityClicked);
+    twoFactorButton = new QPushButton(this);
+    twoFactorButton->setObjectName("twoFactorButton");
+    twoFactorButton->setMinimumHeight(45);
+    twoFactorButton->setFlat(true);
+    twoFactorButton->setCursor(Qt::PointingHandCursor);
+
+    auto *twoFactorLayout = new QHBoxLayout(twoFactorButton);
+    twoFactorLayout->setContentsMargins(8, 0, 10, 0);
+    twoFactorLayout->setSpacing(8);
+
+    auto *shieldIcon = new QLabel(twoFactorButton);
+    shieldIcon->setPixmap(QIcon(":/icons/twofactor.svg").pixmap(QSize(24, 24), devicePixelRatioF()));
+    shieldIcon->setFixedSize(24, 24);
+    shieldIcon->setAttribute(Qt::WA_TransparentForMouseEvents);
+    twoFactorLayout->addWidget(shieldIcon);
+
+    auto *twoFactorTitle = new QLabel(tr("Two-factor Authentication"), twoFactorButton);
+    twoFactorTitle->setObjectName("twoFactorTitle");
+    twoFactorTitle->setAttribute(Qt::WA_TransparentForMouseEvents);
+    twoFactorLayout->addWidget(twoFactorTitle, 1);
+
+    twoFactorStatusLabel = new QLabel(twoFactorButton);
+    twoFactorStatusLabel->setObjectName("twoFactorStatus");
+    twoFactorStatusLabel->setFixedSize(44, 24);
+    twoFactorStatusLabel->setAlignment(Qt::AlignCenter);
+    twoFactorStatusLabel->setAttribute(Qt::WA_TransparentForMouseEvents);
+    twoFactorLayout->addWidget(twoFactorStatusLabel);
+
+    ui->verticalLayout_2->addWidget(twoFactorButton);
+    updateTwoFactorIndicator(TwoFactorState::Unknown);
+    connect(twoFactorButton, &QPushButton::clicked, this, &MainWindow::onAccountSecurityClicked);
 
 
     connect(ui->userAvatarButton, &QPushButton::clicked, this, &MainWindow::onAvatarButtonClicked);
@@ -73,6 +111,8 @@ MainWindow::MainWindow(QWidget *parent)
         m_outgoingPage->setRequests(client->getClientID());
     });
     connect(client, &Client::disconnected, this, [this] {
+        ++reminderGeneration;
+        updateTwoFactorIndicator(TwoFactorState::Unknown);
         statusBar()->showMessage(tr("Disconnected. Sign in again to continue."));
     });
     const double margin = 26;
@@ -80,6 +120,7 @@ MainWindow::MainWindow(QWidget *parent)
     int x = 9;
     int y = this->height() - 1.5 * upHeight - margin;
     ui->userPanel->move(x, y);
+    scheduleTwoFactorReminder();
 }
 
 void MainWindow::resizeEvent(QResizeEvent *event)
@@ -130,18 +171,120 @@ void MainWindow::onAvatarButtonClicked()
     updateAvatar(cachedAvatar);
 }
 
-void MainWindow::onAccountSecurityClicked() {
-    AccountSecurityDialog security(manager, this);
+void MainWindow::onAccountSecurityClicked()
+{
+    openTwoFactorSettings();
+}
+
+void MainWindow::updateTwoFactorIndicator(TwoFactorState state)
+{
+    QString stateName;
+    QString statusText;
+    QString description;
+    if (state == TwoFactorState::Enabled) {
+        stateName = QStringLiteral("enabled");
+        statusText = tr("ON");
+        description = tr("Two-factor authentication is on.");
+    } else if (state == TwoFactorState::Disabled) {
+        stateName = QStringLiteral("disabled");
+        statusText = tr("OFF");
+        description = tr("Two-factor authentication is off. Click to set it up.");
+    } else {
+        stateName = QStringLiteral("unknown");
+        statusText = QStringLiteral("?");
+        description = tr("Two-factor authentication status is unavailable.");
+    }
+    twoFactorStatusLabel->setText(statusText);
+    twoFactorStatusLabel->setProperty("state", stateName);
+    twoFactorStatusLabel->style()->unpolish(twoFactorStatusLabel);
+    twoFactorStatusLabel->style()->polish(twoFactorStatusLabel);
+    twoFactorStatusLabel->update();
+    twoFactorButton->setToolTip(description);
+    twoFactorButton->setAccessibleName(tr("Two-factor Authentication: %1").arg(statusText));
+    twoFactorButton->setAccessibleDescription(description);
+}
+
+MainWindow::TwoFactorState MainWindow::refreshTwoFactorStatus()
+{
+    const int userId = client->getClientID();
+    if (userId <= 0) {
+        updateTwoFactorIndicator(TwoFactorState::Unknown);
+        return TwoFactorState::Unknown;
+    }
+
+    const auto reply = manager->securityRequest("mfa_status");
+    const auto enabled = reply["result"].toObject().value("enabled");
+    if (!reply["ok"].toBool() || !enabled.isBool() || client->getClientID() != userId) {
+        updateTwoFactorIndicator(TwoFactorState::Unknown);
+        return TwoFactorState::Unknown;
+    }
+
+    const auto state = enabled.toBool() ? TwoFactorState::Enabled : TwoFactorState::Disabled;
+    updateTwoFactorIndicator(state);
+    return state;
+}
+
+void MainWindow::scheduleTwoFactorReminder()
+{
+    const int userId = client->getClientID();
+    const quint64 generation = ++reminderGeneration;
+    updateTwoFactorIndicator(TwoFactorState::Unknown);
+    if (userId <= 0) {
+        return;
+    }
+    QTimer::singleShot(0, this, [this, userId, generation] {
+        if (generation == reminderGeneration && client->getClientID() == userId) {
+            showTwoFactorReminder(userId);
+        }
+    });
+}
+
+void MainWindow::showTwoFactorReminder(int userId)
+{
+    if (twoFactorDialogOpen || !isVisible() || refreshTwoFactorStatus() != TwoFactorState::Disabled) {
+        return;
+    }
+
+    QSettings settings(QStringLiteral("Discard"), QStringLiteral("Discard-M2"));
+    const auto preferenceKey = twoFactorReminderKey(client, userId);
+    if (settings.value(preferenceKey, false).toBool()) {
+        return;
+    }
+
+    twoFactorDialogOpen = true;
+    TwoFactorReminderDialog reminder(client->getClientName(), this);
+    const auto result = reminder.exec();
+    twoFactorDialogOpen = false;
+    if (client->getClientID() != userId) {
+        return;
+    }
+    settings.setValue(preferenceKey, reminder.remindersDisabled());
+    if (result == QDialog::Accepted) {
+        openTwoFactorSettings(true);
+    }
+}
+
+void MainWindow::openTwoFactorSettings(bool startSetup)
+{
+    if (twoFactorDialogOpen || client->getClientID() <= 0) {
+        return;
+    }
+    twoFactorDialogOpen = true;
+    AccountSecurityDialog security(manager, this, startSetup);
     security.exec();
+    twoFactorDialogOpen = false;
+    refreshTwoFactorStatus();
 }
 
 void MainWindow::refreshForUser(){
+    statusBar()->clearMessage();
     updateAvatar(client->getClientAvatar());
     ui->userNameLabel->setText(client->getClientName());
     ui->ADD_OUTGOING->setCurrentWidget(m_addFriendPage);
     m_addFriendPage->load(client->getClientID());
     m_FriendsPage->load(client->getFriends());
     loadConversations();
+    scheduleTwoFactorReminder();
 }
 
 void MainWindow::onDisconnectClicked(){
@@ -151,12 +294,15 @@ void MainWindow::onDisconnectClicked(){
     this->hide();
     if (h.exec() == QDialog::Rejected) {
         this->close();      // Exit application if dialog is rejected
+        return;
     }
     refreshForUser();
     this->show();
 }
 void MainWindow::onConnectionSuccess()
 {
+    // A TCP connection alone does not complete password/second-factor sign-in.
+    if (client->getClientID() <= 0) return;
     qDebug() << "User: " << client->getClientName();
     qDebug() << "ID: " << client->getClientID();
     loadConversations();
@@ -225,3 +371,5 @@ void MainWindow::onItemNotDragged()
 {
     m_banner->hideBanner();
 }
+
+

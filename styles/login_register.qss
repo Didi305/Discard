@@ -99,6 +99,70 @@ QPushButton[role="secondary"]:pressed {
     background-color: #35393f;
 }
 
+/* Matching layout-based sign-in and registration forms. */
+#Login QLabel, #Register QLabel {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+#Login QLabel#title, #Register QLabel#title {
+    padding: 0;
+    color: #f4f6fa;
+    font-size: 30px;
+    font-weight: 650;
+}
+
+#Login #formSubtitle, #Register #formSubtitle {
+    color: #9ba3af;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+#Login QLineEdit, #Register QLineEdit {
+    background-color: #293244;
+    color: #f6f8ff;
+    border: 2px solid #465570;
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 16px;
+    selection-background-color: #587bea;
+    selection-color: #ffffff;
+}
+
+#Login QLineEdit:hover, #Register QLineEdit:hover {
+    background-color: #2d384c;
+    border-color: #667c9f;
+}
+
+#Login QLineEdit:focus, #Register QLineEdit:focus {
+    background-color: #303e58;
+    border-color: #91b4ff;
+}
+
+#Register QLineEdit[invalid="true"] {
+    border-color: #ee8396;
+}
+
+#Login QPushButton, #Register QPushButton {
+    padding: 10px 16px;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+#Login QPushButton:focus, #Register QPushButton:focus {
+    border-color: #a5c7ff;
+}
+
+#Login #loginErrorMessage, #Register #registerErrorMessage {
+    color: #ffadb9;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+#Login #loginErrorMessage[success="true"] {
+    color: #6bd9a6;
+}
+
 /* Authenticator settings use compact sections with a shared visual hierarchy. */
 #twoFactorSettingsDialog QLabel {
     background: transparent;

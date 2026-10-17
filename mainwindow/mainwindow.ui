@@ -849,10 +849,17 @@
                   <string notr="true"/>
                  </property>
                  <property name="text">
-                  <string>   Friends</string>
+                  <string>Friends</string>
                  </property>
                  <property name="icon">
-                  <iconset theme="QIcon::ThemeIcon::UserAvailable"/>
+                  <iconset resource="../resource.qrc">
+                   <normaloff>:/icons/friends.svg</normaloff>:/icons/friends.svg</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>24</width>
+                   <height>24</height>
+                  </size>
                  </property>
                  <property name="flat">
                   <bool>true</bool>
@@ -877,10 +884,17 @@
                   <string notr="true"/>
                  </property>
                  <property name="text">
-                  <string>   Message Requests</string>
+                  <string>Message Requests</string>
                  </property>
                  <property name="icon">
-                  <iconset theme="QIcon::ThemeIcon::DocumentSend"/>
+                  <iconset resource="../resource.qrc">
+                   <normaloff>:/icons/message-requests.svg</normaloff>:/icons/message-requests.svg</iconset>
+                 </property>
+                 <property name="iconSize">
+                  <size>
+                   <width>24</width>
+                   <height>24</height>
+                  </size>
                  </property>
                  <property name="flat">
                   <bool>true</bool>
@@ -1278,6 +1292,8 @@ padding-left: 7px;</string>
    </property>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="../resource.qrc"/>
+ </resources>
  <connections/>
 </ui>

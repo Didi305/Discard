@@ -23,6 +23,7 @@ public:
     void setClientID(int userId);
     void setClientData(Data &userData);
     void setEndpoint(const QString &hostname, int serverPort);
+    QString serverEndpoint() const;
     bool ensureConnected();
     QJsonObject request(const QString &operation, const QJsonObject &arguments = {});
     void disconnectFromServer();

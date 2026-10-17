@@ -18,6 +18,9 @@
 #include <QRegularExpressionValidator>
 #include <QSaveFile>
 #include <QSignalBlocker>
+#include <QScreen>
+#include <QShowEvent>
+#include <QResizeEvent>
 #include <QStackedWidget>
 #include <QTimer>
 #include <QVBoxLayout>
@@ -126,6 +129,36 @@ void styleDialog(QDialog *dialog) {
 }
 }
 
+TwoFactorReminderDialog::TwoFactorReminderDialog(const QString &accountName, QWidget *parent)
+    : QDialog(parent) {
+    setWindowTitle(tr("Set up two-factor authentication"));
+    setObjectName("twoFactorReminderDialog");
+    styleDialog(this);
+
+    auto *layout = new QVBoxLayout(this);
+    layout->setSpacing(16);
+    addText(layout, tr("Two-factor authentication (2FA) is turned off for %1.").arg(accountName));
+    addText(layout, tr("Add an authenticator app so signing in requires your password and a code "
+                       "from your phone. You can set it up now or later from the sidebar."));
+
+    hideReminder = new QCheckBox(tr("Don't show this again for this account on this computer."), this);
+    hideReminder->setObjectName("hideTwoFactorReminder");
+    layout->addWidget(hideReminder);
+
+    auto *buttons = new QDialogButtonBox(this);
+    auto *setupButton = buttons->addButton(tr("Set up 2FA"), QDialogButtonBox::AcceptRole);
+    auto *laterButton = buttons->addButton(tr("Not now"), QDialogButtonBox::RejectRole);
+    setupButton->setDefault(true);
+    laterButton->setProperty("role", "secondary");
+    layout->addWidget(buttons);
+    connect(buttons, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttons, &QDialogButtonBox::rejected, this, &QDialog::reject);
+}
+
+bool TwoFactorReminderDialog::remindersDisabled() const {
+    return hideReminder->isChecked();
+}
+
 SecondFactorDialog::SecondFactorDialog(Manager *m, QWidget *parent)
     : QDialog(parent), manager(m) {
     setWindowTitle(tr("Verify your sign-in"));
@@ -205,6 +238,53 @@ AccountSecurityDialog::AccountSecurityDialog(Manager *m, QWidget *parent, bool s
     if (startSetup && !setupButton->isHidden()) {
         QTimer::singleShot(0, this, &AccountSecurityDialog::beginSetup);
     }
+}
+
+void AccountSecurityDialog::showEvent(QShowEvent *event) {
+    QDialog::showEvent(event);
+    scheduleCentering();
+}
+
+void AccountSecurityDialog::resizeEvent(QResizeEvent *event) {
+    QDialog::resizeEvent(event);
+    if (isVisible()) {
+        scheduleCentering();
+    }
+}
+
+void AccountSecurityDialog::scheduleCentering() {
+    if (centeringQueued) {
+        return;
+    }
+    centeringQueued = true;
+    // Wait for the layout and native window frame to reach their final sizes.
+    QTimer::singleShot(0, this, [this] {
+        centeringQueued = false;
+        if (isVisible()) {
+            centerOnParent();
+        }
+    });
+}
+
+void AccountSecurityDialog::centerOnParent() {
+    auto *owner = parentWidget() ? parentWidget()->window() : nullptr;
+    const QPoint center = owner ? owner->frameGeometry().center() : frameGeometry().center();
+    auto *targetScreen = QGuiApplication::screenAt(center);
+    if (!targetScreen) {
+        targetScreen = screen();
+    }
+    if (!targetScreen) {
+        return;
+    }
+
+    const QRect available = targetScreen->availableGeometry();
+    QRect frame = frameGeometry();
+    frame.moveCenter(owner ? center : available.center());
+    const int rightmost = qMax(available.left(), available.right() - frame.width() + 1);
+    const int lowest = qMax(available.top(), available.bottom() - frame.height() + 1);
+    frame.moveTopLeft(QPoint(qBound(available.left(), frame.left(), rightmost),
+                            qBound(available.top(), frame.top(), lowest)));
+    move(frame.topLeft());
 }
 
 QWidget *AccountSecurityDialog::createStatusPage() {

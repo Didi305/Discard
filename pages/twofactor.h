@@ -10,6 +10,17 @@ class QPushButton;
 class QStackedWidget;
 class QPlainTextEdit;
 class QCheckBox;
+class QShowEvent;
+class QResizeEvent;
+
+class TwoFactorReminderDialog : public QDialog {
+public:
+    explicit TwoFactorReminderDialog(const QString &accountName, QWidget *parent = nullptr);
+    bool remindersDisabled() const;
+
+private:
+    QCheckBox *hideReminder;
+};
 
 // Password verification has succeeded, but the socket is not authenticated yet.
 class SecondFactorDialog : public QDialog {
@@ -31,6 +42,8 @@ public:
                                    bool startSetup = false);
 protected:
     void reject() override;
+    void showEvent(QShowEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
 private:
     Manager *manager;
     QStackedWidget *pages;
@@ -50,6 +63,9 @@ private:
     QCheckBox *codesSaved;
     QStringList recoveryCodes;
     bool setupPending=false;
+    bool centeringQueued = false;
+    void scheduleCentering();
+    void centerOnParent();
     QWidget *createStatusPage();
     QWidget *createSetupPage();
     QWidget *createRecoveryPage();

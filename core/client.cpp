@@ -79,6 +79,10 @@ void Client::setEndpoint(const QString &hostname, int serverPort) {
     port = serverPort;
 }
 
+QString Client::serverEndpoint() const {
+    return host.trimmed().toLower() + ":" + QString::number(port);
+}
+
 bool Client::ensureConnected() {
     if (socket->state() == QAbstractSocket::ConnectedState) {
         return true;

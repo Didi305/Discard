@@ -1,11 +1,16 @@
 <RCC>
     <qresource prefix="/icons">
+        <file alias="input-user.svg">resources/icons/input-user.svg</file>
+        <file alias="input-lock.svg">resources/icons/input-lock.svg</file>
+        <file alias="twofactor.svg">resources/icons/twofactor.svg</file>
         <file>resources/icons/active.svg</file>
         <file>resources/icons/check.svg</file>
         <file>resources/icons/close.svg</file>
         <file>resources/icons/disturb.svg</file>
         <file>resources/icons/hidden.svg</file>
         <file>resources/icons/WAPP.ico</file>
+        <file alias="friends.svg">resources/icons/friends.svg</file>
+        <file alias="message-requests.svg">resources/icons/message-requests.svg</file>
     </qresource>
 
     <qresource prefix="/styles">

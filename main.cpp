@@ -9,7 +9,6 @@
 int main(int argc,char *argv[]) {
     QApplication app(argc,argv);
     QCoreApplication::setApplicationName("Discard-M2");
-    app.setApplicationDisplayName("Discard");
     QCommandLineParser parser;parser.addHelpOption();
     parser.addOption({"host","ChatServer hostname or IP address.","host","127.0.0.1"});
     parser.addOption({"port","ChatServer TCP port.","port","41234"});

@@ -4,36 +4,46 @@
 #include "manager.h"
 #include "twofactor.h"
 #include <QApplication>
+#include <QStyle>
+#include <QPalette>
 
 Login::Login(QWidget *parent) : QDialog(parent), ui(new Ui::Login), manager(Manager::get()) {
     ui->setupUi(this);
     setStyleSheet(Utils::readText(":/styles/login_register.qss", "login_register.qss"));
-    ui->loginErrorMessage->setEnabled(true);
-    ui->loginErrorMessage->setTextFormat(Qt::PlainText);
-    ui->loginErrorMessage->setWordWrap(true);
-    ui->loginErrorMessage->setAlignment(Qt::AlignCenter);
-    ui->loginErrorMessage->setGeometry(60, 300, width() - 120, 48);
-    ui->loginErrorMessage->setStyleSheet(QStringLiteral("color: #ffb4b4; font-size: 14px;"));
-    ui->loginErrorMessage->hide();
     ui->createAccountButton->setProperty("role", "secondary");
-    QFontMetrics fm(ui->loginButton->font());
-    ui->loginButton->setMinimumHeight(fm.height() + 20);
+    for (auto *field : {ui->loginUsername, ui->loginPassword}) {
+        const auto icon = field->echoMode() == QLineEdit::Password
+            ? QStringLiteral(":/icons/input-lock.svg") : QStringLiteral(":/icons/input-user.svg");
+        field->addAction(QIcon(icon), QLineEdit::LeadingPosition);
+        auto colors = field->palette();
+        colors.setColor(QPalette::PlaceholderText, QColor("#a9b6cf"));
+        field->setPalette(colors);
+    }
+    ui->loginUsername->setFocus();
     connect(ui->loginButton, &QPushButton::clicked, this, &Login::onLoginButtonClicked);
     connect(ui->createAccountButton, &QPushButton::clicked, this, &Login::onCreateAccountButtonClicked);
+    connect(ui->loginUsername, &QLineEdit::textEdited, ui->loginErrorMessage, &QLabel::clear);
+    connect(ui->loginPassword, &QLineEdit::textEdited, ui->loginErrorMessage, &QLabel::clear);
 }
 
-Login::~Login(){
-    delete(ui);
+Login::~Login() {
+    delete ui;
 }
-
 
 void Login::showError(const QString &message) {
-    ui->loginErrorMessage->setText(message);
-    ui->loginErrorMessage->show();
+    showMessage(message, false);
 }
 
-bool Login::connectToDatabase() {
-    ui->loginErrorMessage->hide();
+void Login::showMessage(const QString &message, bool success) {
+    ui->loginErrorMessage->setText(message);
+    ui->loginErrorMessage->setProperty("success", success);
+    ui->loginErrorMessage->style()->unpolish(ui->loginErrorMessage);
+    ui->loginErrorMessage->style()->polish(ui->loginErrorMessage);
+    ui->loginErrorMessage->update();
+}
+
+bool Login::connectToServer() {
+    ui->loginErrorMessage->clear();
     QApplication::setOverrideCursor(Qt::WaitCursor);
     const bool connected = manager->connectServer();
     QApplication::restoreOverrideCursor();
@@ -43,9 +53,9 @@ bool Login::connectToDatabase() {
     return connected;
 }
 
-void Login::onLoginButtonClicked(){
-    QString username = ui->loginUsername->text();
-    QString password = ui->loginPassword->text();
+void Login::onLoginButtonClicked() {
+    const QString username = ui->loginUsername->text();
+    const QString password = ui->loginPassword->text();
     if (username.isEmpty() || password.isEmpty()) {
         showError(tr("Enter your username and password."));
         return;
@@ -54,9 +64,12 @@ void Login::onLoginButtonClicked(){
         showError(manager->lastError());
         return;
     }
-    if (!connectToDatabase()) return;
+    if (!connectToServer()) {
+        return;
+    }
     if (!manager->authenticate(username, password)) {
         if (manager->secondFactorRequired()) {
+            // No main window or user data is exposed while this prompt is pending.
             ui->loginPassword->clear();
             SecondFactorDialog secondFactor(manager, this);
             if (secondFactor.exec() == QDialog::Accepted) {
@@ -70,8 +83,12 @@ void Login::onLoginButtonClicked(){
     accept();
 }
 
-void Login::onCreateAccountButtonClicked(){
-    if (!connectToDatabase()) return;
-    reg = new Register(this);
-    reg->show();
+void Login::onCreateAccountButtonClicked() {
+    Register registration(this);
+    if (registration.exec() == QDialog::Accepted) {
+        ui->loginUsername->setText(registration.registeredUsername());
+        ui->loginPassword->clear();
+        ui->loginPassword->setFocus();
+        showMessage(tr("Account created. Enter your password to sign in."), true);
+    }
 }

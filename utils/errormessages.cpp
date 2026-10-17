@@ -12,6 +12,7 @@ QString ErrorMessages::message(const QString &operation, const QString &code, co
     }
 
     const QHash<QString, QString> messages{
+        {"account_exists", QCoreApplication::translate("Manager", "That username or nickname is already in use. Choose another and try again.")},
         {"username_too_long", QCoreApplication::translate("Manager", "Username must be %1 characters or fewer.").arg(InputLimits::MaxUsernameLength)},
         {"too_many_attachments", QCoreApplication::translate("Manager", "You can attach at most eight files to one message.")},
         {"attachment_read_failed", QCoreApplication::translate("Manager", "Could not read a selected attachment. Check that the file exists and can be opened.")},
